@@ -1646,7 +1646,8 @@ let selectedGender1 = null;
                 console.log('Sending request:', requestBody);
                 
                 // Call backend API
-                const response = await fetch('http://localhost:3001/api/fortune', {
+                const response = await fetch('https://mystic-flax.vercel.app/api/fortune', {
+
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
