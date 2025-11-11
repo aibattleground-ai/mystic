@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYSTIC AI - Your AI Fortune Teller 🔮</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --purple: #8B5CF6;
+            --pink: #EC4899;
+            --blue: #3B82F6;
+            --cyan: #06B6D4;
+            --green: #10B981;
+            --yellow: #F59E0B;
+            --red: #EF4444;
+            --dark: #1F2937;
+            --white: #FFFFFF;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --gradient-rainbow: linear-gradient(90deg, #FF6B6B, #4ECDC4, #45B7D1, #96E6A1, #FECA57, #FF6B6B);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: var(--white);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: floatUp 15s infinite linear;
+            opacity: 0.3;
+        }
+
+        @keyframes floatUp {
+            from {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 3s linear infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Pacifico', cursive;
+            font-size: 2rem;
+            background: linear-gradient(90deg, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-cta {
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: none;
+            border-radius: 50px;
+            color: var(--dark);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 2rem 4rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .hero-title .rainbow-text {
+            background: var(--gradient-rainbow);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            opacity: 0.95;
+            margin-bottom: 3rem;
+        }
+
+        /* Fortune Categories Grid */
+        .fortune-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto 3rem;
+            animation: slideUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fortune-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fortune-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .fortune-card:hover::before {
+            transform: scale(1);
+        }
+
+        .fortune-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .fortune-card.selected {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+            transform: scale(1.05);
+        }
+
+        .fortune-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        .fortune-card:nth-child(odd) .fortune-icon {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes wiggle {
+            0%, 100% {
+                transform: rotate(-3deg);
+            }
+            50% {
+                transform: rotate(3deg);
+            }
+        }
+
+        .fortune-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--white);
+        }
+
+        .fortune-description {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-top: 0.25rem;
+        }
+
+        /* Fun Input Form */
+        .fun-form {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 2.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: slideUp 1s ease-out 0.6s both;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h3 {
+            font-size: 1.75rem;
+            color: var(--dark);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: #6B7280;
+            font-size: 1rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-label {
+            display: block;
+            color: var(--dark);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .fun-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 3px solid #E5E7EB;
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            color: var(--dark);
+        }
+
+        .fun-input:focus {
+            outline: none;
+            border-color: var(--purple);
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2);
+        }
+
+        .fun-input::placeholder {
+            color: #9CA3AF;
+        }
+
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .time-input {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: var(--gradient-rainbow);
+            background-size: 200% auto;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: rainbow 3s linear infinite;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Features Grid */
+        .features {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px) rotate(1deg);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        .feature-box:nth-child(2) .feature-emoji {
+            animation-delay: 0.2s;
+        }
+
+        .feature-box:nth-child(3) .feature-emoji {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-desc {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        /* Special Fortunes Section */
+        .special-fortunes {
+            padding: 6rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .special-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .special-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .special-card::before {
+            content: '✨';
+            position: absolute;
+            font-size: 5rem;
+            top: -20px;
+            right: -20px;
+            opacity: 0.1;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .special-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+
+        .special-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: var(--dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .special-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .special-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .special-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        /* Testimonials Carousel */
+        .testimonials {
+            padding: 6rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .testimonial-carousel {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .stars {
+            color: #ffd700;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .author-info {
+            text-align: left;
+        }
+
+        .author-name {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .author-title {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 255, 255, 0.1));
+        }
+
+        .cta-content h2 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.5rem 3rem;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ffd700;
+            transform: translateY(-2px);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--white);
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+            transform: translateY(-5px) rotate(15deg);
+        }
+
+        .copyright {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .fortune-categories {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 1rem;
+            }
+            
+            .date-inputs,
+            .time-input {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid,
+            .special-grid,
+            .testimonial-carousel {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-wrapper">
+        <div id="floating-emojis"></div>
+        <div id="sparkles"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <span>🔮</span>
+                <span>MYSTIC AI</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#fortunes">Fortunes</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#special">Special</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+                <a href="#" class="nav-cta">✨ Try Now FREE</a>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-header">
+                <h1 class="hero-title">
+                    <span>Discover Your</span><br>
+                    <span class="rainbow-text">Fortune & Destiny</span><br>
+                    <span>with AI Magic ✨</span>
+                </h1>
+                <p class="hero-subtitle">Choose what you want to know about your future! 🎯</p>
+            </div>
+
+            <!-- Fortune Categories Selection -->
+            <div class="fortune-categories" id="fortunes">
+                <div class="fortune-card" onclick="selectFortune(this, 'love')">
+                    <span class="fortune-icon">💕</span>
+                    <div class="fortune-name">Love Fortune</div>
+                    <div class="fortune-description">Find your soulmate</div>
+                </div>
+                <div class="fortune-card" onclick="selectFortune(this, 'money')">
+                    <span class="fortune-icon">💰</span>
+                    <div class="fortune-name">Money Fortune</div>
+                    <div class="fortune-description">Wealth predictions</div>
+                </div>
+                <div class="fortune-card" onclick="selectFortune(this, 'career')">
+                    <span class="fortune-icon">🚀</span>
+                    <div class="fortune-name">Career Fortune</div>
+                    <div class="fortune-description">Success timing</div>
+                </div>
+                <div class="fortune-card" onclick="selectFortune(this, 'health')">
+                    <span class="fortune-icon">💪</span>
+                    <div class="fortune-name">Health Fortune</div>
+                    <div class="fortune-description">Wellness insights</div>
+                </div>
+                <div class="fortune-card" onclick="selectFortune(this, 'travel')">
+                    <span class="fortune-icon">✈️</span>
+                    <div class="fortune-name">Travel Fortune</div>
+                    <div class="fortune-description">Best destinations</div>
+                </div>
+                <div class="fortune-card" onclick="selectFortune(this, 'crypto')">
+                    <span class="fortune-icon">🪙</span>
+                    <div class="fortune-name">Crypto Fortune</div>
+                    <div class="fortune-description">Trading timing</div>
+                </div>
+                <div class="fortune-card" onclick="selectFortune(this, 'gaming')">
+                    <span class="fortune-icon">🎮</span>
+                    <div class="fortune-name">Gaming Luck</div>
+                    <div class="fortune-description">Win predictions</div>
+                </div>
+                <div class="fortune-card" onclick="selectFortune(this, 'pet')">
+                    <span class="fortune-icon">🐾</span>
+                    <div class="fortune-name">Pet Compatibility</div>
+                    <div class="fortune-description">Perfect pet match</div>
+                </div>
+                <div class="fortune-card" onclick="selectFortune(this, 'food')">
+                    <span class="fortune-icon">🍕</span>
+                    <div class="fortune-name">Food Fortune</div>
+                    <div class="fortune-description">Lucky foods</div>
+                </div>
+                <div class="fortune-card" onclick="selectFortune(this, 'social')">
+                    <span class="fortune-icon">📱</span>
+                    <div class="fortune-name">Social Media</div>
+                    <div class="fortune-description">Viral timing</div>
+                </div>
+            </div>
+
+            <!-- Fun Input Form -->
+            <div class="fun-form">
+                <div class="form-header">
+                    <h3>🌟 Let's Get Started! 🌟</h3>
+                    <p>Tell us a bit about yourself (it's fun, we promise!)</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">What's your name? 😊</label>
+                    <input type="text" class="fun-input" placeholder="Enter your awesome name">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">When were you born? 🎂</label>
+                    <div class="date-inputs">
+                        <input type="number" class="fun-input" placeholder="Year (e.g., 1995)">
+                        <select class="fun-input">
+                            <option value="">Month</option>
+                            <option value="1">Jan</option>
+                            <option value="2">Feb</option>
+                            <option value="3">Mar</option>
+                            <option value="4">Apr</option>
+                            <option value="5">May</option>
+                            <option value="6">Jun</option>
+                            <option value="7">Jul</option>
+                            <option value="8">Aug</option>
+                            <option value="9">Sep</option>
+                            <option value="10">Oct</option>
+                            <option value="11">Nov</option>
+                            <option value="12">Dec</option>
+                        </select>
+                        <input type="number" class="fun-input" placeholder="Day" min="1" max="31">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">What time? ⏰ (optional but more accurate!)</label>
+                    <div class="time-input">
+                        <input type="number" class="fun-input" placeholder="Hour (0-23)" min="0" max="23">
+                        <input type="number" class="fun-input" placeholder="Minute (0-59)" min="0" max="59">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Where were you born? 📍</label>
+                    <input type="text" class="fun-input" placeholder="City, Country (e.g., Los Angeles, USA)">
+                </div>
+
+                <button class="submit-btn">
+                    🔮 REVEAL MY FORTUNE 🔮
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="features-container">
+            <h2 class="section-title">✨ Why We're Amazing ✨</h2>
+            <div class="features-grid">
+                <div class="feature-box">
+                    <span class="feature-emoji">🎯</span>
+                    <h3 class="feature-title">Scary Accurate</h3>
+                    <p class="feature-desc">Our AI is trained on millions of fortunes and gets it right 99% of the time!</p>
+                </div>
+                <div class="feature-box">
+                    <span class="feature-emoji">⚡</span>
+                    <h3 class="feature-title">Instant Results</h3>
+                    <p class="feature-desc">No waiting! Get your personalized fortune in seconds, not days.</p>
+                </div>
+                <div class="feature-box">
+                    <span class="feature-emoji">🎨</span>
+                    <h3 class="feature-title">Beautiful Reports</h3>
+                    <p class="feature-desc">Gorgeous, shareable reports that look amazing on Instagram!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Fortunes Section -->
+    <section id="special" class="special-fortunes">
+        <div class="section-title">🌟 Special Fortune Readings 🌟</div>
+        <div class="special-grid">
+            <div class="special-card">
+                <span class="special-badge">HOT</span>
+                <span class="special-icon">💑</span>
+                <h3 class="special-title">Soulmate Finder</h3>
+                <p class="special-desc">Discover when and where you'll meet your perfect match!</p>
+            </div>
+            <div class="special-card">
+                <span class="special-badge">NEW</span>
+                <span class="special-icon">🎰</span>
+                <h3 class="special-title">Lucky Numbers</h3>
+                <p class="special-desc">Get your personal lottery numbers based on cosmic alignment!</p>
+            </div>
+            <div class="special-card">
+                <span class="special-badge">TRENDING</span>
+                <span class="special-icon">🦄</span>
+                <h3 class="special-title">Startup Success</h3>
+                <p class="special-desc">Find the perfect timing to launch your billion-dollar idea!</p>
+            </div>
+            <div class="special-card">
+                <span class="special-badge">VIRAL</span>
+                <span class="special-icon">🎭</span>
+                <h3 class="special-title">Celebrity Match</h3>
+                <p class="special-desc">Which celebrity shares your cosmic energy? Find out!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonials">
+        <h2 class="section-title">💬 What People Say 💬</h2>
+        <div class="testimonial-carousel">
+            <div class="testimonial">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"OMG! It told me I'd get a promotion in March and IT HAPPENED! This is insane!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SF</div>
+                    <div class="author-info">
+                        <div class="author-name">Sarah Foster</div>
+                        <div class="author-title">Marketing Manager, NYC</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"The crypto timing was perfect! Made 10x returns following the fortune advice!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JK</div>
+                    <div class="author-info">
+                        <div class="author-name">Jake Kim</div>
+                        <div class="author-title">Crypto Trader, Seoul</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"Found my soulmate exactly when it predicted! We're getting married next month!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">EM</div>
+                    <div class="author-info">
+                        <div class="author-name">Emma Martinez</div>
+                        <div class="author-title">Designer, Barcelona</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2>🎉 Ready for Some Magic? 🎉</h2>
+            <p>Join 1 million+ people discovering their destiny!</p>
+            <a href="#" class="cta-button">✨ Get My FREE Fortune Now ✨</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">How it Works</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Blog</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="social-icons">
+                <a href="#" class="social-icon">📘</a>
+                <a href="#" class="social-icon">🐦</a>
+                <a href="#" class="social-icon">📷</a>
+                <a href="#" class="social-icon">🎵</a>
+                <a href="#" class="social-icon">📺</a>
+            </div>
+            <div class="copyright">
+                © 2025 MYSTIC AI - Made with ❤️ and ✨ Magic
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Create floating emojis
+        const emojis = ['✨', '🌟', '💫', '⭐', '🌙', '☀️', '🔮', '💎', '🦄', '🌈'];
+        const floatingContainer = document.getElementById('floating-emojis');
+        
+        for (let i = 0; i < 20; i++) {
+            const emoji = document.createElement('div');
+            emoji.className = 'floating-emoji';
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.left = Math.random() * 100 + '%';
+            emoji.style.animationDelay = Math.random() * 15 + 's';
+            emoji.style.animationDuration = (15 + Math.random() * 10) + 's';
+            floatingContainer.appendChild(emoji);
+        }
+
+        // Create sparkles
+        const sparkleContainer = document.getElementById('sparkles');
+        
+        setInterval(() => {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDelay = '0s';
+            sparkleContainer.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.remove();
+            }, 3000);
+        }, 300);
+
+        // Fortune card selection
+        let selectedFortunes = [];
+        
+        function selectFortune(card, type) {
+            card.classList.toggle('selected');
+            
+            if (selectedFortunes.includes(type)) {
+                selectedFortunes = selectedFortunes.filter(f => f !== type);
+            } else {
+                selectedFortunes.push(type);
+            }
+            
+            console.log('Selected fortunes:', selectedFortunes);
+        }
+
+        // Submit button animation
+        document.querySelector('.submit-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                alert('✨ Your fortune is being calculated by the cosmic AI! ✨');
+            }, 200);
+        });
+
+        // Add hover sound effect (optional)
+        document.querySelectorAll('.fortune-card, .special-card, .feature-box').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Add a subtle animation or sound effect here
+                card.style.transform = 'scale(1.05) rotate(1deg)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                if (!card.classList.contains('selected')) {
+                    card.style.transform = 'scale(1) rotate(0deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
