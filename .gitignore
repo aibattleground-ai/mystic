@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+
+# Environment variables (API KEY 보호!)
+.env
+backend/.env
+
+# Mac system files
+.DS_Store
+.DS_Store?
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+.env.save
+.env
+.env.save
+.env
