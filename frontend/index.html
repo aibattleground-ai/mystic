@@ -954,14 +954,34 @@ width: 90%;
     }
 
     .loader-logo {
-        font-size: 4rem;
-        font-weight: 900;
-        background: linear-gradient(135deg, #d4af37, #ffd700, #ffed4e);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 40px;
-        animation: logoGlow 2s ease-in-out infinite;
+    font-size: 4.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #d4af37, #ffd700, #ffed4e, #ff6b6b);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 40px;
+    animation: logoGlow 2s ease-in-out infinite, 
+               logoPulse 1.5s ease-in-out infinite,
+               logoShine 4s linear infinite;
+    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1));
+    text-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+}
+
+@keyframes logoPulse {
+    0%, 100% {
+        transform: scale(1);
     }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes logoShine {
+    to {
+        background-position: 300% center;
+    }
+}
 
     @keyframes logoGlow {
         0%, 100% { filter: brightness(1); }
@@ -969,11 +989,36 @@ width: 90%;
     }
 
     .loader-text {
-        font-size: 1.2rem;
-        color: rgba(255, 255, 255, 0.6);
-        margin-bottom: 30px;
-        letter-spacing: 2px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #fff, #ffd700, #ff6b6b, #ffd700, #fff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 30px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: textGlow 2s ease-in-out infinite, textShine 3s linear infinite;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8)) 
+                drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
     }
+    50% {
+        filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1)) 
+                drop-shadow(0 0 40px rgba(255, 215, 0, 0.8))
+                drop-shadow(0 0 60px rgba(255, 107, 107, 0.6));
+    }
+}
+
+@keyframes textShine {
+    to {
+        background-position: 200% center;
+    }
+}
 
     .loading-bar-container {
         width: 400px;
@@ -986,15 +1031,23 @@ width: 90%;
     }
 
     .loading-bar {
-        height: 100%;
-        background: linear-gradient(90deg, #d4af37, #ffd700, #ffed4e);
-        border-radius: 10px;
-        width: 0%;
-        transition: width 0.3s ease;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-        position: relative;
+    height: 100%;
+    background: linear-gradient(90deg, #d4af37, #ffd700, #ffed4e, #ff6b6b, #ffd700);
+    background-size: 200% auto;
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6),
+                0 0 40px rgba(255, 215, 0, 0.4),
+                0 0 60px rgba(255, 107, 107, 0.3);
+    position: relative;
+    animation: barShine 2s linear infinite;
+}
+@keyframes barShine {
+    to {
+        background-position: 200% center;
     }
-
+}
     .loading-bar::after {
         content: '';
         position: absolute;
@@ -1052,7 +1105,7 @@ width: 90%;
     
     <div class="loader-content">
         <div class="loader-logo">AETHER.AI</div>
-        <div class="loader-text">Initializing AI Protocol...</div>
+        <div class="loader-text">Awakening the world's most powerful AI Oracle...</div>
         <div class="loading-bar-container">
             <div class="loading-bar" id="loadingBar"></div>
         </div>
