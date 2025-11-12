@@ -924,9 +924,113 @@ width: 90%;
                 grid-template-columns: 1fr;
             }
         }
+        /* ==================== LOADING SCREEN ==================== */
+    #loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    #loading-screen.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .loader-content {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 60px 80px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+    .loader-logo {
+        font-size: 4rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #d4af37, #ffd700, #ffed4e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 40px;
+        animation: logoGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes logoGlow {
+        0%, 100% { filter: brightness(1); }
+        50% { filter: brightness(1.3); }
+    }
+
+    .loader-text {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 30px;
+        letter-spacing: 2px;
+    }
+
+    .loading-bar-container {
+        width: 400px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 0 auto 20px;
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+
+    .loading-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #d4af37, #ffd700, #ffed4e);
+        border-radius: 10px;
+        width: 0%;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        position: relative;
+    }
+
+    .loading-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    .loading-percentage {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #d4af37, #ffd700);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
     </style>
 </head>
 <body>
+    <div id="loading-screen">
+    <div class="loader-content">
+        <div class="loader-logo">AETHER.AI</div>
+        <div class="loader-text">Initializing AI Protocol...</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loadingBar"></div>
+        </div>
+        <div class="loading-percentage" id="loadingPercentage">0%</div>
+    </div>
+</div>
     <!-- Background Animation -->
     <div class="bg-wrapper">
         <div id="floating-emojis"></div>
@@ -1383,6 +1487,27 @@ width: 90%;
         </div>
     </footer>
 
+    // Loading Animation
+let progress = 0;
+const loadingBar = document.getElementById('loadingBar');
+const loadingPercentage = document.getElementById('loadingPercentage');
+const loadingScreen = document.getElementById('loading-screen');
+
+const loadingInterval = setInterval(() => {
+    progress += Math.random() * 15;
+    
+    if (progress >= 100) {
+        progress = 100;
+        clearInterval(loadingInterval);
+        
+        setTimeout(() => {
+            loadingScreen.classList.add('hidden');
+        }, 500);
+    }
+
+    loadingBar.style.width = progress + '%';
+    loadingPercentage.textContent = Math.floor(progress) + '%';
+}, 200);
     <script>
         // Create floating emojis
         const emojis = ['✨', '🌟', '💫', '⭐', '🌙', '☀️', '🔮', '💎', '🦄', '🌈'];
