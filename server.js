@@ -22,8 +22,9 @@ app.use(express.json());
 // 정적 파일 (있으면 서빙, 없어도 문제 없음)
 app.use(express.static(path.join(__dirname, 'frontend')));
 app.get(['/result', '/result.html'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'result.html'));  // ✅ frontend에서 제공
+  res.sendFile(path.join(__dirname, 'frontend', 'result.html')); // ✅ frontend에서 제공
 });
+
 // ============================================
 // CATEGORY-SPECIFIC PROMPT GENERATORS
 // ============================================
