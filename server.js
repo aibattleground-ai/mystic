@@ -3,28 +3,24 @@
 // ============================================
 
 const express = require('express');
-const Anthropic = require('@anthropic-ai/sdk').default;  // ✅ Anthropic SDK import
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// ----------------------
 // Middleware
+// ----------------------
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST'],
   credentials: true
 }));
 app.use(express.json());
+
+// 정적 파일 (있으면 서빙, 없어도 문제 없음)
 app.use(express.static(path.join(__dirname, 'frontend')));
-
-// ✅ Anthropic SDK instance
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
-
-
 
 // ============================================
 // CATEGORY-SPECIFIC PROMPT GENERATORS
@@ -654,93 +650,98 @@ CRITICAL: Use REAL dream symbolism, Jungian psychology, astrology connections. A
 // ============================================
 
 app.post('/api/fortune', async (req, res) => {
-  // 환경변수 존재 확인 (키 값은 로그로 찍지 않음)
+  // 환경변수 존재 확인
   if (!process.env.ANTHROPIC_API_KEY) {
     return res.status(500).json({ error: 'Missing ANTHROPIC_API_KEY' });
   }
+
   try {
     const body = req.body;
-    
-    // Detect language from name
-    const nameToCheck = body.name || body.person1?.name || '';
+
+    // 언어 감지
+    const nameToCheck = body?.name || body?.person1?.name || '';
     const hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(nameToCheck);
     const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF]/.test(nameToCheck);
     const language = hasKorean ? 'Korean' : hasJapanese ? 'Japanese' : 'English';
 
     let prompt = '';
 
-    // Check if this is Compatibility (2-person input)
+    // 1) 커플 궁합
     if (body.person1 && body.person2) {
       prompt = generateCompatibilityPrompt(body.person1, body.person2, language);
     }
-    // Check if this is Dream Reading
+    // 2) 꿈 해석
     else if (body.dreamContent) {
       const { name, birthYear, birthMonth, birthDay, birthTime, birthPlace } = body;
       const birthTimeFormatted = birthTime || 'Unknown';
       const birthInfo = `${birthYear}.${birthMonth}.${birthDay} (${birthTimeFormatted} · ${birthPlace})`;
-      
       prompt = generateDreamPrompt(name, birthInfo, body.dreamContent, language);
     }
-    // Standard categories (Love, Money, Crypto, Gaming, Viral, Gambling)
+    // 3) 단일 카테고리(복수 선택 가능)
     else {
-      const { name, birthYear, birthMonth, birthDay, birthTime, birthPlace, categories } = body;
+      const {
+        name,
+        birthYear,
+        birthMonth,
+        birthDay,
+        birthTime,
+        birthPlace
+      } = body;
+
+      const categories = Array.isArray(body.categories) ? body.categories : [];
       const birthTimeFormatted = birthTime || 'Unknown';
       const birthInfo = `${birthYear}.${birthMonth}.${birthDay} (${birthTimeFormatted} · ${birthPlace})`;
 
-      // Generate prompts for each selected category
       const categoryPrompts = [];
-      
-      if (categories.includes('Love')) {
-        categoryPrompts.push(generateLovePrompt(name, birthInfo, language));
-      }
-      if (categories.includes('Money')) {
-        categoryPrompts.push(generateMoneyPrompt(name, birthInfo, language));
-      }
-      if (categories.includes('Crypto')) {
-        categoryPrompts.push(generateCryptoPrompt(name, birthInfo, language));
-      }
-      if (categories.includes('Gaming')) {
-        categoryPrompts.push(generateGamingPrompt(name, birthInfo, language));
-      }
-      if (categories.includes('Viral')) {
-        categoryPrompts.push(generateViralPrompt(name, birthInfo, language));
-      }
-      if (categories.includes('Gambling')) {
-        categoryPrompts.push(generateGamblingPrompt(name, birthInfo, language));
-      }
+      if (categories.includes('Love')) categoryPrompts.push(generateLovePrompt(name, birthInfo, language));
+      if (categories.includes('Money')) categoryPrompts.push(generateMoneyPrompt(name, birthInfo, language));
+      if (categories.includes('Crypto')) categoryPrompts.push(generateCryptoPrompt(name, birthInfo, language));
+      if (categories.includes('Gaming')) categoryPrompts.push(generateGamingPrompt(name, birthInfo, language));
+      if (categories.includes('Viral')) categoryPrompts.push(generateViralPrompt(name, birthInfo, language));
+      if (categories.includes('Gambling')) categoryPrompts.push(generateGamblingPrompt(name, birthInfo, language));
 
-      // Combine all category prompts
       prompt = categoryPrompts.join('\n\n━━━━━━━━━━━━━━━━━━━━━━━\n\n');
     }
 
-    // Call Anthropic via HTTP (no SDK)
-const resp = await fetch('https://api.anthropic.com/v1/messages', {
-  method: 'POST',
-  headers: {
-    'x-api-key': process.env.ANTHROPIC_API_KEY,
-    'anthropic-version': '2023-06-01',
-    'content-type': 'application/json'
-  },
-  body: JSON.stringify({
-    model: 'claude-3.5-sonnet-20241022',   // 필요하면 여기만 바꾸면 됨
-    max_tokens: 2000,
-    messages: [{ role: 'user', content: prompt }]
-  })
-});
+    // ------------------------------
+    // Anthropic HTTP API 호출 (Node18 fetch)
+    // ------------------------------
+    const payload = {
+      model: 'claude-3-5-sonnet-20241022',   // 정확한 모델명
+      max_tokens: 2000,
+      messages: [
+        {
+          role: 'user',
+          content: [{ type: 'text', text: prompt }] // 올바른 블록 형식
+        }
+      ]
+    };
 
-if (!resp.ok) {
-  const txt = await resp.text();
-  console.error('Anthropic error:', resp.status, txt);
-  return res.status(500).json({ error: 'Anthropic API error' });
-}
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
 
-const data = await resp.json();
-res.json({ fortune: data?.content?.[0]?.text || '' });
+    if (!resp.ok) {
+      const txt = await resp.text();
+      console.error('Anthropic API error:', resp.status, txt);
+      return res.status(500).json({ error: `Anthropic API ${resp.status}` });
+    }
 
+    const data = await resp.json();
+    const first = Array.isArray(data?.content) ? data.content[0] : null;
+    const text = first && first.type === 'text' ? first.text : '';
+
+    return res.status(200).json({ fortune: text });
 
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Failed to generate fortune' });
+    console.error('Server error:', error);
+    return res.status(500).json({ error: String(error?.message || error) });
   }
 });
 
