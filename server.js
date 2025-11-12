@@ -707,7 +707,7 @@ app.post('/api/fortune', async (req, res) => {
     // Anthropic HTTP API 호출 (Node18 fetch)
     // ------------------------------
     const payload = {
-      model: 'claude-3-5-sonnet-20240620',   // 정확한 모델명
+      model: 'claude-3-haiku-20240307',   // 정확한 모델명
       max_tokens: 2000,
       messages: [
         {
