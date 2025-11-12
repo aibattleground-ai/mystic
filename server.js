@@ -1,5 +1,4 @@
 const express = require('express');
-const Anthropic = require('@anthropic-ai/sdk').default;
 const cors = require('cors');
 const path = require('path');
 
@@ -14,9 +13,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'frontend')));
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+
 
 // ============================================
 // CATEGORY-SPECIFIC PROMPT GENERATORS
@@ -701,19 +698,30 @@ app.post('/api/fortune', async (req, res) => {
       prompt = categoryPrompts.join('\n\n━━━━━━━━━━━━━━━━━━━━━━━\n\n');
     }
 
-    // Call Claude API
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 8000,
-      messages: [{
-        role: 'user',
-        content: prompt
-      }]
-    });
+    // Call Anthropic via HTTP (no SDK)
+const resp = await fetch('https://api.anthropic.com/v1/messages', {
+  method: 'POST',
+  headers: {
+    'x-api-key': process.env.ANTHROPIC_API_KEY,
+    'anthropic-version': '2023-06-01',
+    'content-type': 'application/json'
+  },
+  body: JSON.stringify({
+    model: 'claude-3.5-sonnet-20241022',   // 필요하면 여기만 바꾸면 됨
+    max_tokens: 2000,
+    messages: [{ role: 'user', content: prompt }]
+  })
+});
 
-    res.json({
-      fortune: message.content[0].text
-    });
+if (!resp.ok) {
+  const txt = await resp.text();
+  console.error('Anthropic error:', resp.status, txt);
+  return res.status(500).json({ error: 'Anthropic API error' });
+}
+
+const data = await resp.json();
+res.json({ fortune: data?.content?.[0]?.text || '' });
+
 
   } catch (error) {
     console.error('Error:', error);
