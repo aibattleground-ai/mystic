@@ -1045,6 +1045,11 @@ width: 90%;
 </head>
 <body>
     <div id="loading-screen">
+    <!-- 비디오 배경 -->
+    <video autoplay muted playsinline id="loadingVideo" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;">
+        <source src="/landing.mp4" type="video/mp4">
+    </video>
+    
     <div class="loader-content">
         <div class="loader-logo">AETHER.AI</div>
         <div class="loader-text">Initializing AI Protocol...</div>
@@ -1079,9 +1084,6 @@ width: 90%;
 
     <!-- Hero Section -->
     <section class="hero">
-        <video class="hero-video" autoplay muted loop playsinline>
-       <source src="/landing.mp4" type="video/mp4">
-       </video>
         <div class="hero-container">
             <div class="hero-header">
                 <h1 class="hero-title">
@@ -1516,26 +1518,39 @@ width: 90%;
  
     <script>
            // Loading Animation
-let progress = 0;
 const loadingBar = document.getElementById('loadingBar');
 const loadingPercentage = document.getElementById('loadingPercentage');
 const loadingScreen = document.getElementById('loading-screen');
+const loadingVideo = document.getElementById('loadingVideo');
 
-const loadingInterval = setInterval(() => {
-    progress += Math.random() * 15;
+let progress = 0;
+let videoDuration = 5; // 비디오 길이 (초) - 실제 길이로 조정 필요
+
+// 비디오 메타데이터 로드되면 실제 길이 가져오기
+loadingVideo.addEventListener('loadedmetadata', () => {
+    videoDuration = loadingVideo.duration;
+    console.log('Video duration:', videoDuration);
+});
+
+// 비디오 끝나면 로딩 완료
+loadingVideo.addEventListener('ended', () => {
+    progress = 100;
+    loadingBar.style.width = '100%';
+    loadingPercentage.textContent = '100%';
     
-    if (progress >= 100) {
-        progress = 100;
-        clearInterval(loadingInterval);
-        
-        setTimeout(() => {
-            loadingScreen.classList.add('hidden');
-        }, 500);
-    }
+    setTimeout(() => {
+        loadingScreen.classList.add('hidden');
+    }, 500);
+});
 
-    loadingBar.style.width = progress + '%';
-    loadingPercentage.textContent = Math.floor(progress) + '%';
-}, 200);
+// 로딩바를 비디오 진행에 맞춰 업데이트
+setInterval(() => {
+    if (loadingVideo.currentTime && loadingVideo.duration) {
+        progress = (loadingVideo.currentTime / loadingVideo.duration) * 100;
+        loadingBar.style.width = progress + '%';
+        loadingPercentage.textContent = Math.floor(progress) + '%';
+    }
+}, 100);
         // Create floating emojis
         const emojis = ['✨', '🌟', '💫', '⭐', '🌙', '☀️', '🔮', '💎', '🦄', '🌈'];
         const floatingContainer = document.getElementById('floating-emojis');
