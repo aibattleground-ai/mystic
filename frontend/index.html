@@ -1570,6 +1570,7 @@ width: 90%;
 
  
     <script>
+        document.body.style.overflow = 'hidden';
            // Loading Animation
 const loadingBar = document.getElementById('loadingBar');
 const loadingPercentage = document.getElementById('loadingPercentage');
@@ -1593,6 +1594,9 @@ loadingVideo.addEventListener('ended', () => {
     
     setTimeout(() => {
         loadingScreen.classList.add('hidden');
+        // 스크롤 맨 위로!
+        window.scrollTo(0, 0);
+        document.body.style.overflow = 'auto';
     }, 500);
 });
 
