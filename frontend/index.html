@@ -1656,8 +1656,18 @@ let selectedGender1 = null;
                 });
                 
                 if (!response.ok) {
-                    throw new Error('Server error');
-                }
+  const errText = await response.text();         // 디버그용
+  console.error('API 500:', errText);
+  alert('Server error. Please try again.');
+  return;                                        // 실패면 여기서 종료
+}
+
+const data = await response.json();
+
+// ✅ result.html에서 읽을 수 있게 저장하고 페이지 이동
+sessionStorage.setItem('fortuneData', JSON.stringify(data.fortune ?? ''));
+window.location.href = '/result.html';
+
                 
                 const data = await response.json();
                 
