@@ -1,10 +1,16 @@
+// ============================================
+// MYSTIC AI SERVER (for Vercel deployment)
+// ============================================
+
 const express = require('express');
+const Anthropic = require('@anthropic-ai/sdk').default;  // ✅ Anthropic SDK import
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Middleware
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST'],
@@ -12,6 +18,11 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'frontend')));
+
+// ✅ Anthropic SDK instance
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
 
 
 
@@ -643,6 +654,10 @@ CRITICAL: Use REAL dream symbolism, Jungian psychology, astrology connections. A
 // ============================================
 
 app.post('/api/fortune', async (req, res) => {
+  // 환경변수 존재 확인 (키 값은 로그로 찍지 않음)
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return res.status(500).json({ error: 'Missing ANTHROPIC_API_KEY' });
+  }
   try {
     const body = req.body;
     
