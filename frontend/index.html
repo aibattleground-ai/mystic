@@ -1513,7 +1513,9 @@ width: 90%;
         </div>
     </footer>
 
-    // Loading Animation
+ 
+    <script>
+           // Loading Animation
 let progress = 0;
 const loadingBar = document.getElementById('loadingBar');
 const loadingPercentage = document.getElementById('loadingPercentage');
@@ -1534,7 +1536,6 @@ const loadingInterval = setInterval(() => {
     loadingBar.style.width = progress + '%';
     loadingPercentage.textContent = Math.floor(progress) + '%';
 }, 200);
-    <script>
         // Create floating emojis
         const emojis = ['✨', '🌟', '💫', '⭐', '🌙', '☀️', '🔮', '💎', '🦄', '🌈'];
         const floatingContainer = document.getElementById('floating-emojis');
