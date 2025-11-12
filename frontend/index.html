@@ -1646,20 +1646,17 @@ let selectedGender1 = null;
                 console.log('Sending request:', requestBody);
                 
                 // Call backend API
-                const response = await fetch('/api/fortune', {
+const response = await fetch('/api/fortune', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(requestBody),
+});
 
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(requestBody)
-                });
-                
-                if (!response.ok) {
-  const errText = await response.text();         // 디버그용
+if (!response.ok) {
+  const errText = await response.text();            // 디버그용
   console.error('API 500:', errText);
   alert('Server error. Please try again.');
-  return;                                        // 실패면 여기서 종료
+  return;                                           // 실패면 여기서 종료
 }
 
 const data = await response.json();
@@ -1668,12 +1665,6 @@ const data = await response.json();
 sessionStorage.setItem('fortuneData', JSON.stringify(data.fortune ?? ''));
 window.location.href = '/result.html';
 
-                
-                const data = await response.json();
-                
-                // Save fortune and redirect
-                sessionStorage.setItem('fortuneData', JSON.stringify(data.fortune));
-                window.location.href = 'result.html';
                 
             } catch (error) {
                 console.error('Error:', error);
@@ -1698,6 +1689,9 @@ window.location.href = '/result.html';
                 }
             });
         });
+        window.selectFortune = selectFortune;
+window.selectGender = selectGender;
+
     </script>
 </body>
 </html>
