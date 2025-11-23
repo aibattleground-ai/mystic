@@ -3,168 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Fortune - oracleEyes</title>
+    <title>ORACLE EYES - Your Divine Reading</title>
+
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
             font-family: 'Noto Serif KR', serif;
-            background: linear-gradient(180deg, #0a1929 0%, #000000 100%);
-            min-height: 100vh;
-            color: #e0e0e0;
-            position: relative;
-            overflow-x: hidden;
+            background: radial-gradient(circle at top, #0f1a2b, #000000 70%);
+            color:#e8e8e8;
+            min-height:100vh;
+            overflow-x:hidden;
         }
 
+        /* Animated Particles */
         .particle {
-            position: fixed;
-            font-size: 1.5rem;
-            opacity: 0.15;
-            pointer-events: none;
-            animation: float 15s infinite ease-in-out;
+            position:fixed;
+            font-size:1.5rem;
+            opacity:0.15;
+            pointer-events:none;
+            animation: float 18s infinite ease-in-out;
         }
-
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.15; }
-            25% { transform: translate(50px, -100px) rotate(90deg); opacity: 0.3; }
-            50% { transform: translate(-30px, -200px) rotate(180deg); opacity: 0.15; }
-            75% { transform: translate(-80px, -150px) rotate(270deg); opacity: 0.3; }
+            0%{ transform:translate(0,0) rotate(0deg); opacity:0.1; }
+            25%{ transform:translate(80px,-120px) rotate(90deg); opacity:0.25; }
+            50%{ transform:translate(-40px,-220px) rotate(180deg); opacity:0.15; }
+            75%{ transform:translate(-100px,-120px) rotate(270deg); opacity:0.25; }
+            100%{ transform:translate(0,0) rotate(360deg); opacity:0.1; }
         }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 40px 30px; position: relative; z-index: 1; }
-
-        .header { text-align: center; margin-bottom: 60px; animation: fadeInDown 1.2s ease; }
-
-        .mystical-character { font-size: 6rem; margin-bottom: 20px; animation: levitate 3s ease-in-out infinite; filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.4)); }
-
-        @keyframes levitate { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
-
-        .logo { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; color: #d4af37; letter-spacing: 5px; margin-bottom: 15px; }
-
-        .subtitle { color: #a0a0a0; font-size: 1.1rem; letter-spacing: 3px; }
-
-        .divider { width: 200px; height: 2px; background: linear-gradient(90deg, transparent, #d4af37, transparent); margin: 40px auto; }
-
-        .result-card {
-            background: rgba(20, 30, 48, 0.85);
-            backdrop-filter: blur(15px);
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: 25px;
-            padding: 60px;
-            margin-bottom: 40px;
-            animation: slideInUp 1s ease;
-            position: relative;
-            overflow: hidden;
+        /* Container */
+        .container {
+            max-width:1000px;
+            margin:0 auto;
+            padding:40px 26px;
+            position:relative;
+            z-index:2;
         }
 
-        @keyframes slideInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-
-        .fortune-content {
-            line-height: 2.2;
-            font-size: 1.1rem;
-            white-space: pre-wrap;
-            color: #e8e8e8;
+        /* Header */
+        .header {
+            text-align:center;
+            margin-bottom:60px;
+            animation:fadeInDown 1.2s ease;
         }
 
-        .loading { text-align: center; padding: 120px 20px; }
+        .oracle-symbol {
+            font-size:7rem;
+            margin-bottom:20px;
+            animation: levitate 3s ease-in-out infinite;
+            filter:drop-shadow(0 0 40px rgba(212,175,55,0.6));
+        }
+
+        @keyframes levitate {
+            0%,100% { transform:translateY(0); }
+            50% { transform:translateY(-18px); }
+        }
+
+        .logo {
+            font-family:'Playfair Display', serif;
+            font-size:3.4rem;
+            font-weight:700;
+            color:#d4af37;
+            letter-spacing:5px;
+            text-shadow:0 0 35px rgba(212,175,55,0.7);
+            animation:glow 2.4s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow:0 0 20px rgba(212,175,55,0.4); }
+            to   { text-shadow:0 0 45px rgba(212,175,55,1); }
+        }
+
+        .subtitle {
+            margin-top:12px;
+            font-size:1.1rem;
+            letter-spacing:3px;
+            color:#bbbbbb;
+        }
+
+        .divider {
+            width:220px;
+            height:3px;
+            margin:40px auto;
+            background:linear-gradient(90deg, transparent, #d4af37, transparent);
+            animation:expandWidth 1.6s ease;
+        }
+
+        @keyframes expandWidth {
+            from{ width:0; }
+            to{ width:220px; }
+        }
+
+        /* Loading Screen */
+        #loading {
+            text-align:center;
+            padding:140px 20px;
+        }
+
+        .loading-symbol {
+            font-size:7rem;
+            animation: spin 2.8s linear infinite;
+            filter: drop-shadow(0 0 50px rgba(212,175,55,0.7));
+        }
+
+        @keyframes spin {
+            0%{ transform:rotate(0deg); }
+            100%{ transform:rotate(360deg); }
+        }
 
         .loading-text {
-            font-size: 1.8rem;
-            color: #d4af37;
-            margin-top: 40px;
-            animation: pulse 2s infinite;
+            font-size:1.6rem;
+            margin-top:34px;
+            color:#d4af37;
+            animation:pulse 2s infinite;
         }
 
-        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+        @keyframes pulse {
+            0%,100% { opacity:0.45; }
+            50% { opacity:1; }
+        }
+
+        .loading-dots span {
+            animation:bounce 1.4s infinite;
+            display:inline-block;
+        }
+        .loading-dots span:nth-child(2){ animation-delay:0.2s; }
+        .loading-dots span:nth-child(3){ animation-delay:0.4s; }
+
+        @keyframes bounce {
+            0%,60%,100% { transform:translateY(0); }
+            30% { transform:translateY(-12px); }
+        }
+        /* RESULT SECTION */
+        #result {
+            display:none;
+            animation:fadeIn 1.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity:0; transform:translateY(20px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* Result card */
+        .result-card {
+            background: rgba(20,30,48,0.82);
+            backdrop-filter: blur(18px);
+            border:2px solid rgba(212,175,55,0.32);
+            border-radius:26px;
+            padding:55px;
+            margin-bottom:50px;
+            position:relative;
+            overflow:hidden;
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.55),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+            animation:slideInUp 1s ease;
+        }
+
+        @keyframes slideInUp {
+            from { opacity:0; transform:translateY(50px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .result-card::before {
+            content:"";
+            position:absolute;
+            top:-50%;
+            left:-50%;
+            width:200%;
+            height:200%;
+            background:radial-gradient(circle,
+                rgba(212,175,55,0.07) 0%,
+                transparent 70%
+            );
+            animation:rotateSlow 22s linear infinite;
+        }
+
+        @keyframes rotateSlow {
+            from{ transform:rotate(0deg); }
+            to  { transform:rotate(360deg); }
+        }
+
+        /* Mystic corner decorations */
+        .corner {
+            position:absolute;
+            width:60px; height:60px;
+            border:2px solid #d4af37;
+            opacity:0.3;
+        }
+        .corner.tl { top:20px; left:20px; border-right:none; border-bottom:none; animation:cornerPulse 3.5s infinite; }
+        .corner.br { bottom:20px; right:20px; border-left:none; border-top:none; animation:cornerPulse 3.5s infinite 1.6s; }
+
+        @keyframes cornerPulse {
+            0%,100% { opacity:0.28; transform:scale(1); }
+            50%     { opacity:0.6; transform:scale(1.12); }
+        }
+
+        /* Fortune Content Typography */
+        .fortune-content {
+            position:relative;
+            z-index:2;
+            font-size:1.12rem;
+            line-height:2.2;
+            color:#e8e8e8;
+            white-space:pre-wrap;
+            word-break:keep-all;
+        }
+
+        .fortune-content h1,
+        .fortune-content h2,
+        .fortune-content h3 {
+            color:#d4af37;
+            margin:25px 0 12px;
+            font-family:'Playfair Display', serif;
+            letter-spacing:1px;
+        }
+
+        .fortune-content h1 { font-size:2rem; }
+        .fortune-content h2 { font-size:1.6rem; }
+        .fortune-content h3 { font-size:1.3rem; }
+
+        .fortune-content strong {
+            color:#ffd76e;
+            font-weight:600;
+        }
+
+        .fortune-content em {
+            font-style:italic;
+            color:#ffefc7;
+        }
+
+        /* Animated highlight bar */
+        .highlight {
+            background:linear-gradient(90deg,
+                rgba(212,175,55,0.25),
+                rgba(212,175,55,0.05)
+            );
+            padding:6px 10px;
+            border-left:3px solid #d4af37;
+            margin:16px 0;
+            animation:fadeIn 1.4s ease;
+        }
+
+        /* Back Button */
+        .button-container {
+            text-align:center;
+            margin-top:55px;
+        }
 
         .back-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #d4af37 0%, #aa8a2e 100%);
-            color: #0a1929;
-            padding: 18px 50px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: 2px;
+            display:inline-block;
+            padding:18px 50px;
+            background:linear-gradient(135deg, #d4af37 0%, #aa8a2e 100%);
+            color:#0a1929;
+            text-decoration:none;
+            border-radius:50px;
+            font-size:1.1rem;
+            font-weight:600;
+            letter-spacing:2px;
+            box-shadow:0 10px 30px rgba(212,175,55,0.45);
+            transition:all 0.35s cubic-bezier(0.68,-0.55,0.265,1.55);
+            position:relative;
+            overflow:hidden;
         }
-    </style>
-</head>
-<body>
 
-<script>
-    const particles = ['🔮', '✨', '⭐', '💫', '🌟', '✴️'];
-    for(let i = 0; i < 20; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.textContent = particles[Math.floor(Math.random() * particles.length)];
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 5 + 's';
-        particle.style.animationDuration = (10 + Math.random() * 10) + 's';
-        document.body.appendChild(particle);
-    }
-</script>
+        .back-button:hover {
+            transform:translateY(-5px) scale(1.05);
+            box-shadow:0 15px 40px rgba(212,175,55,0.7);
+        }
 
-<div class="container">
-    <div class="header">
-        <div class="mystical-character">🔮</div>
-        <div class="logo">oracleEyes</div>
-        <div class="subtitle">YOUR DESTINY DECODED</div>
-        <div class="divider"></div>
-    </div>
+        .back-button::before {
+            content:"";
+            position:absolute;
+            top:50%; left:50%;
+            transform:translate(-50%, -50%);
+            width:0; height:0;
+            background:rgba(255,255,255,0.25);
+            border-radius:50%;
+            transition:0.55s;
+        }
 
-    <div id="loading" class="loading">
-        <div class="loading-text">
-            Reading the cosmos<span class="loading-dots">...</span>
-        </div>
-    </div>
+        .back-button:hover::before {
+            width:260px; height:260px;
+        }
+    <!-- SCROLL PROGRESS -->
+    <script>
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const percent = (scrollTop / docHeight) * 100;
+            document.getElementById('scrollProgress').style.height = percent + '%';
+        });
+    </script>
 
-    <div id="result" style="display: none;">
-        <div class="result-card">
-            <div id="fortune-content" class="fortune-content"></div>
-        </div>
+    <!-- RENDER FORTUNE -->
+    <script>
+        const fortuneRaw = sessionStorage.getItem('fortuneData');
 
-        <div style="text-align: center;">
-            <a href="index.html" class="back-button">← Get Another Reading</a>
-        </div>
-    </div>
-</div>
+        function parseMarkdown(text) {
+            if (!text) return '';
 
-<script>
-    const data = sessionStorage.getItem("fortuneData");
+            // ## Headers
+            text = text.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+            text = text.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+            text = text.replace(/^# (.*)$/gm, '<h1>$1</h1>');
 
-    function safeParse(str) {
-        try { return JSON.parse(str); }
-        catch { return str; }
-    }
+            // Bold
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-    function normalizeFortune(input) {
-        if (!input) return "No Data";
+            // Italic
+            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
-        const parsed = safeParse(input);
+            // Highlight (custom)
+            text = text.replace(/>>> (.*)/g, '<div class="highlight">$1</div>');
 
-        if (typeof parsed === "string") return parsed;
+            // Line breaks
+            return text.replace(/\n/g, '<br>');
+        }
 
-        if (Array.isArray(parsed)) return parsed.join("\n\n");
+        if (fortuneRaw) {
+            const parsed = parseMarkdown(JSON.parse(fortuneRaw));
 
-        return JSON.stringify(parsed, null, 2);
-    }
-
-    if (data) {
-        const finalText = normalizeFortune(data);
-
-        setTimeout(() => {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('result').style.display = 'block';
-            document.getElementById('fortune-content').innerHTML = finalText.replace(/\n/g, "<br>");
-            sessionStorage.removeItem("fortuneData");
-        }, 1500);
-    } else {
-        document.getElementById('loading').innerHTML =
-            '<div class="loading-text">❌ No fortune data found</div>';
-    }
-</script>
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none'; 
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('fortune-content').innerHTML = parsed;
+                sessionStorage.removeItem('fortuneData');
+            }, 2400);
+        } else {
+            document.getElementById('loading').innerHTML =
+                '<div class="loading-text">❌ 결과 데이터를 찾을 수 없습니다</div>';
+        }
+    </script>
 
 </body>
 </html>
