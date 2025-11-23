@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ORACLE EYES - Your Divine Reading</title>
 
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -14,18 +18,19 @@
         body {
             font-family: 'Noto Serif KR', serif;
             background: radial-gradient(circle at top, #0f1a2b, #000000 70%);
-            color:#e8e8e8;
-            min-height:100vh;
-            overflow-x:hidden;
+            color: #e8e8e8;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Animated Particles */
         .particle {
-            position:fixed;
-            font-size:1.5rem;
-            opacity:0.15;
-            pointer-events:none;
+            position: fixed;
+            font-size: 1.5rem;
+            opacity: 0.15;
+            pointer-events: none;
             animation: float 18s infinite ease-in-out;
+            z-index: 0;
         }
         @keyframes float {
             0%{ transform:translate(0,0) rotate(0deg); opacity:0.1; }
@@ -37,309 +42,356 @@
 
         /* Container */
         .container {
-            max-width:1000px;
-            margin:0 auto;
-            padding:40px 26px;
-            position:relative;
-            z-index:2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px 100px; /* 하단 여백 확보 */
+            position: relative;
+            z-index: 2;
         }
 
         /* Header */
         .header {
-            text-align:center;
-            margin-bottom:60px;
-            animation:fadeInDown 1.2s ease;
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 1.2s ease;
         }
 
         .oracle-symbol {
-            font-size:7rem;
-            margin-bottom:20px;
+            font-size: 5rem;
+            margin-bottom: 10px;
+            display: block;
             animation: levitate 3s ease-in-out infinite;
-            filter:drop-shadow(0 0 40px rgba(212,175,55,0.6));
+            filter: drop-shadow(0 0 40px rgba(212,175,55,0.6));
         }
 
         @keyframes levitate {
             0%,100% { transform:translateY(0); }
-            50% { transform:translateY(-18px); }
+            50% { transform:translateY(-15px); }
         }
 
         .logo {
-            font-family:'Playfair Display', serif;
-            font-size:3.4rem;
-            font-weight:700;
-            color:#d4af37;
-            letter-spacing:5px;
-            text-shadow:0 0 35px rgba(212,175,55,0.7);
-            animation:glow 2.4s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { text-shadow:0 0 20px rgba(212,175,55,0.4); }
-            to   { text-shadow:0 0 45px rgba(212,175,55,1); }
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #d4af37;
+            letter-spacing: 3px;
+            text-shadow: 0 0 35px rgba(212,175,55,0.7);
+            margin-bottom: 10px;
         }
 
         .subtitle {
-            margin-top:12px;
-            font-size:1.1rem;
-            letter-spacing:3px;
-            color:#bbbbbb;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            color: #bbbbbb;
+            text-transform: uppercase;
         }
 
         .divider {
-            width:220px;
-            height:3px;
-            margin:40px auto;
-            background:linear-gradient(90deg, transparent, #d4af37, transparent);
-            animation:expandWidth 1.6s ease;
-        }
-
-        @keyframes expandWidth {
-            from{ width:0; }
-            to{ width:220px; }
+            width: 150px;
+            height: 2px;
+            margin: 30px auto;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
         }
 
         /* Loading Screen */
         #loading {
-            text-align:center;
-            padding:140px 20px;
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease;
         }
 
         .loading-symbol {
-            font-size:7rem;
-            animation: spin 2.8s linear infinite;
-            filter: drop-shadow(0 0 50px rgba(212,175,55,0.7));
+            font-size: 6rem;
+            animation: spin 3s linear infinite;
+            filter: drop-shadow(0 0 50px rgba(212,175,55,0.5));
+            margin-bottom: 30px;
         }
-
-        @keyframes spin {
-            0%{ transform:rotate(0deg); }
-            100%{ transform:rotate(360deg); }
-        }
+        @keyframes spin { 100% { transform:rotate(360deg); } }
 
         .loading-text {
-            font-size:1.6rem;
-            margin-top:34px;
-            color:#d4af37;
-            animation:pulse 2s infinite;
+            font-size: 1.2rem;
+            color: #d4af37;
+            letter-spacing: 2px;
+            animation: pulse 2s infinite;
         }
+        @keyframes pulse { 50% { opacity: 0.5; } }
 
-        @keyframes pulse {
-            0%,100% { opacity:0.45; }
-            50% { opacity:1; }
-        }
-
-        .loading-dots span {
-            animation:bounce 1.4s infinite;
-            display:inline-block;
-        }
-        .loading-dots span:nth-child(2){ animation-delay:0.2s; }
-        .loading-dots span:nth-child(3){ animation-delay:0.4s; }
-
-        @keyframes bounce {
-            0%,60%,100% { transform:translateY(0); }
-            30% { transform:translateY(-12px); }
-        }
-        /* RESULT SECTION */
+        /* Result Section */
         #result {
-            display:none;
-            animation:fadeIn 1.6s ease;
+            display: none;
+            animation: fadeIn 1.6s ease;
         }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
-        @keyframes fadeIn {
-            from { opacity:0; transform:translateY(20px); }
-            to   { opacity:1; transform:translateY(0); }
-        }
-
-        /* Result card */
+        /* Result Card */
         .result-card {
-            background: rgba(20,30,48,0.82);
-            backdrop-filter: blur(18px);
-            border:2px solid rgba(212,175,55,0.32);
-            border-radius:26px;
-            padding:55px;
-            margin-bottom:50px;
-            position:relative;
-            overflow:hidden;
-            box-shadow:
-                0 20px 60px rgba(0,0,0,0.55),
-                inset 0 1px 0 rgba(255,255,255,0.08);
-            animation:slideInUp 1s ease;
+            background: rgba(20, 30, 48, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 20px;
+            padding: 50px 30px;
+            margin-bottom: 40px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
         }
 
-        @keyframes slideInUp {
-            from { opacity:0; transform:translateY(50px); }
-            to   { opacity:1; transform:translateY(0); }
-        }
-
-        .result-card::before {
-            content:"";
-            position:absolute;
-            top:-50%;
-            left:-50%;
-            width:200%;
-            height:200%;
-            background:radial-gradient(circle,
-                rgba(212,175,55,0.07) 0%,
-                transparent 70%
-            );
-            animation:rotateSlow 22s linear infinite;
-        }
-
-        @keyframes rotateSlow {
-            from{ transform:rotate(0deg); }
-            to  { transform:rotate(360deg); }
-        }
-
-        /* Mystic corner decorations */
+        /* Corner Decorations */
         .corner {
-            position:absolute;
-            width:60px; height:60px;
-            border:2px solid #d4af37;
-            opacity:0.3;
+            position: absolute;
+            width: 40px; height: 40px;
+            border: 2px solid #d4af37;
+            opacity: 0.5;
         }
-        .corner.tl { top:20px; left:20px; border-right:none; border-bottom:none; animation:cornerPulse 3.5s infinite; }
-        .corner.br { bottom:20px; right:20px; border-left:none; border-top:none; animation:cornerPulse 3.5s infinite 1.6s; }
+        .corner.tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .corner.br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
 
-        @keyframes cornerPulse {
-            0%,100% { opacity:0.28; transform:scale(1); }
-            50%     { opacity:0.6; transform:scale(1.12); }
+        /* Markdown Content Styling */
+        .markdown-body {
+            color: #e8e8e8;
+            font-size: 1.1rem;
+            line-height: 1.9;
+            word-break: keep-all;
         }
-
-        /* Fortune Content Typography */
-        .fortune-content {
-            position:relative;
-            z-index:2;
-            font-size:1.12rem;
-            line-height:2.2;
-            color:#e8e8e8;
-            white-space:pre-wrap;
-            word-break:keep-all;
+        .markdown-body h1, .markdown-body h2 {
+            font-family: 'Playfair Display', serif;
+            color: #d4af37;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+            padding-bottom: 10px;
         }
-
-        .fortune-content h1,
-        .fortune-content h2,
-        .fortune-content h3 {
-            color:#d4af37;
-            margin:25px 0 12px;
-            font-family:'Playfair Display', serif;
-            letter-spacing:1px;
+        .markdown-body h3 {
+            color: #fff;
+            margin-top: 30px;
+            font-size: 1.2rem;
         }
-
-        .fortune-content h1 { font-size:2rem; }
-        .fortune-content h2 { font-size:1.6rem; }
-        .fortune-content h3 { font-size:1.3rem; }
-
-        .fortune-content strong {
-            color:#ffd76e;
-            font-weight:600;
+        .markdown-body strong {
+            color: #ffd700;
+            font-weight: 700;
         }
-
-        .fortune-content em {
-            font-style:italic;
-            color:#ffefc7;
+        .markdown-body p {
+            margin-bottom: 1.5em;
+            text-align: justify;
         }
-
-        /* Animated highlight bar */
-        .highlight {
-            background:linear-gradient(90deg,
-                rgba(212,175,55,0.25),
-                rgba(212,175,55,0.05)
-            );
-            padding:6px 10px;
-            border-left:3px solid #d4af37;
-            margin:16px 0;
-            animation:fadeIn 1.4s ease;
+        .markdown-body blockquote {
+            border-left: 3px solid #d4af37;
+            padding-left: 15px;
+            margin: 20px 0;
+            color: #ccc;
+            font-style: italic;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+        }
+        .markdown-body ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        .markdown-body li {
+            margin-bottom: 8px;
         }
 
-        /* Back Button */
-        .button-container {
-            text-align:center;
-            margin-top:55px;
+        /* Action Buttons */
+        .action-bar {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
         }
 
-        .back-button {
-            display:inline-block;
-            padding:18px 50px;
-            background:linear-gradient(135deg, #d4af37 0%, #aa8a2e 100%);
-            color:#0a1929;
-            text-decoration:none;
-            border-radius:50px;
-            font-size:1.1rem;
-            font-weight:600;
-            letter-spacing:2px;
-            box-shadow:0 10px 30px rgba(212,175,55,0.45);
-            transition:all 0.35s cubic-bezier(0.68,-0.55,0.265,1.55);
-            position:relative;
-            overflow:hidden;
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: 'Noto Serif KR', serif;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
         }
 
-        .back-button:hover {
-            transform:translateY(-5px) scale(1.05);
-            box-shadow:0 15px 40px rgba(212,175,55,0.7);
+        .btn-gold {
+            background: linear-gradient(135deg, #d4af37, #aa8a2e);
+            color: #0a1929;
+            box-shadow: 0 10px 20px rgba(212,175,55,0.3);
+        }
+        .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(212,175,55,0.5); }
+
+        .btn-dark {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-dark:hover { background: rgba(255,255,255,0.2); transform: translateY(-3px); }
+
+        /* Scroll Progress */
+        .scroll-indicator {
+            position: fixed; top: 0; left: 0; height: 4px; background: #d4af37; z-index: 100; width: 0%;
+            box-shadow: 0 0 10px #d4af37;
         }
 
-        .back-button::before {
-            content:"";
-            position:absolute;
-            top:50%; left:50%;
-            transform:translate(-50%, -50%);
-            width:0; height:0;
-            background:rgba(255,255,255,0.25);
-            border-radius:50%;
-            transition:0.55s;
+        @media (max-width: 600px) {
+            .logo { font-size: 2.2rem; }
+            .result-card { padding: 30px 20px; }
+            .btn { flex: 1; justify-content: center; }
         }
+    </style>
+</head>
+<body>
 
-        .back-button:hover::before {
-            width:260px; height:260px;
-        }
-    <!-- SCROLL PROGRESS -->
+    <div class="scroll-indicator" id="scrollProgress"></div>
+
+    <div id="particles"></div>
+
+    <div id="loading">
+        <div class="loading-symbol">🔮</div>
+        <div class="loading-text">THE STARS ARE ALIGNING...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <span class="oracle-symbol">👁️</span>
+            <h1 class="logo">MYSTIC AI</h1>
+            <p class="subtitle">Your Cosmic Destiny Revealed</p>
+            <div class="divider"></div>
+        </div>
+
+        <div id="result">
+            <div class="result-card" id="captureArea">
+                <div class="corner tl"></div>
+                <div class="corner br"></div>
+                <div id="fortune-content" class="markdown-body"></div>
+                
+                <div style="text-align: center; margin-top: 50px; opacity: 0.5; font-size: 0.8rem;">
+                    OracleEyes.AI • 2026 Premium Report
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn btn-dark" onclick="saveImage()">
+                    <i class="fas fa-download"></i> Save
+                </button>
+                <button class="btn btn-dark" onclick="shareResult()">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+                <button class="btn btn-gold" onclick="location.href='index.html'">
+                    <i class="fas fa-redo"></i> New Reading
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // 1. 파티클 생성
+        const particlesContainer = document.getElementById('particles');
+        const shapes = ['✨', '⭐', '🌙', '🔮'];
+        for(let i=0; i<20; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.textContent = shapes[Math.floor(Math.random()*shapes.length)];
+            p.style.left = Math.random()*100 + '%';
+            p.style.top = Math.random()*100 + '%';
+            p.style.animationDelay = Math.random()*5 + 's';
+            p.style.animationDuration = (15 + Math.random()*10) + 's';
+            particlesContainer.appendChild(p);
+        }
+
+        // 2. 스크롤 바
         window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const percent = (scrollTop / docHeight) * 100;
-            document.getElementById('scrollProgress').style.height = percent + '%';
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scrollProgress").style.width = scrolled + "%";
         });
-    </script>
 
-    <!-- RENDER FORTUNE -->
-    <script>
-        const fortuneRaw = sessionStorage.getItem('fortuneData');
+        // 3. 데이터 로드 및 렌더링
+        const fortuneData = sessionStorage.getItem('fortuneData');
+        const loading = document.getElementById('loading');
+        const resultDiv = document.getElementById('result');
+        const contentDiv = document.getElementById('fortune-content');
 
-        function parseMarkdown(text) {
-            if (!text) return '';
+        if (fortuneData) {
+            // 마크다운 렌더링 (서버의 줄바꿈 문자 처리)
+            const rawText = JSON.parse(fortuneData);
+            contentDiv.innerHTML = marked.parse(rawText);
 
-            // ## Headers
-            text = text.replace(/^### (.*)$/gm, '<h3>$1</h3>');
-            text = text.replace(/^## (.*)$/gm, '<h2>$1</h2>');
-            text = text.replace(/^# (.*)$/gm, '<h1>$1</h1>');
-
-            // Bold
-            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-            // Italic
-            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-            // Highlight (custom)
-            text = text.replace(/>>> (.*)/g, '<div class="highlight">$1</div>');
-
-            // Line breaks
-            return text.replace(/\n/g, '<br>');
-        }
-
-        if (fortuneRaw) {
-            const parsed = parseMarkdown(JSON.parse(fortuneRaw));
-
+            // 로딩 종료 애니메이션
             setTimeout(() => {
-                document.getElementById('loading').style.display = 'none'; 
-                document.getElementById('result').style.display = 'block';
-                document.getElementById('fortune-content').innerHTML = parsed;
-                sessionStorage.removeItem('fortuneData');
-            }, 2400);
+                loading.style.opacity = '0';
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    resultDiv.style.display = 'block';
+                    fireConfetti(); // 폭죽 효과
+                }, 800);
+            }, 2000); // 2초 대기 (긴장감 조성)
+            
+            // 데이터 삭제 (새로고침 시 리셋)
+            sessionStorage.removeItem('fortuneData');
         } else {
-            document.getElementById('loading').innerHTML =
-                '<div class="loading-text">❌ 결과 데이터를 찾을 수 없습니다</div>';
+            // 데이터 없으면 메인으로
+            location.href = 'index.html';
+        }
+
+        // ✨ 폭죽 효과
+        function fireConfetti() {
+            const duration = 3000;
+            const end = Date.now() + duration;
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#FFD700', '#FFFFFF']
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#FFD700', '#FFFFFF']
+                });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        // 📸 이미지 저장
+        function saveImage() {
+            const element = document.getElementById('captureArea');
+            html2canvas(element, {
+                backgroundColor: '#0f1a2b',
+                scale: 2
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'My_Destiny_2026.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                alert('Image Saved! 📸');
+            });
+        }
+
+        // 🔗 공유하기
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'OracleEyes Destiny',
+                    text: 'I just revealed my 2026 destiny! ✨',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.origin);
+                alert('Link Copied! 🔗');
+            }
         }
     </script>
-
 </body>
 </html>
