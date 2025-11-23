@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETHER.AI - Your AI Fortune Teller 🔮</title>
+    <title>OracleEyes.AI - Your AI Fortune Oracle 👁️</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
@@ -242,13 +241,12 @@
             margin-bottom: 3rem;
         }
 
-        /* Fortune Categories Grid */
+        /* Fortune Categories Grid - Modified for 9 cards */
         .fortune-categories {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-max-width: 1200px;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto 3rem;
             animation: slideUp 1s ease-out 0.3s both;
         }
@@ -277,7 +275,43 @@ max-width: 1200px;
             position: relative;
             overflow: hidden;
         }
-/* Selected state */
+
+        /* Special New Year Card Style */
+        .fortune-card.special-new-year {
+            background: linear-gradient(135deg, 
+                rgba(255, 215, 0, 0.3), 
+                rgba(255, 0, 0, 0.2),
+                rgba(255, 255, 255, 0.2)
+            );
+            border: 3px solid #ffd700;
+            animation: newYearGlow 2s ease-in-out infinite;
+        }
+
+        .new-year-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: linear-gradient(135deg, #ff0000, #ffd700);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+        }
+
+        @keyframes newYearGlow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.8),
+                            0 0 60px rgba(255, 0, 0, 0.4);
+            }
+        }
+
+        /* Selected state */
         .fortune-card.selected {
             border: 3px solid #00ff88;
             background: rgba(0, 255, 136, 0.1);
@@ -303,6 +337,7 @@ max-width: 1200px;
         .fortune-card.selected .selected-check {
             display: flex;
         }
+
         .fortune-card::before {
             content: '';
             position: absolute;
@@ -323,12 +358,6 @@ max-width: 1200px;
             transform: translateY(-10px) scale(1.05);
             background: rgba(255, 255, 255, 0.25);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .fortune-card.selected {
-            background: rgba(255, 215, 0, 0.3);
-            border-color: #ffd700;
-            transform: scale(1.05);
         }
 
         .fortune-icon {
@@ -364,9 +393,8 @@ max-width: 1200px;
         }
 
         /* Fun Input Form */
-        /* Mystical character decoration */
         .fun-form::before {
-            content: '🔮';
+            content: '👁️';
             position: absolute;
             top: -40px;
             left: 50%;
@@ -391,6 +419,7 @@ max-width: 1200px;
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-15px); }
         }
+
         .fun-form {
             background: rgba(20, 30, 48, 0.9);
             backdrop-filter: blur(20px);
@@ -398,9 +427,10 @@ max-width: 1200px;
             border-radius: 30px;
             padding: 50px;
             max-width: 700px;
-width: 90%;
+            width: 90%;
             margin: 60px auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
 
         .form-header h3 {
@@ -413,6 +443,10 @@ width: 90%;
             font-size: 1.1rem;
             color: #a0a0a0;
             margin-bottom: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
         }
 
         .input-group label {
@@ -474,17 +508,25 @@ width: 90%;
             margin-top: 30px;
         }
 
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .submit-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 10px 40px rgba(0, 255, 136, 0.5);
         }
-/* Gender buttons container */
+
+        /* Gender buttons container */
         .gender-buttons {
             display: grid !important;
             grid-template-columns: repeat(3, 1fr) !important;
             gap: 12px !important;
             margin-top: 15px;
         }
+
         .gender-btn {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.08));
             border: 2px solid rgba(255, 255, 255, 0.15);
@@ -562,11 +604,6 @@ width: 90%;
         .gender-icon {
             font-size: 2.5rem;
             filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
 
         /* Features Grid */
@@ -924,194 +961,199 @@ width: 90%;
                 grid-template-columns: 1fr;
             }
         }
-        /* ==================== LOADING SCREEN ==================== */
-    #loading-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: transparent;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        transition: opacity 0.8s ease, visibility 0.8s ease;
-    }
 
-    #loading-screen.hidden {
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-    }
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
 
-    .loader-content {
-        background: rgba(0, 0, 0, 0.6);
-        padding: 60px 80px;
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        text-align: center;
-    }
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
 
-    .loader-logo {
-    font-size: 4.5rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #d4af37, #ffd700, #ffed4e, #ff6b6b);
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 40px;
-    animation: logoGlow 2s ease-in-out infinite, 
-               logoPulse 1.5s ease-in-out infinite,
-               logoShine 4s linear infinite;
-    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1));
-    text-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
-}
+        .loader-content {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 60px 80px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
 
-@keyframes logoPulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-}
+        .loader-logo {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #d4af37, #ffd700, #ffed4e, #ff6b6b);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+            animation: logoGlow 2s ease-in-out infinite, 
+                       logoPulse 1.5s ease-in-out infinite,
+                       logoShine 4s linear infinite;
+            filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1));
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+        }
 
-@keyframes logoShine {
-    to {
-        background-position: 300% center;
-    }
-}
+        @keyframes logoPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
 
-    @keyframes logoGlow {
-        0%, 100% { filter: brightness(1); }
-        50% { filter: brightness(1.3); }
-    }
+        @keyframes logoShine {
+            to {
+                background-position: 300% center;
+            }
+        }
 
-    .loader-text {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, #fff, #ffd700, #ff6b6b, #ffd700, #fff);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 30px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    animation: textGlow 2s ease-in-out infinite, textShine 3s linear infinite;
-    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
-}
+        @keyframes logoGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
 
-@keyframes textGlow {
-    0%, 100% {
-        filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8)) 
-                drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
-    }
-    50% {
-        filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1)) 
-                drop-shadow(0 0 40px rgba(255, 215, 0, 0.8))
-                drop-shadow(0 0 60px rgba(255, 107, 107, 0.6));
-    }
-}
+        .loader-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #fff, #ffd700, #ff6b6b, #ffd700, #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: textGlow 2s ease-in-out infinite, textShine 3s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+        }
 
-@keyframes textShine {
-    to {
-        background-position: 200% center;
-    }
-}
+        @keyframes textGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8)) 
+                        drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1)) 
+                        drop-shadow(0 0 40px rgba(255, 215, 0, 0.8))
+                        drop-shadow(0 0 60px rgba(255, 107, 107, 0.6));
+            }
+        }
 
-    .loading-bar-container {
-        width: 400px;
-        height: 8px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        overflow: hidden;
-        margin: 0 auto 20px;
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-    }
+        @keyframes textShine {
+            to {
+                background-position: 200% center;
+            }
+        }
 
-    .loading-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #d4af37, #ffd700, #ffed4e, #ff6b6b, #ffd700);
-    background-size: 200% auto;
-    border-radius: 10px;
-    width: 0%;
-    transition: width 0.3s ease;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6),
-                0 0 40px rgba(255, 215, 0, 0.4),
-                0 0 60px rgba(255, 107, 107, 0.3);
-    position: relative;
-    animation: barShine 2s linear infinite;
-}
-@keyframes barShine {
-    to {
-        background-position: 200% center;
-    }
-}
-    .loading-bar::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-        animation: shimmer 2s infinite;
-    }
+        .loading-bar-container {
+            width: 400px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
 
-    @keyframes shimmer {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-    }
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37, #ffd700, #ffed4e, #ff6b6b, #ffd700);
+            background-size: 200% auto;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6),
+                        0 0 40px rgba(255, 215, 0, 0.4),
+                        0 0 60px rgba(255, 107, 107, 0.3);
+            position: relative;
+            animation: barShine 2s linear infinite;
+        }
 
-    .loading-percentage {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #d4af37, #ffd700);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    /* Hero Video Background */
-.hero {
-    position: relative;
-    overflow: hidden;
-}
+        @keyframes barShine {
+            to {
+                background-position: 200% center;
+            }
+        }
 
-.hero-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    transform: translate(-50%, -50%);
-    object-fit: cover;
-    z-index: 0;
-}
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
 
-.hero > * {
-    position: relative;
-    z-index: 1;
-}
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .loading-percentage {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Video Background */
+        .hero {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
     <div id="loading-screen">
-    <!-- 비디오 배경 -->
-    <video autoplay muted playsinline id="loadingVideo" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;">
-        <source src="/landing.mp4" type="video/mp4">
-    </video>
-    
-    <div class="loader-content">
-        <div class="loader-logo">AETHER.AI</div>
-        <div class="loader-text">Awakening the world's most powerful AI Oracle...</div>
-        <div class="loading-bar-container">
-            <div class="loading-bar" id="loadingBar"></div>
+        <!-- 비디오 배경 -->
+        <video autoplay muted playsinline id="loadingVideo" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;">
+            <source src="/landing.mp4" type="video/mp4">
+        </video>
+        
+        <div class="loader-content">
+            <div class="loader-logo">ORACLEEYES.AI</div>
+            <div class="loader-text">Awakening the Oracle's Vision...</div>
+            <div class="loading-bar-container">
+                <div class="loading-bar" id="loadingBar"></div>
+            </div>
+            <div class="loading-percentage" id="loadingPercentage">0%</div>
         </div>
-        <div class="loading-percentage" id="loadingPercentage">0%</div>
     </div>
-</div>
+
     <!-- Background Animation -->
     <div class="bg-wrapper">
         <div id="floating-emojis"></div>
@@ -1122,8 +1164,8 @@ width: 90%;
     <nav>
         <div class="nav-container">
             <div class="logo">
-                <span>🔮</span>
-                <span>AETHER.AI</span>
+                <span>👁️</span>
+                <span>OracleEyes.AI</span>
             </div>
             <ul class="nav-menu">
                 <li><a href="#fortunes">Fortunes</a></li>
@@ -1140,16 +1182,24 @@ width: 90%;
         <div class="hero-container">
             <div class="hero-header">
                 <h1 class="hero-title">
-                    <span>Discover Your</span><br>
-                    <span class="rainbow-text">Fortune & Destiny</span><br>
-                    <span>with AI Magic ✨</span>
+                    <span>See Your</span><br>
+                    <span class="rainbow-text">2026 Destiny</span><br>
+                    <span>Through Oracle's Eyes 👁️</span>
                 </h1>
-                <p class="hero-subtitle">Choose what you want to know about your future! 🎯</p>
+                <p class="hero-subtitle">🎊 Special New Year Fortune Reading Available! 🎊</p>
             </div>
 
             <!-- Fortune Categories Selection -->
             <div class="fortune-categories" id="fortunes">
-                <!-- Love & Romance -->
+                <!-- New Year 2026 Card (First) -->
+                <div class="fortune-card special-new-year" onclick="selectFortune(this, 'newyear')">
+                    <span class="new-year-badge">2026</span>
+                    <span class="fortune-icon">🎊</span>
+                    <div class="fortune-name">New Year 2026</div>
+                    <div class="fortune-description">Complete year forecast</div>
+                    <div class="selected-check">✓</div>
+                </div>
+
                 <div class="fortune-card" onclick="selectFortune(this, 'love')">
                     <span class="fortune-icon">💕</span>
                     <div class="fortune-name">Love & Romance</div>
@@ -1157,55 +1207,48 @@ width: 90%;
                     <div class="selected-check">✓</div>
                 </div>
 
-                <!-- Wealth & Money -->
                 <div class="fortune-card" onclick="selectFortune(this, 'money')">
                     <span class="fortune-icon">💰</span>
                     <div class="fortune-name">Wealth & Money</div>
-                    <div class="fortune-description">Financial fortune</div>
+                    <div class="fortune-description">Your financial bowl</div>
                     <div class="selected-check">✓</div>
                 </div>
 
-                <!-- Crypto Trading -->
+                <div class="fortune-card" onclick="selectFortune(this, 'career')">
+                    <span class="fortune-icon">💼</span>
+                    <div class="fortune-name">Career & Success</div>
+                    <div class="fortune-description">Leader vs Entrepreneur?</div>
+                    <div class="selected-check">✓</div>
+                </div>
+
                 <div class="fortune-card" onclick="selectFortune(this, 'crypto')">
                     <span class="fortune-icon">₿</span>
-                    <div class="fortune-name">Crypto Trading</div>
-                    <div class="fortune-description">Perfect timing</div>
+                    <div class="fortune-name">Crypto Destiny</div>
+                    <div class="fortune-description">Investment timing</div>
                     <div class="selected-check">✓</div>
                 </div>
 
-                <!-- Gaming Luck -->
-                <div class="fortune-card" onclick="selectFortune(this, 'gaming')">
-                    <span class="fortune-icon">🎮</span>
-                    <div class="fortune-name">Gaming Luck</div>
-                    <div class="fortune-description">Win predictions</div>
+                <div class="fortune-card" onclick="selectFortune(this, 'persona')">
+                    <span class="fortune-icon">🦊</span>
+                    <div class="fortune-name">My True Persona</div>
+                    <div class="fortune-description">Your hidden soul animal</div>
                     <div class="selected-check">✓</div>
                 </div>
 
-                <!-- Viral Timing -->
-                <div class="fortune-card" onclick="selectFortune(this, 'viral')">
-                    <span class="fortune-icon">🔥</span>
-                    <div class="fortune-name">Viral Timing</div>
-                    <div class="fortune-description">Content success</div>
+                <div class="fortune-card" onclick="selectFortune(this, 'karma')">
+                    <span class="fortune-icon">👻</span>
+                    <div class="fortune-name">Past Life & Karma</div>
+                    <div class="fortune-description">Why were you born?</div>
                     <div class="selected-check">✓</div>
                 </div>
 
-                <!-- Luck & Gambling -->
-                <div class="fortune-card" onclick="selectFortune(this, 'gambling')">
-                    <span class="fortune-icon">🎲</span>
-                    <div class="fortune-name">Luck & Gambling</div>
-                    <div class="fortune-description">Lucky moments</div>
-                    <div class="selected-check">✓</div>
-                </div>
-
-                <!-- Compatibility -->
                 <div class="fortune-card" onclick="selectFortune(this, 'compatibility')">
-                    <span class="fortune-icon">💑</span>
+                    <span class="fortune-icon">👩‍❤️‍👨</span>
                     <div class="fortune-name">Compatibility</div>
                     <div class="fortune-description">Relationship match</div>
                     <div class="selected-check">✓</div>
                 </div>
 
-                <!-- Dream Reading -->
                 <div class="fortune-card" onclick="selectFortune(this, 'dream')">
                     <span class="fortune-icon">🌙</span>
                     <div class="fortune-name">Dream Reading</div>
@@ -1225,7 +1268,8 @@ width: 90%;
                     <label class="input-label">What's your name? 😊</label>
                     <input type="text" id="name" class="fun-input" placeholder="Enter your awesome name">
                 </div>
-<!-- Gender Selection -->
+
+                <!-- Gender Selection -->
                 <div class="input-group">
                     <label class="input-label">Your gender? ⚧️</label>
                     <div class="gender-buttons">
@@ -1243,6 +1287,7 @@ width: 90%;
                         </button>
                     </div>
                 </div>
+
                 <div class="input-group">
                     <label class="input-label">When were you born? 🎂</label>
                     <div class="date-inputs">
@@ -1269,8 +1314,8 @@ width: 90%;
                 <div class="input-group">
                     <label class="input-label">What time? ⏰ (optional but more accurate!)</label>
                     <div class="time-input">
-                       <input type="number" id="birth-time" class="fun-input" placeholder="Hour (0-23)" min="0" max="23">
-                        <input type="number" class="fun-input" placeholder="Minute (0-59)" min="0" max="59">
+                       <input type="number" id="birth-hour" class="fun-input" placeholder="Hour (0-23)" min="0" max="23">
+                        <input type="number" id="birth-minute" class="fun-input" placeholder="Minute (0-59)" min="0" max="59">
                     </div>
                 </div>
 
@@ -1278,11 +1323,12 @@ width: 90%;
                     <label class="input-label">Where were you born? 📍</label>
                     <input type="text" id="birth-place" class="fun-input" placeholder="City, Country (e.g., Los Angeles, USA)">
                 </div>
-<!-- Compatibility Form (Hidden by default) -->
+
+                <!-- Compatibility Form (Hidden by default) -->
                 <div id="compatibility-form" style="display: none;">
                     <h3 style="color: #d4af37; text-align: center; margin-bottom: 30px;">💑 Enter Both People's Information</h3>
                     
-                   <!-- Person 1 -->
+                    <!-- Person 1 -->
                     <div style="background: rgba(212, 175, 55, 0.1); padding: 25px; border-radius: 20px; margin-bottom: 20px;">
                         <h4 style="color: #d4af37; margin-bottom: 20px;">👤 Person 1</h4>
                         <div class="input-group">
@@ -1313,7 +1359,7 @@ width: 90%;
                         </div>
                         <div class="input-group">
                             <label class="input-label">Birth Time ⏰ (optional)</label>
-                            <div class="time-inputs">
+                            <div class="time-input">
                                 <input type="number" id="person1-hour" class="fun-input" placeholder="Hour (0-23)" min="0" max="23">
                                 <input type="number" id="person1-minute" class="fun-input" placeholder="Minute (0-59)" min="0" max="59">
                             </div>
@@ -1368,7 +1414,7 @@ width: 90%;
                         </div>
                         <div class="input-group">
                             <label class="input-label">Birth Time ⏰ (optional)</label>
-                            <div class="time-inputs">
+                            <div class="time-input">
                                 <input type="number" id="person2-hour" class="fun-input" placeholder="Hour (0-23)" min="0" max="23">
                                 <input type="number" id="person2-minute" class="fun-input" placeholder="Minute (0-59)" min="0" max="59">
                             </div>
@@ -1390,9 +1436,10 @@ width: 90%;
                                 </button>
                             </div>
                         </div>
-                        </div>
+                    </div>
                 </div>
-        <!-- Dream Reading Form (Hidden by default) -->
+
+                <!-- Dream Reading Form (Hidden by default) -->
                 <div id="dream-form" style="display: none;">
                     <h3 style="color: #d4af37; text-align: center; margin-bottom: 30px;">💭 Tell Us About Your Dream</h3>
                     
@@ -1434,10 +1481,10 @@ width: 90%;
                 </div>
                 
                 <button class="submit-btn">
-    🔮 REVEAL MY FORTUNE 🔮
-</button>
-</div>
-</div>
+                    👁️ REVEAL MY FORTUNE 👁️
+                </button>
+            </div>
+        </div>
     </section>
 
     <!-- Features Section -->
@@ -1448,17 +1495,17 @@ width: 90%;
                 <div class="feature-box">
                     <span class="feature-emoji">🎯</span>
                     <h3 class="feature-title">Scary Accurate</h3>
-                    <p class="feature-desc">Our AI is trained on millions of fortunes and gets it right 99% of the time!</p>
+                    <p class="feature-desc">Our AI Oracle sees through time and space with 99% accuracy!</p>
                 </div>
                 <div class="feature-box">
                     <span class="feature-emoji">⚡</span>
-                    <h3 class="feature-title">Instant Results</h3>
-                    <p class="feature-desc">No waiting! Get your personalized fortune in seconds, not days.</p>
+                    <h3 class="feature-title">Instant Vision</h3>
+                    <p class="feature-desc">No waiting! Your future revealed in seconds, not days.</p>
                 </div>
                 <div class="feature-box">
                     <span class="feature-emoji">🎨</span>
                     <h3 class="feature-title">Beautiful Reports</h3>
-                    <p class="feature-desc">Gorgeous, shareable reports that look amazing on Instagram!</p>
+                    <p class="feature-desc">Gorgeous, shareable visions perfect for social media!</p>
                 </div>
             </div>
         </div>
@@ -1501,7 +1548,7 @@ width: 90%;
         <div class="testimonial-carousel">
             <div class="testimonial">
                 <div class="stars">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">"OMG! It told me I'd get a promotion in March and IT HAPPENED! This is insane!"</p>
+                <p class="testimonial-text">"The Oracle saw my promotion coming! March 2025 exactly as predicted!"</p>
                 <div class="testimonial-author">
                     <div class="author-avatar">SF</div>
                     <div class="author-info">
@@ -1512,7 +1559,7 @@ width: 90%;
             </div>
             <div class="testimonial">
                 <div class="stars">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">"The crypto timing was perfect! Made 10x returns following the fortune advice!"</p>
+                <p class="testimonial-text">"The crypto timing was perfect! Made 10x returns following the Oracle's vision!"</p>
                 <div class="testimonial-author">
                     <div class="author-avatar">JK</div>
                     <div class="author-info">
@@ -1523,7 +1570,7 @@ width: 90%;
             </div>
             <div class="testimonial">
                 <div class="stars">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">"Found my soulmate exactly when it predicted! We're getting married next month!"</p>
+                <p class="testimonial-text">"Found my soulmate exactly when the Oracle predicted! Getting married next month!"</p>
                 <div class="testimonial-author">
                     <div class="author-avatar">EM</div>
                     <div class="author-info">
@@ -1538,9 +1585,9 @@ width: 90%;
     <!-- CTA Section -->
     <section class="cta">
         <div class="cta-content">
-            <h2>🎉 Ready for Some Magic? 🎉</h2>
-            <p>Join 1 million+ people discovering their destiny!</p>
-            <a href="#" class="cta-button">✨ Get My FREE Fortune Now ✨</a>
+            <h2>🎉 Ready to See Your Future? 🎉</h2>
+            <p>Join 1 million+ people discovering their destiny through the Oracle's Eyes!</p>
+            <a href="#fortunes" class="cta-button">👁️ Get My FREE Fortune Now 👁️</a>
         </div>
     </section>
 
@@ -1563,53 +1610,50 @@ width: 90%;
                 <a href="#" class="social-icon">📺</a>
             </div>
             <div class="copyright">
-                © 2025 AETHER.AI - Made with ❤️ and ✨ Magic
+                © 2025 OracleEyes.AI - Seeing Beyond the Veil 👁️
             </div>
         </div>
     </footer>
 
- 
     <script>
         document.body.style.overflow = 'hidden';
-           // Loading Animation
-const loadingBar = document.getElementById('loadingBar');
-const loadingPercentage = document.getElementById('loadingPercentage');
-const loadingScreen = document.getElementById('loading-screen');
-const loadingVideo = document.getElementById('loadingVideo');
+        
+        // Loading Animation
+        const loadingBar = document.getElementById('loadingBar');
+        const loadingPercentage = document.getElementById('loadingPercentage');
+        const loadingScreen = document.getElementById('loading-screen');
+        const loadingVideo = document.getElementById('loadingVideo');
 
-let progress = 0;
-let videoDuration = 5; // 비디오 길이 (초) - 실제 길이로 조정 필요
+        let progress = 0;
+        let videoDuration = 5;
 
-// 비디오 메타데이터 로드되면 실제 길이 가져오기
-loadingVideo.addEventListener('loadedmetadata', () => {
-    videoDuration = loadingVideo.duration;
-    console.log('Video duration:', videoDuration);
-});
+        loadingVideo.addEventListener('loadedmetadata', () => {
+            videoDuration = loadingVideo.duration;
+            console.log('Video duration:', videoDuration);
+        });
 
-// 비디오 끝나면 로딩 완료
-loadingVideo.addEventListener('ended', () => {
-    progress = 100;
-    loadingBar.style.width = '100%';
-    loadingPercentage.textContent = '100%';
-    
-    setTimeout(() => {
-        loadingScreen.classList.add('hidden');
-        // 스크롤 맨 위로!
-        window.scrollTo(0, 0);
-        document.body.style.overflow = 'auto';
-    }, 500);
-});
+        loadingVideo.addEventListener('ended', () => {
+            progress = 100;
+            loadingBar.style.width = '100%';
+            loadingPercentage.textContent = '100%';
+            
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                window.scrollTo(0, 0);
+                document.body.style.overflow = 'auto';
+            }, 500);
+        });
 
-// 로딩바를 비디오 진행에 맞춰 업데이트
-setInterval(() => {
-    if (loadingVideo.currentTime && loadingVideo.duration) {
-        progress = (loadingVideo.currentTime / loadingVideo.duration) * 100;
-        loadingBar.style.width = progress + '%';
-        loadingPercentage.textContent = Math.floor(progress) + '%';
-    }
-}, 100);
+        setInterval(() => {
+            if (loadingVideo.currentTime && loadingVideo.duration) {
+                progress = (loadingVideo.currentTime / loadingVideo.duration) * 100;
+                loadingBar.style.width = progress + '%';
+                loadingPercentage.textContent = Math.floor(progress) + '%';
+            }
+        }, 100);
+
         // Create floating emojis
-        const emojis = ['✨', '🌟', '💫', '⭐', '🌙', '☀️', '🔮', '💎', '🦄', '🌈'];
+        const emojis = ['✨', '🌟', '💫', '⭐', '🌙', '☀️', '👁️', '💎', '🦄', '🌈'];
         const floatingContainer = document.getElementById('floating-emojis');
         
         for (let i = 0; i < 20; i++) {
@@ -1639,23 +1683,18 @@ setInterval(() => {
         }, 300);
 
         // Fortune card selection
-        // Fortune card selection (SINGLE SELECT ONLY)
         let selectedFortune = null;
-
-        // Gender selection (single select)
         let selectedGender = null;
-let selectedGender1 = null;
+        let selectedGender1 = null;
         let selectedGender2 = null;
+
         window.selectGender = function(btn, gender, person) {
-            // Get parent container (person1 or person2's gender-buttons)
             const container = btn.parentElement;
             
-            // Remove selection only within this container
             container.querySelectorAll('.gender-btn').forEach(b => {
                 b.classList.remove('selected');
             });
             
-            // Add to clicked button
             btn.classList.add('selected');
             
             if (person === 1) {
@@ -1669,9 +1708,8 @@ let selectedGender1 = null;
                 console.log('Selected gender:', selectedGender);
             }
         }
-    // Fortune card selection
+
         window.selectFortune = function(card, type) {
-            // Remove all selections
             document.querySelectorAll('.fortune-card').forEach(c => {
                 c.classList.remove('selected');
             });
@@ -1679,55 +1717,49 @@ let selectedGender1 = null;
             card.classList.add('selected');
             selectedFortune = type;
             
-            // Get all form sections
             const basicInputs = document.querySelectorAll('.input-group:not(#compatibility-form .input-group):not(#dream-form .input-group)');
             const compatForm = document.getElementById('compatibility-form');
             const dreamForm = document.getElementById('dream-form');
             
             if (type === 'compatibility') {
-                // Hide basic inputs, show compatibility
                 basicInputs.forEach(input => input.style.display = 'none');
                 compatForm.style.display = 'block';
                 if(dreamForm) dreamForm.style.display = 'none';
             } else if (type === 'dream') {
-                // Hide basic inputs, show dream
                 basicInputs.forEach(input => input.style.display = 'none');
                 if(dreamForm) dreamForm.style.display = 'block';
                 compatForm.style.display = 'none';
             } else {
-                // Show basic inputs, hide special forms
                 basicInputs.forEach(input => input.style.display = 'block');
                 compatForm.style.display = 'none';
                 if(dreamForm) dreamForm.style.display = 'none';
             }
             
             console.log('Selected:', selectedFortune);
-            // Dream content character counter
-        const dreamContent = document.getElementById('dream-content');
-        if (dreamContent) {
-            dreamContent.addEventListener('input', function() {
-                const count = this.value.length;
-                document.getElementById('dream-char-count').textContent = count;
-            });
-        }
+            
+            const dreamContent = document.getElementById('dream-content');
+            if (dreamContent) {
+                dreamContent.addEventListener('input', function() {
+                    const count = this.value.length;
+                    document.getElementById('dream-char-count').textContent = count;
+                });
+            }
         }
 
         // Submit button animation
         document.querySelector('.submit-btn').addEventListener('click', async function(e) {
             e.preventDefault();
             
-            // Show loading state
             const btn = this;
             const originalText = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '✨ Consulting the cosmos...';
+            btn.innerHTML = '✨ The Oracle is seeing...';
             btn.style.opacity = '0.7';
             btn.style.cursor = 'not-allowed';
             
             try {
                 let requestBody = {};
                 
-                // CASE 1: COMPATIBILITY (궁합)
                 if (selectedFortune === 'compatibility') {
                     const p1Name = document.getElementById('person1-name').value;
                     const p1Year = document.getElementById('person1-year').value;
@@ -1745,9 +1777,8 @@ let selectedGender1 = null;
                     const p2Minute = document.getElementById('person2-minute').value || '';
                     const p2Place = document.getElementById('person2-place').value;
                     
-                    // Validate
                     if (!p1Name || !p1Year || !p1Month || !p1Day || !p1Place || !selectedGender1) {
-                        alert('Please fill in all Person 1 information! 🔮');
+                        alert('Please fill in all Person 1 information! 👁️');
                         btn.disabled = false;
                         btn.innerHTML = originalText;
                         btn.style.opacity = '1';
@@ -1756,7 +1787,7 @@ let selectedGender1 = null;
                     }
                     
                     if (!p2Name || !p2Year || !p2Month || !p2Day || !p2Place || !selectedGender2) {
-                        alert('Please fill in all Person 2 information! 🔮');
+                        alert('Please fill in all Person 2 information! 👁️');
                         btn.disabled = false;
                         btn.innerHTML = originalText;
                         btn.style.opacity = '1';
@@ -1764,7 +1795,6 @@ let selectedGender1 = null;
                         return;
                     }
                     
-                    // Build request
                     requestBody = {
                         person1: {
                             name: p1Name,
@@ -1786,8 +1816,6 @@ let selectedGender1 = null;
                         }
                     };
                 }
-                
-                // CASE 2: DREAM READING (해몽)
                 else if (selectedFortune === 'dream') {
                     const dreamName = document.getElementById('dream-name').value;
                     const dreamYear = document.getElementById('dream-year').value;
@@ -1795,9 +1823,8 @@ let selectedGender1 = null;
                     const dreamDay = document.getElementById('dream-day').value;
                     const dreamContent = document.getElementById('dream-content').value;
                     
-                    // Validate
                     if (!dreamName || !dreamYear || !dreamMonth || !dreamDay || !dreamContent) {
-                        alert('Please fill in all dream information! 🔮');
+                        alert('Please fill in all dream information! 👁️');
                         btn.disabled = false;
                         btn.innerHTML = originalText;
                         btn.style.opacity = '1';
@@ -1814,7 +1841,6 @@ let selectedGender1 = null;
                         return;
                     }
                     
-                    // Build request
                     requestBody = {
                         name: dreamName,
                         birthYear: dreamYear,
@@ -1825,19 +1851,18 @@ let selectedGender1 = null;
                         dreamContent: dreamContent
                     };
                 }
-                
-                // CASE 3: STANDARD CATEGORIES (Love, Money, Crypto, Gaming, Viral, Gambling)
                 else {
                     const name = document.getElementById('name').value;
                     const birthYear = document.getElementById('birth-year').value;
                     const birthMonth = document.getElementById('birth-month').value;
                     const birthDay = document.getElementById('birth-day').value;
-                    const birthTime = document.getElementById('birth-time').value || '';
+                    const birthHour = document.getElementById('birth-hour').value || '';
+                    const birthMinute = document.getElementById('birth-minute').value || '';
+                    const birthTime = birthHour && birthMinute ? `${birthHour}:${birthMinute}` : '';
                     const birthPlace = document.getElementById('birth-place').value;
                     
-                    // Validate
                     if (!name || !birthYear || !birthMonth || !birthDay || !birthPlace || !selectedFortune || !selectedGender) {
-                        alert('Please fill in all required fields, select your gender, and choose a fortune category! 🔮');
+                        alert('Please fill in all required fields, select your gender, and choose a fortune category! 👁️');
                         btn.disabled = false;
                         btn.innerHTML = originalText;
                         btn.style.opacity = '1';
@@ -1845,14 +1870,14 @@ let selectedGender1 = null;
                         return;
                     }
                     
-                    // Build request - categories as array
                     const categoryMap = {
+                        'newyear': 'NewYear',  // 신년운세 추가
                         'love': 'Love',
                         'money': 'Money',
+                        'career': 'Career',
                         'crypto': 'Crypto',
-                        'gaming': 'Gaming',
-                        'viral': 'Viral',
-                        'gambling': 'Gambling'
+                        'persona': 'Persona',
+                        'karma': 'Karma'
                     };
                     
                     requestBody = {
@@ -1869,30 +1894,30 @@ let selectedGender1 = null;
                 
                 console.log('Sending request:', requestBody);
                 
-                // Call backend API
-const response = await fetch('/api/fortune', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(requestBody),
-});
+                const response = await fetch('/api/fortune', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody),
+                });
 
-if (!response.ok) {
-  const errText = await response.text();            // 디버그용
-  console.error('API 500:', errText);
-  alert('Server error. Please try again.');
-  return;                                           // 실패면 여기서 종료
-}
+                if (!response.ok) {
+                    const errText = await response.text();
+                    console.error('API Error:', errText);
+                    alert('The Oracle is temporarily unavailable. Please try again.');
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                    return;
+                }
 
-const data = await response.json();
-
-// ✅ result.html에서 읽을 수 있게 저장하고 페이지 이동
-sessionStorage.setItem('fortuneData', JSON.stringify(data.fortune ?? ''));
-window.location.href = '/result.html';
-
+                const data = await response.json();
+                sessionStorage.setItem('fortuneData', JSON.stringify(data.fortune ?? ''));
+                window.location.href = '/result.html';
                 
             } catch (error) {
                 console.error('Error:', error);
-                alert('Failed to generate fortune. Please try again! 🔮');
+                alert('Failed to connect with the Oracle. Please try again! 👁️');
                 btn.disabled = false;
                 btn.innerHTML = originalText;
                 btn.style.opacity = '1';
@@ -1900,10 +1925,9 @@ window.location.href = '/result.html';
             }
         });
 
-        // Add hover sound effect (optional)
+        // Add hover sound effect
         document.querySelectorAll('.fortune-card, .special-card, .feature-box').forEach(card => {
             card.addEventListener('mouseenter', () => {
-                // Add a subtle animation or sound effect here
                 card.style.transform = 'scale(1.05) rotate(1deg)';
             });
             
@@ -1913,9 +1937,6 @@ window.location.href = '/result.html';
                 }
             });
         });
-        window.selectFortune = selectFortune;
-window.selectGender = selectGender;
-
     </script>
 </body>
 </html>
