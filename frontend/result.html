@@ -1,411 +1,348 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Fortune - MYSTIC AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Your Cosmic Destiny - OracleEyes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+KR:wght@300;500;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --gold: #FFD700;
+            --deep-purple: #1a0b2e;
+            --glass: rgba(255, 255, 255, 0.05);
+            --neon: #00ff88;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Noto Serif KR', serif;
-            background: linear-gradient(180deg, #0a1929 0%, #000000 100%);
+            background-color: #050505;
+            background-image: 
+                radial-gradient(circle at 50% 0%, #2a1b3d 0%, transparent 70%),
+                radial-gradient(circle at 0% 50%, #1a0b2e 0%, transparent 50%);
+            color: #fff;
             min-height: 100vh;
-            color: #e0e0e0;
-            position: relative;
             overflow-x: hidden;
         }
 
-        /* Animated particles */
-        .particle {
+        /* 배경 별 반짝임 */
+        .stars {
             position: fixed;
-            font-size: 1.5rem;
-            opacity: 0.15;
+            top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
-            animation: float 15s infinite ease-in-out;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.5;
+            animation: twinkle 10s infinite alternate;
         }
-
-        @keyframes float {
-            0%, 100% { 
-                transform: translate(0, 0) rotate(0deg);
-                opacity: 0.15;
-            }
-            25% { 
-                transform: translate(50px, -100px) rotate(90deg);
-                opacity: 0.3;
-            }
-            50% { 
-                transform: translate(-30px, -200px) rotate(180deg);
-                opacity: 0.15;
-            }
-            75% { 
-                transform: translate(-80px, -150px) rotate(270deg);
-                opacity: 0.3;
-            }
-        }
+        @keyframes twinkle { from {opacity: 0.3;} to {opacity: 0.7;} }
 
         .container {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 40px 30px;
+            padding: 40px 20px;
             position: relative;
-            z-index: 1;
+            z-index: 10;
         }
 
-        /* Header with mystical character */
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
-            animation: fadeInDown 1.2s ease;
-        }
-
-        .mystical-character {
-            font-size: 6rem;
-            margin-bottom: 20px;
-            animation: levitate 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.4));
-        }
-
-        @keyframes levitate {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            font-weight: 700;
-            color: #d4af37;
-            letter-spacing: 5px;
-            margin-bottom: 15px;
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-            to { text-shadow: 0 0 40px rgba(212, 175, 55, 0.7); }
-        }
-
-        .subtitle {
-            color: #a0a0a0;
-            font-size: 1.1rem;
-            letter-spacing: 3px;
-        }
-
-        /* Decorative divider */
-        .divider {
-            width: 200px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #d4af37, transparent);
-            margin: 40px auto;
-            animation: expandWidth 1.5s ease;
-        }
-
-        @keyframes expandWidth {
-            from { width: 0; }
-            to { width: 200px; }
-        }
-
-        /* Result card with entrance animation */
-        .result-card {
-            background: rgba(20, 30, 48, 0.85);
-            backdrop-filter: blur(15px);
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: 25px;
-            padding: 60px;
-            margin-bottom: 40px;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            animation: slideInUp 1s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .result-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Fortune content styling */
-        .fortune-content {
-            line-height: 2.2;
-            font-size: 1.1rem;
-            white-space: pre-wrap;
-            color: #e8e8e8;
-            position: relative;
-            z-index: 1;
-        }
-
-        .fortune-content::first-line {
-            font-size: 1.3rem;
-            color: #d4af37;
-        }
-
-        /* Animated decorative corners */
-        .corner-decoration {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border: 2px solid #d4af37;
-            opacity: 0.3;
-        }
-
-        .corner-decoration.top-left {
-            top: 20px;
-            left: 20px;
-            border-right: none;
-            border-bottom: none;
-            animation: cornerPulse 3s ease-in-out infinite;
-        }
-
-        .corner-decoration.bottom-right {
-            bottom: 20px;
-            right: 20px;
-            border-left: none;
-            border-top: none;
-            animation: cornerPulse 3s ease-in-out infinite 1.5s;
-        }
-
-        @keyframes cornerPulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.1); }
-        }
-
-        /* Button with hover effects */
-        .back-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #d4af37 0%, #aa8a2e 100%);
-            color: #0a1929;
-            padding: 18px 50px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: 2px;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .back-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .back-button:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .back-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6);
-        }
-
-        .button-container {
-            text-align: center;
-            margin-top: 50px;
-            animation: fadeIn 2s ease;
-        }
-
-        /* Loading state */
-        .loading {
-            text-align: center;
-            padding: 120px 20px;
-        }
-
-        .loading-character {
-            font-size: 8rem;
-            animation: spin 2s linear infinite;
-            filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.6));
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 1.8rem;
-            color: #d4af37;
-            margin-top: 40px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-
-        .loading-dots {
-            display: inline-block;
-        }
-
-        .loading-dots span {
-            animation: bounce 1.4s infinite;
-        }
-
-        .loading-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes bounce {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Scroll indicator */
-        .scroll-indicator {
+        /* 로딩 화면 */
+        #loading {
             position: fixed;
-            top: 50%;
-            right: 30px;
-            transform: translateY(-50%);
-            width: 3px;
-            height: 200px;
-            background: rgba(212, 175, 55, 0.2);
-            border-radius: 3px;
-            z-index: 100;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 1s ease;
+        }
+        .orb {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, var(--gold), transparent);
+            box-shadow: 0 0 60px var(--gold), 0 0 100px purple;
+            animation: pulseOrb 2s infinite alternate;
+        }
+        @keyframes pulseOrb { 
+            from { transform: scale(1); opacity: 0.8; } 
+            to { transform: scale(1.2); opacity: 1; } 
+        }
+        .loading-text {
+            margin-top: 20px;
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            letter-spacing: 2px;
+            animation: fadeText 1.5s infinite;
         }
 
-        .scroll-progress {
-            width: 100%;
-            height: 0%;
-            background: linear-gradient(180deg, #d4af37, #ffd700);
-            border-radius: 3px;
-            transition: height 0.3s ease;
+        /* 결과 카드 (메인) */
+        .result-card {
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            margin-bottom: 30px;
+            opacity: 0; /* 애니메이션용 */
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+
+        .result-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .oracle-eye {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px var(--gold);
+            animation: floatEye 3s ease-in-out infinite;
+        }
+        @keyframes floatEye { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-10px); } 
+        }
+
+        /* 마크다운 스타일링 (여기가 핵심) */
+        .markdown-body {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #e0e0e0;
+        }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+        .markdown-body h1 { font-size: 2rem; text-align: center; text-shadow: 0 0 20px rgba(255,215,0,0.4); }
+        .markdown-body h2 { font-size: 1.5rem; }
+        .markdown-body h3 { font-size: 1.2rem; color: #bf9b30; }
+        .markdown-body strong { color: #fff; font-weight: 700; background: linear-gradient(120deg, transparent 0%, rgba(255,215,0,0.2) 100%); }
+        .markdown-body p { margin-bottom: 20px; text-align: justify; }
+        .markdown-body ul { margin-left: 20px; margin-bottom: 20px; }
+        .markdown-body li { margin-bottom: 10px; }
+        .markdown-body blockquote {
+            border-left: 3px solid var(--gold);
+            padding-left: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #bbb;
+            background: rgba(255,215,0,0.05);
+            padding: 15px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* 액션 버튼들 */
+        .action-bar {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), #d4af37);
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-3px); }
+
+        .share-tooltip {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--neon);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        /* 모바일 대응 */
+        @media (max-width: 600px) {
+            .result-card { padding: 30px 20px; }
+            .markdown-body h1 { font-size: 1.5rem; }
+            .btn { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
-    <!-- Floating particles -->
-    <script>
-        const particles = ['🔮', '✨', '⭐', '💫', '🌟', '✴️'];
-        for(let i = 0; i < 20; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.textContent = particles[Math.floor(Math.random() * particles.length)];
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 5 + 's';
-            particle.style.animationDuration = (10 + Math.random() * 10) + 's';
-            document.body.appendChild(particle);
-        }
-    </script>
 
-    <!-- Scroll indicator -->
-    <div class="scroll-indicator">
-        <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="stars"></div>
+
+    <div id="loading">
+        <div class="orb"></div>
+        <div class="loading-text">CONSULTING THE STARS...</div>
     </div>
 
     <div class="container">
-        <div class="header">
-            <div class="mystical-character">🔮</div>
-            <div class="logo">MYSTIC AI</div>
-            <div class="subtitle">YOUR COSMIC FORTUNE REVEALED</div>
-            <div class="divider"></div>
+        <div class="result-card" id="resultCard">
+            <div class="oracle-eye">👁️</div>
+            <div id="fortune-content" class="markdown-body"></div>
         </div>
 
-        <div id="loading" class="loading">
-            <div class="loading-character">✨</div>
-            <div class="loading-text">
-                Reading the cosmos
-                <span class="loading-dots">
-                    <span>.</span><span>.</span><span>.</span>
-                </span>
-            </div>
-        </div>
-
-        <div id="result" style="display: none;">
-            <div class="result-card">
-                <div class="corner-decoration top-left"></div>
-                <div class="corner-decoration bottom-right"></div>
-                <div id="fortune-content" class="fortune-content"></div>
-            </div>
-
-            <div class="button-container">
-                <a href="index.html" class="back-button">← Get Another Reading</a>
-            </div>
+        <div class="action-bar" id="actionBar" style="opacity: 0; transition: opacity 1s 1s;">
+            <button class="btn btn-secondary" onclick="saveImage()">
+                <i class="fas fa-download"></i> Save Image
+            </button>
+            <button class="btn btn-secondary" onclick="shareResult()">
+                <i class="fas fa-share-nodes"></i> Share
+            </button>
+            <button class="btn btn-primary" onclick="location.href='index.html'">
+                <i class="fas fa-redo"></i> New Reading
+            </button>
         </div>
     </div>
 
-    <script>
-        // Scroll progress indicator
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollPercent = (scrollTop / docHeight) * 100;
-            document.getElementById('scrollProgress').style.height = scrollPercent + '%';
-        });
+    <div id="toast" class="share-tooltip">Image Saved! 📸</div>
 
-        // Get fortune data
+    <script>
+        // 1. 데이터 가져오기
         const fortuneData = sessionStorage.getItem('fortuneData');
+        const loading = document.getElementById('loading');
+        const resultCard = document.getElementById('resultCard');
+        const contentDiv = document.getElementById('fortune-content');
+        const actionBar = document.getElementById('actionBar');
 
         if (fortuneData) {
+            // 2. 파싱 및 마크다운 렌더링
+            let rawText = JSON.parse(fortuneData);
+            
+            // 만약 백엔드에서 줄바꿈이 \n으로 온다면 마크다운으로 인식되게 처리
+            // marked.js 라이브러리가 #, **, - 등을 HTML로 예쁘게 바꿔줌
+            contentDiv.innerHTML = marked.parse(rawText);
+
+            // 3. 로딩 종료 및 애니메이션
             setTimeout(() => {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('result').style.display = 'block';
-                document.getElementById('fortune-content').innerHTML = JSON.parse(fortuneData).replace(/\n/g, '<br>');
-                sessionStorage.removeItem('fortuneData');
-            }, 2500);
+                loading.style.opacity = '0';
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    resultCard.classList.add('show');
+                    actionBar.style.opacity = '1';
+                    
+                    // 4. 팡팡 터지는 효과 (Confetti)
+                    triggerConfetti();
+                }, 500);
+            }, 2000); // 2초 딜레이 (신비감 조성)
+
+            // 데이터 삭제 (새로고침 방지)
+            sessionStorage.removeItem('fortuneData');
+
         } else {
-            document.getElementById('loading').innerHTML = '<div class="loading-text">❌ No fortune data found</div>';
+            // 데이터 없으면 홈으로
+            location.href = 'index.html';
+        }
+
+        // ✨ 폭죽 효과 함수
+        function triggerConfetti() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInOut(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                // 금가루 색상
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInOut(0.1, 0.3), y: Math.random() - 0.2 },
+                    colors: ['#FFD700', '#FFA500', '#FFFFFF']
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInOut(0.7, 0.9), y: Math.random() - 0.2 },
+                    colors: ['#FFD700', '#FFA500', '#FFFFFF']
+                }));
+            }, 250);
+        }
+
+        // 📸 이미지 저장 기능 (html2canvas 사용)
+        function saveImage() {
+            const card = document.querySelector('.result-card');
+            
+            // 캡처 중에는 그림자/여백 살짝 조정
+            html2canvas(card, {
+                backgroundColor: '#1a0b2e', // 배경색 지정
+                scale: 2 // 고해상도
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'My_Mystic_Fortune_2026.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                
+                showToast("Image Saved! 📸");
+            });
+        }
+
+        // 🔗 공유 기능 (모바일 Native Share)
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'OracleEyes AI Fortune',
+                    text: 'I just read my 2026 destiny on OracleEyes! ✨',
+                    url: window.location.href
+                }).then(() => console.log('Successful share'))
+                .catch((error) => console.log('Error sharing', error));
+            } else {
+                // PC 등 지원 안 할 땐 클립보드 복사
+                navigator.clipboard.writeText(window.location.origin);
+                showToast("Link Copied! 🔗");
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 3000);
         }
     </script>
 </body>
