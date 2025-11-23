@@ -1,13 +1,13 @@
 // ============================================
-// MYSTIC AI SERVER - A안 (2회 자동 분할 호출)
-// 완전 정통 사주 계산 + Haiku 이중 호출 + 긴 리포트 보장
+// MYSTIC AI SERVER - FINAL PRO VERSION
+// (Deep Analysis via Split Calls + Full Feature Support)
 // ============================================
 
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { Solar } = require('lunar-javascript');
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch'); // 삭제: Node 18+ 내장 fetch 사용
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -22,7 +22,6 @@ app.get(['/result', '/result.html'], (req, res) =>
 // ============================================
 // 1. 만세력 매핑 데이터
 // ============================================
-
 const GAN_MAP = {
   '甲': { ko: '갑', en: 'Jia' }, '乙': { ko: '을', en: 'Yi' },
   '丙': { ko: '병', en: 'Bing' }, '丁': { ko: '정', en: 'Ding' },
@@ -41,18 +40,15 @@ const ZHI_MAP = {
 };
 
 // ============================================
-// 2. 정통 사주 계산
+// 2. 정통 사주 계산 로직
 // ============================================
-
 function parseGanZhi(gz) {
   if (!gz) return null;
   const gan = gz[0];
   const zhi = gz[1];
   return {
-    stemHan: gan,
-    branchHan: zhi,
-    stemKo: GAN_MAP[gan]?.ko || '',
-    branchKo: ZHI_MAP[zhi]?.ko || ''
+    stemHan: gan, branchHan: zhi,
+    stemKo: GAN_MAP[gan]?.ko || '', branchKo: ZHI_MAP[zhi]?.ko || ''
   };
 }
 
@@ -60,14 +56,13 @@ function calculateFourPillars(y, m, d, birthTime) {
   const year = parseInt(y);
   const month = parseInt(m);
   const day = parseInt(d);
-
   let hour = 12, min = 0;
+
   if (typeof birthTime === 'string') {
     if (birthTime.includes(':')) {
       const [h, mm] = birthTime.split(':');
-      hour = parseInt(h);
-      min = parseInt(mm);
-    } else {
+      hour = parseInt(h); min = parseInt(mm);
+    } else if (birthTime !== '') {
       hour = parseInt(birthTime);
     }
   }
@@ -86,23 +81,20 @@ function calculateFourPillars(y, m, d, birthTime) {
 function formatPillar(p, lang) {
   if (!p) return '';
   if (lang === 'Korean') return `${p.stemKo}${p.branchKo}(${p.stemHan}${p.branchHan})`;
-  return `${p.stemHan}${p.branchHan}`;
+  return `${p.stemHan}${p.branchHan}`; // Default
 }
 
 function detectLanguage(name = '') {
   const hasKr = /[가-힣]/.test(name);
-  const hasJp = /[\u3040-\u30FF]/.test(name);
-  const hasZh = /[\u4E00-\u9FFF]/.test(name);
   if (hasKr) return 'Korean';
-  if (hasJp) return 'Japanese';
-  if (hasZh) return 'Chinese';
   return 'English';
 }
 
 // ============================================
-// 3. 프롬프트 생성 (1차 + 2차 분할)
+// 3. 프롬프트 생성기 (1차/2차 분할용)
 // ============================================
 
+// [1차] 도입부 + 핵심 분석 프롬프트
 function buildIntroPrompt(name, birthInfo, pillars, lang, category) {
   const pY = formatPillar(pillars.year, lang);
   const pM = formatPillar(pillars.month, lang);
@@ -110,67 +102,60 @@ function buildIntroPrompt(name, birthInfo, pillars, lang, category) {
   const pH = formatPillar(pillars.hour, lang);
 
   return `
-너는 'MYSTIC AI'라는 40년 경력 한국 사주 명리 마스터다.
-사용자 이름: ${name}
-출생 정보: ${birthInfo}
+You are 'MYSTIC AI', a grandmaster of Saju (Four Pillars of Destiny).
+Language: ${lang} (Answer ONLY in ${lang})
+Client: ${name}
+Birth: ${birthInfo}
+Pillars: Year(${pY}), Month(${pM}), Day(${pD}), Hour(${pH})
 
-[정확히 계산된 사주]
-- 년주: ${pY}
-- 월주: ${pM}
-- 일주: ${pD}
-- 시주: ${pH}
+Task: Write PART 1 of a premium '${category}' report.
+Structure:
+1. **Greeting & Essence**: deeply analyze their Day Pillar (${pD}) personality.
+2. **The Big Picture**: Explain the interaction between their pillars and the 2026 Fire Horse (丙午) year.
+3. **Core Themes**: 3 Key keywords for their destiny this year.
 
-이 사주 정보를 기초로 해서 '${category}' 리포트의
-1) 도입부  
-2) 핵심 성향 분석  
-3) 2026 병오년 운세의 큰 그림 요약  
-4) 기대감을 올리는 중간 브릿지
-
-까지만 작성해라.
-
-**아직 결론, 상세 월별, 조언, 경고, 핵심 문장 등은 쓰지 마라.** (2차에서 이어서 작성할 것)
-톤은 따뜻하고 깊이 있고, 섹션 제목에 ✨🌙💰❤️🔮 이모지를 자연스럽게 섞어라.
+IMPORTANT:
+- Do NOT write a conclusion. Stop after the Core Themes.
+- Use Markdown (## Headers, **Bold**).
+- Use emojis (✨, 🔮, 🐉) tastefully.
+- Be mystical yet logical.
 `;
 }
 
-function buildFinalPrompt(part1, name, category) {
+// [2차] 상세 운세 + 솔루션 프롬프트
+function buildFinalPrompt(part1, category, lang) {
   return `
-너는 이어서 '${category}' 리포트의 마무리 부분을 작성한다.
+You are 'MYSTIC AI'. Continue writing PART 2 of the '${category}' report.
+Language: ${lang} (Answer ONLY in ${lang})
 
-여기는 2차 호출이다.
-아래는 1차에서 네가 작성한 도입부 + 중간까지의 내용이다:
-
-[1차 내용 시작]
+Here is PART 1 that you just wrote:
+"""
 ${part1}
-[1차 내용 끝]
+"""
 
-이제 이어서:
+Task: Write PART 2 to finish the report.
+Structure:
+1. **Detailed Flow**: Monthly or seasonal breakdown for 2026.
+2. **Actionable Advice**: Specific tips for Wealth, Love, and Career.
+3. **Cautionary Notes**: What to watch out for (Health/Relationships).
+4. **Lucky Items/Colors**: Practical fung-shui tips.
+5. **Final Oracle Message**: A powerful, inspiring closing quote.
 
-- 세부 흐름  
-- 2026 병오년 월별  
-- 재물/일/사람 관계/멘탈 조언  
-- 건강 주의 포인트  
-- 현실적인 가이드 + 개운법  
-- 마지막 3줄 핵심 문장(명언 느낌)
-
-을 자연스럽게 이어서 작성해라.
-
-조건:
-- 1차와 2차 연결이 매끄럽게  
-- 톤/이모지/스타일 유지  
-- 과장 금지, 실전적이고 깊이 있게  
-- 최소 1500~2000자 분량  
+IMPORTANT:
+- seamless transition from Part 1.
+- Maintain the same mystical tone.
+- Use Markdown.
+- Length: Make it rich and detailed.
 `;
 }
 
 // ============================================
-// 4. Haiku API 호출
+// 4. Claude API 호출 함수
 // ============================================
-
 async function callClaude(prompt) {
   const payload = {
     model: 'claude-3-haiku-20240307',
-    max_tokens: 4500,
+    max_tokens: 4000, // 안전하게 4000으로 설정
     temperature: 0.7,
     messages: [{ role: 'user', content: prompt }]
   };
@@ -185,35 +170,65 @@ async function callClaude(prompt) {
     body: JSON.stringify(payload)
   });
 
+  if (!resp.ok) {
+    const txt = await resp.text();
+    throw new Error(`Anthropic API Error: ${txt}`);
+  }
+
   const data = await resp.json();
   return data?.content?.[0]?.text || '';
 }
 
 // ============================================
-// 5. 메인 엔드포인트 — 2회 자동 호출
+// 5. 메인 엔드포인트 (분기 처리 완벽 적용)
 // ============================================
 
 app.post('/api/fortune', async (req, res) => {
   try {
     const body = req.body;
-    const { name, birthYear, birthMonth, birthDay, birthTime, birthPlace, categories } = body;
+    
+    // --- A. 커플 궁합 (기존 방식: 1회 호출) ---
+    if (body.person1 && body.person2) {
+      const p1 = body.person1;
+      const p2 = body.person2;
+      const pillars1 = calculateFourPillars(p1.birthYear, p1.birthMonth, p1.birthDay, p1.birthTime);
+      const pillars2 = calculateFourPillars(p2.birthYear, p2.birthMonth, p2.birthDay, p2.birthTime);
+      const lang = detectLanguage(p1.name);
+      
+      const prompt = `
+      Analyze compatibility between ${p1.name} (${formatPillar(pillars1.day, lang)}) and ${p2.name} (${formatPillar(pillars2.day, lang)}).
+      Provide a score, chemistry analysis, and advice. Use Markdown.
+      `;
+      const result = await callClaude(prompt);
+      return res.status(200).json({ fortune: result });
+    }
 
+    // --- B. 꿈 해몽 (기존 방식: 1회 호출) ---
+    if (body.dreamContent) {
+      const pillars = calculateFourPillars(body.birthYear, body.birthMonth, body.birthDay, body.birthTime);
+      const prompt = `Interpret this dream: "${body.dreamContent}" for a person with Day Pillar ${formatPillar(pillars.day, 'English')}. Use Markdown.`;
+      const result = await callClaude(prompt);
+      return res.status(200).json({ fortune: result });
+    }
+
+    // --- C. 개인 운세 (신규 방식: 2회 분할 호출로 길게 뽑기) ---
+    const { name, birthYear, birthMonth, birthDay, birthTime, birthPlace, categories } = body;
     const lang = detectLanguage(name);
     const birthInfo = `${birthYear}-${birthMonth}-${birthDay} ${birthTime} (${birthPlace})`;
     const category = (categories && categories[0]) || 'NewYear';
-
     const pillars = calculateFourPillars(birthYear, birthMonth, birthDay, birthTime);
 
-    // ------- 1차 호출 -------
+    // 1단계: 도입부 생성
     const prompt1 = buildIntroPrompt(name, birthInfo, pillars, lang, category);
     const part1 = await callClaude(prompt1);
-    // ------- 2차 호출 -------
-    const prompt2 = buildFinalPrompt(part1, name, category);
+
+    // 2단계: 본문+결론 생성 (1단계 내용을 문맥으로 전달)
+    const prompt2 = buildFinalPrompt(part1, category, lang);
     const part2 = await callClaude(prompt2);
 
-    // 최종 합치기
+    // 합치기
     const finalText = `${part1}\n\n${part2}`;
-
+    
     return res.status(200).json({ fortune: finalText });
 
   } catch (err) {
