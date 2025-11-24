@@ -44,7 +44,7 @@
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 40px 20px 100px; /* 하단 여백 확보 */
+            padding: 40px 20px 100px;
             position: relative;
             z-index: 2;
         }
@@ -67,6 +67,11 @@
         @keyframes levitate {
             0%,100% { transform:translateY(0); }
             50% { transform:translateY(-15px); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .logo {
@@ -93,7 +98,9 @@
             background: linear-gradient(90deg, transparent, #d4af37, transparent);
         }
 
-        /* Loading Screen */
+        /* ============================================
+           LOADING SCREEN
+           ============================================ */
         #loading {
             position: fixed;
             inset: 0;
@@ -122,14 +129,117 @@
         }
         @keyframes pulse { 50% { opacity: 0.5; } }
 
-        /* Result Section */
+        /* ============================================
+           COMPLETION EFFECT (Phase 1)
+           ============================================ */
+        #completionEffect {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .completion-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #d4af37;
+            text-shadow: 0 0 50px rgba(212,175,55,0.8);
+            margin-bottom: 20px;
+            animation: scaleIn 0.8s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .completion-subtitle {
+            font-size: 1.2rem;
+            color: #bbb;
+            letter-spacing: 2px;
+        }
+
+        /* ============================================
+           RESULT SECTION
+           ============================================ */
         #result {
             display: none;
-            animation: fadeIn 1.6s ease;
+            animation: fadeIn 1s ease;
         }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeIn { 
+            from { opacity:0; transform:translateY(20px); } 
+            to { opacity:1; transform:translateY(0); } 
+        }
 
-        /* Result Card */
+        /* ============================================
+           INTERACTIVE NAVIGATION (Sticky)
+           ============================================ */
+        .section-nav {
+            position: sticky;
+            top: 20px;
+            background: rgba(20, 30, 48, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50px;
+            padding: 15px 20px;
+            margin-bottom: 40px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            opacity: 0;
+            animation: slideDown 0.8s ease 1s forwards;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-nav::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .section-nav::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 2px;
+        }
+
+        .nav-item {
+            padding: 8px 18px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bbb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
+        .nav-item:hover {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #d4af37, #aa8a2e);
+            border-color: #d4af37;
+            color: #0a1929;
+            font-weight: 600;
+        }
+
+        /* ============================================
+           RESULT CARD
+           ============================================ */
         .result-card {
             background: rgba(20, 30, 48, 0.85);
             backdrop-filter: blur(20px);
@@ -151,13 +261,33 @@
         .corner.tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
         .corner.br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
 
-        /* Markdown Content Styling */
+        /* ============================================
+           MARKDOWN CONTENT STYLING
+           ============================================ */
         .markdown-body {
             color: #e8e8e8;
             font-size: 1.1rem;
             line-height: 1.9;
             word-break: keep-all;
         }
+
+        /* Section fade-in animation */
+        .markdown-body h2 {
+            opacity: 0;
+            animation: sectionFadeIn 0.8s ease forwards;
+        }
+
+        @keyframes sectionFadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateX(-20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
         .markdown-body h1, .markdown-body h2 {
             font-family: 'Playfair Display', serif;
             color: #d4af37;
@@ -165,20 +295,35 @@
             margin-bottom: 15px;
             border-bottom: 1px solid rgba(212,175,55,0.2);
             padding-bottom: 10px;
+            scroll-margin-top: 100px; /* For smooth scroll */
         }
+
+        .markdown-body h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, #d4af37, transparent);
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
         .markdown-body h3 {
             color: #fff;
             margin-top: 30px;
             font-size: 1.2rem;
         }
+
         .markdown-body strong {
             color: #ffd700;
             font-weight: 700;
         }
+
         .markdown-body p {
             margin-bottom: 1.5em;
             text-align: justify;
         }
+
         .markdown-body blockquote {
             border-left: 3px solid #d4af37;
             padding-left: 15px;
@@ -188,21 +333,26 @@
             background: rgba(255,255,255,0.05);
             padding: 15px;
         }
+
         .markdown-body ul {
             padding-left: 20px;
             margin-bottom: 20px;
         }
+
         .markdown-body li {
             margin-bottom: 8px;
         }
 
-        /* Action Buttons */
+        /* ============================================
+           ACTION BUTTONS
+           ============================================ */
         .action-bar {
             display: flex;
             gap: 15px;
             justify-content: center;
             margin-top: 40px;
             flex-wrap: wrap;
+            animation: fadeIn 1s ease 1.5s backwards;
         }
 
         .btn {
@@ -224,25 +374,70 @@
             color: #0a1929;
             box-shadow: 0 10px 20px rgba(212,175,55,0.3);
         }
-        .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(212,175,55,0.5); }
+        .btn-gold:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 30px rgba(212,175,55,0.5); 
+        }
 
         .btn-dark {
             background: rgba(255,255,255,0.1);
             color: #fff;
             border: 1px solid rgba(255,255,255,0.2);
         }
-        .btn-dark:hover { background: rgba(255,255,255,0.2); transform: translateY(-3px); }
-
-        /* Scroll Progress */
-        .scroll-indicator {
-            position: fixed; top: 0; left: 0; height: 4px; background: #d4af37; z-index: 100; width: 0%;
-            box-shadow: 0 0 10px #d4af37;
+        .btn-dark:hover { 
+            background: rgba(255,255,255,0.2); 
+            transform: translateY(-3px); 
         }
 
+        /* ============================================
+           SCROLL PROGRESS
+           ============================================ */
+        .scroll-indicator {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            height: 4px; 
+            background: #d4af37; 
+            z-index: 100; 
+            width: 0%;
+            box-shadow: 0 0 10px #d4af37;
+            transition: width 0.1s ease;
+        }
+
+        /* ============================================
+           TYPING CURSOR
+           ============================================ */
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background: #d4af37;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
         @media (max-width: 600px) {
             .logo { font-size: 2.2rem; }
             .result-card { padding: 30px 20px; }
             .btn { flex: 1; justify-content: center; }
+            .completion-text { font-size: 2.5rem; }
+            .section-nav {
+                justify-content: flex-start;
+                padding: 12px 15px;
+            }
+            .nav-item {
+                font-size: 0.85rem;
+                padding: 6px 14px;
+            }
         }
     </style>
 </head>
@@ -252,20 +447,32 @@
 
     <div id="particles"></div>
 
+    <!-- Loading Screen -->
     <div id="loading">
         <div class="loading-symbol">🔮</div>
         <div class="loading-text">THE STARS ARE ALIGNING...</div>
     </div>
 
+    <!-- Completion Effect -->
+    <div id="completionEffect">
+        <div class="completion-text">✨ DESTINY UNLOCKED ✨</div>
+        <div class="completion-subtitle">Your 2026 fortune has been decoded</div>
+    </div>
+
     <div class="container">
         <div class="header">
             <span class="oracle-symbol">👁️</span>
-            <h1 class="logo">MYSTIC AI</h1>
+            <h1 class="logo">ORACLE EYES</h1>
             <p class="subtitle">Your Cosmic Destiny Revealed</p>
             <div class="divider"></div>
         </div>
 
         <div id="result">
+            <!-- Interactive Navigation -->
+            <div class="section-nav" id="sectionNav">
+                <!-- Dynamically generated -->
+            </div>
+
             <div class="result-card" id="captureArea">
                 <div class="corner tl"></div>
                 <div class="corner br"></div>
@@ -291,7 +498,9 @@
     </div>
 
     <script>
-        // 1. 파티클 생성
+        // ============================================
+        // 1. PARTICLES
+        // ============================================
         const particlesContainer = document.getElementById('particles');
         const shapes = ['✨', '⭐', '🌙', '🔮'];
         for(let i=0; i<20; i++) {
@@ -305,7 +514,9 @@
             particlesContainer.appendChild(p);
         }
 
-        // 2. 스크롤 바
+        // ============================================
+        // 2. SCROLL PROGRESS BAR
+        // ============================================
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -313,85 +524,218 @@
             document.getElementById("scrollProgress").style.width = scrolled + "%";
         });
 
-        // 3. 데이터 로드 및 렌더링
+        // ============================================
+        // 3. MAIN SCRIPT
+        // ============================================
         const fortuneData = sessionStorage.getItem('fortuneData');
         const loading = document.getElementById('loading');
+        const completionEffect = document.getElementById('completionEffect');
         const resultDiv = document.getElementById('result');
         const contentDiv = document.getElementById('fortune-content');
 
         if (fortuneData) {
-            // 마크다운 렌더링 (서버의 줄바꿈 문자 처리)
             const rawText = JSON.parse(fortuneData);
-            contentDiv.innerHTML = marked.parse(rawText);
-
-            // 로딩 종료 애니메이션
+            
+            // Convert markdown to HTML
+            const htmlContent = marked.parse(rawText);
+            
+            // Phase 1: Show completion effect (2초)
             setTimeout(() => {
                 loading.style.opacity = '0';
                 setTimeout(() => {
                     loading.style.display = 'none';
-                    resultDiv.style.display = 'block';
-                    fireConfetti(); // 폭죽 효과
+                    completionEffect.style.display = 'flex';
+                    fireConfetti(); // 폭죽
                 }, 800);
-            }, 2000); // 2초 대기 (긴장감 조성)
+            }, 1500);
+
+            // Phase 2: Hide completion, show result with typing (3.5초)
+            setTimeout(() => {
+                completionEffect.style.opacity = '0';
+                setTimeout(() => {
+                    completionEffect.style.display = 'none';
+                    resultDiv.style.display = 'block';
+                    
+                    // Start typing animation
+                    typeContent(htmlContent);
+                }, 800);
+            }, 3500);
             
-            // 데이터 삭제 (새로고침 시 리셋)
+            // Clear session storage
             sessionStorage.removeItem('fortuneData');
         } else {
-            // 데이터 없으면 메인으로
             location.href = 'index.html';
         }
 
-        // ✨ 폭죽 효과
+        // ============================================
+        // 4. TYPING ANIMATION
+        // ============================================
+        function typeContent(htmlContent) {
+            // Create a temporary element to parse HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlContent;
+            
+            // Insert content immediately (for structure)
+            contentDiv.innerHTML = htmlContent;
+            
+            // Build section navigation
+            buildSectionNav();
+            
+            // Animate sections sequentially
+            const sections = contentDiv.querySelectorAll('h2');
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    section.style.animationDelay = '0s';
+                    section.style.opacity = '1';
+                    
+                    // Scroll hint on first section
+                    if (index === 0) {
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, index * 300); // Stagger by 300ms
+            });
+        }
+
+        // ============================================
+        // 5. SECTION NAVIGATION
+        // ============================================
+        function buildSectionNav() {
+            const nav = document.getElementById('sectionNav');
+            const sections = contentDiv.querySelectorAll('h2');
+            
+            sections.forEach((section, index) => {
+                const navItem = document.createElement('div');
+                navItem.className = 'nav-item';
+                navItem.textContent = section.textContent.replace(/[🔮💰❤️💼💪🗓️🎁✨⚡🌟🧿]/g, '').trim();
+                
+                // Add emoji
+                const emoji = section.textContent.match(/[🔮💰❤️💼💪🗓️🎁✨⚡🌟🧿]/);
+                if (emoji) {
+                    navItem.textContent = emoji[0] + ' ' + navItem.textContent;
+                }
+                
+                navItem.onclick = () => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Update active state
+                    document.querySelectorAll('.nav-item').forEach(item => 
+                        item.classList.remove('active'));
+                    navItem.classList.add('active');
+                };
+                
+                // Set first as active
+                if (index === 0) navItem.classList.add('active');
+                
+                nav.appendChild(navItem);
+            });
+        }
+
+        // ============================================
+        // 6. CONFETTI EFFECT
+        // ============================================
         function fireConfetti() {
             const duration = 3000;
             const end = Date.now() + duration;
+            
             (function frame() {
                 confetti({
-                    particleCount: 3,
+                    particleCount: 5,
                     angle: 60,
                     spread: 55,
                     origin: { x: 0 },
-                    colors: ['#FFD700', '#FFFFFF']
+                    colors: ['#FFD700', '#FFFFFF', '#d4af37']
                 });
                 confetti({
-                    particleCount: 3,
+                    particleCount: 5,
                     angle: 120,
                     spread: 55,
                     origin: { x: 1 },
-                    colors: ['#FFD700', '#FFFFFF']
+                    colors: ['#FFD700', '#FFFFFF', '#d4af37']
                 });
-                if (Date.now() < end) requestAnimationFrame(frame);
+                
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
             }());
         }
 
-        // 📸 이미지 저장
+        // ============================================
+        // 7. SAVE IMAGE
+        // ============================================
         function saveImage() {
             const element = document.getElementById('captureArea');
             html2canvas(element, {
                 backgroundColor: '#0f1a2b',
-                scale: 2
+                scale: 2,
+                logging: false
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'My_Destiny_2026.png';
+                link.download = 'My_Destiny_2026_OracleEyes.png';
                 link.href = canvas.toDataURL();
                 link.click();
-                alert('Image Saved! 📸');
+                
+                // Show success message
+                showToast('📸 Image saved successfully!');
             });
         }
 
-        // 🔗 공유하기
+        // ============================================
+        // 8. SHARE RESULT
+        // ============================================
         function shareResult() {
             if (navigator.share) {
                 navigator.share({
-                    title: 'OracleEyes Destiny',
-                    text: 'I just revealed my 2026 destiny! ✨',
-                    url: window.location.href
+                    title: 'OracleEyes - My 2026 Destiny',
+                    text: 'I just revealed my 2026 destiny with OracleEyes AI! ✨',
+                    url: window.location.origin
+                }).then(() => {
+                    showToast('🎉 Shared successfully!');
                 });
             } else {
+                // Fallback: copy link
                 navigator.clipboard.writeText(window.location.origin);
-                alert('Link Copied! 🔗');
+                showToast('🔗 Link copied to clipboard!');
             }
         }
+
+        // ============================================
+        // 9. TOAST NOTIFICATION
+        // ============================================
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(212, 175, 55, 0.95);
+                color: #0a1929;
+                padding: 15px 30px;
+                border-radius: 50px;
+                font-weight: 600;
+                z-index: 10000;
+                animation: slideUp 0.5s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s';
+                setTimeout(() => toast.remove(), 500);
+            }, 2500);
+        }
+
+        // Add slideUp animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from { opacity: 0; transform: translate(-50%, 20px); }
+                to { opacity: 1; transform: translate(-50%, 0); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
