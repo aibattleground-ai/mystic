@@ -166,18 +166,18 @@
             background: linear-gradient(90deg, #d4af37, #ffd700, #fff);
             border-radius: 10px;
             width: 0%;
-            animation: loading 30s ease-out forwards;
+            animation: loading 300s ease-out forwards;
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
         }
 
         @keyframes loading {
             0% { width: 0%; }
-            10% { width: 15%; }
-            30% { width: 35%; }
-            50% { width: 55%; }
-            70% { width: 75%; }
-            90% { width: 90%; }
-            100% { width: 95%; }
+            10% { width: 20%; }  /* 초반엔 빨리 참 (반응성) */
+            30% { width: 50%; }  /* 중간까지도 적당히 속도감 */
+            60% { width: 75%; }  /* 여기서부터 느려짐 */
+            80% { width: 85%; }  /* 아주 천천히 */
+            95% { width: 90%; }  /* 거의 멈춘 듯이 */
+            100% { width: 95%; } /* 90초가 지나도 95%에서 멈춤 (절대 꽉 안 참) */
         }
 
         /* 메시지 로테이션 */
@@ -296,7 +296,7 @@
                 alert('The Oracle is taking longer than expected. Please try again.');
                 window.location.href = '/';
             }
-        }, 120000);
+        }, 300000);
     </script>
 </body>
 </html>
