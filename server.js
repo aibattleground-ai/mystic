@@ -85,7 +85,7 @@ Task: Write a **PREMIUM ${category} REPORT** for ${targetYear}.
 async function callClaude(prompt) {
   const payload = {
     // ★★★ 가장 안전한 '최신 버전 자동 선택' 옵션 ★★★
-    model: 'claude-3-5-sonnet-latest', 
+    model: 'claude-3-5-sonnet-20241022', 
     max_tokens: 4096, 
     temperature: 0.7,
     messages: [{ role: 'user', content: prompt }]
