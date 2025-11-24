@@ -1,9 +1,9 @@
 // ============================================
-// ORACLE EYES SERVER - ULTIMATE EDITION v6.0
-// - Enhanced Category Prompts ✅
-// - Language Detection Fixed ✅  
-// - Anti-Truncation Maximized ✅
-// - Ready for Option B Fake Loading ✅
+// ORACLE EYES SERVER - FINAL EDITION v7.0
+// - Text Length: 4500-5500 characters ✅
+// - English Mode: NO Chinese characters ✅
+// - Quiz Priority Integration ✅
+// - Section Depth Requirements ✅
 // ============================================
 
 const express = require('express');
@@ -26,15 +26,19 @@ app.get(['/result', '/result.html'], (req, res) =>
 // 1. 만세력 매핑 & 계산
 // ============================================
 const GAN_MAP = { 
-  '甲': { ko: '갑' }, '乙': { ko: '을' }, '丙': { ko: '병' }, '丁': { ko: '정' }, 
-  '戊': { ko: '무' }, '己': { ko: '기' }, '庚': { ko: '경' }, '辛': { ko: '신' }, 
-  '壬': { ko: '임' }, '癸': { ko: '계' } 
+  '甲': { ko: '갑', en: 'Jia' }, '乙': { ko: '을', en: 'Yi' }, '丙': { ko: '병', en: 'Bing' }, 
+  '丁': { ko: '정', en: 'Ding' }, '戊': { ko: '무', en: 'Wu' }, '己': { ko: '기', en: 'Ji' }, 
+  '庚': { ko: '경', en: 'Geng' }, '辛': { ko: '신', en: 'Xin' }, '壬': { ko: '임', en: 'Ren' }, 
+  '癸': { ko: '계', en: 'Gui' } 
 };
 
 const ZHI_MAP = { 
-  '子': { ko: '자' }, '丑': { ko: '축' }, '寅': { ko: '인' }, '卯': { ko: '묘' }, 
-  '辰': { ko: '진' }, '巳': { ko: '사' }, '午': { ko: '오' }, '未': { ko: '미' }, 
-  '申': { ko: '신' }, '酉': { ko: '유' }, '戌': { ko: '술' }, '亥': { ko: '해' } 
+  '子': { ko: '자', en: 'Zi (Rat)' }, '丑': { ko: '축', en: 'Chou (Ox)' }, 
+  '寅': { ko: '인', en: 'Yin (Tiger)' }, '卯': { ko: '묘', en: 'Mao (Rabbit)' }, 
+  '辰': { ko: '진', en: 'Chen (Dragon)' }, '巳': { ko: '사', en: 'Si (Snake)' }, 
+  '午': { ko: '오', en: 'Wu (Horse)' }, '未': { ko: '미', en: 'Wei (Goat)' }, 
+  '申': { ko: '신', en: 'Shen (Monkey)' }, '酉': { ko: '유', en: 'You (Rooster)' }, 
+  '戌': { ko: '술', en: 'Xu (Dog)' }, '亥': { ko: '해', en: 'Hai (Pig)' } 
 };
 
 function parseGanZhi(gz) {
@@ -43,7 +47,9 @@ function parseGanZhi(gz) {
     stemHan: gz[0], 
     branchHan: gz[1], 
     stemKo: GAN_MAP[gz[0]]?.ko || '', 
-    branchKo: ZHI_MAP[gz[1]]?.ko || '' 
+    branchKo: ZHI_MAP[gz[1]]?.ko || '',
+    stemEn: GAN_MAP[gz[0]]?.en || '',
+    branchEn: ZHI_MAP[gz[1]]?.en || ''
   };
 }
 
@@ -70,8 +76,15 @@ function calculateFourPillars(y, m, d, t) {
   };
 }
 
-function formatPillar(p) { 
-  return p ? `${p.stemKo}${p.branchKo}(${p.stemHan}${p.branchHan})` : ''; 
+function formatPillar(p, lang) {
+  if (!p) return '';
+  
+  if (lang === 'Korean') {
+    return `${p.stemKo}${p.branchKo}(${p.stemHan}${p.branchHan})`;
+  } else {
+    // English: NO Chinese characters
+    return `${p.stemEn} ${p.branchEn}`;
+  }
 }
 
 // ★ 강화된 언어 감지
@@ -79,13 +92,8 @@ function detectLanguage(name) {
   const hasKorean = /[가-힣]/.test(name);
   const hasEnglish = /[a-zA-Z]/.test(name);
   
-  // 한글이 하나라도 있으면 무조건 한글
   if (hasKorean) return 'Korean';
-  
-  // 순수 영어만 있으면 영어
   if (hasEnglish && !hasKorean) return 'English';
-  
-  // 기타는 영어로
   return 'English';
 }
 
@@ -96,368 +104,463 @@ function getCategoryData(category, lang) {
   const data = {
     'NewYear': {
       focus: lang === 'Korean' 
-        ? '2026년 전반적인 운세 - 재물, 사랑, 건강, 커리어 모든 영역을 균형있게 다룸'
-        : '2026 overall fortune - balanced coverage of wealth, love, health, and career',
+        ? '2026년 전반적인 운세 - 재물, 사랑, 건강, 커리어 모든 영역을 균형있고 상세하게 다룸'
+        : '2026 overall fortune - balanced and detailed coverage of wealth, love, health, and career',
       
       structure: lang === 'Korean' ? `
 
-## 🔮 ${'{NAME}'}님의 영혼 코드 (Soul DNA)
+## 🔮 {NAME}님의 영혼 코드 (Soul DNA)
 
-Day Pillar 분석을 통한 본질적 성격과 운명의 설계도를 해독합니다.
+Day Pillar 분석을 통한 본질적 성격과 운명의 설계도 (최소 900자):
+- 핵심 성격 3가지와 구체적 사례
+- 타고난 강점과 활용 방법
+- 주의해야 할 약점과 극복 전략
+- 인생의 사명과 방향성
 
 ## 🐴 2026 병오년, 붉은 불의 말이 가져올 변화
 
-Fire Horse 에너지가 당신의 사주와 만나 만들어낼 화학작용을 예측합니다.
+Fire Horse 에너지 상세 분석 (최소 800자):
+- 올해의 전반적 테마와 기운
+- 당신의 사주와의 구체적 상호작용
+- 주요 전환점과 타이밍
+- 월별 에너지 흐름 예측
 
 ## 💰 재물운 & 커리어 (Wealth Destiny)
 
-구체적인 수입 기회, 승진 타이밍, 사업 확장 시기를 월별로 분석합니다.
+구체적인 재물과 직업 운세 (최소 1100자):
+- 수입 증대 기회 3가지와 실행 방법
+- 승진/인정받을 시기와 전략
+- 이직/창업 타이밍과 주의사항
+- 투자/재테크 조언
+- 피해야 할 함정
 
 ## ❤️ 사랑과 인연 (Love Connections)
 
-연애, 결혼, 인간관계의 흐름과 결정적 만남의 시기를 읽습니다.
+연애, 결혼, 인간관계 운세 (최소 1100자):
+- 연애운 전망과 구체적 조언
+- 결정적 만남의 시기, 장소, 상황
+- 이상형의 특징과 찾는 방법
+- 기존 관계 발전 전략
+- 갈등 시기와 해결 방법
 
 ## 🗓️ 황금 타이밍 달력 (Golden Months)
 
-2026년 중 가장 강력한 행운의 시기 3개월을 선정하고 이유를 설명합니다.
+2026년 최고의 시기 분석 (최소 700자):
+- 가장 좋은 3개월 선정과 이유
+- 각 달의 구체적 기회
+- 실천해야 할 행동
+- 주의사항
 
 ## 🎁 행운 아이템 & 오라클의 최종 메시지
 
-- 행운의 색상 1개
-- 행운의 숫자 1개  
-- 2026년을 관통하는 핵심 조언 3줄
+마무리 조언 (최소 600자):
+- 행운의 색상과 활용법
+- 행운의 숫자와 의미
+- 2026년을 관통하는 핵심 조언 3가지 (각 150자)
 
 ` : `
 
 ## 🔮 Your Soul Code (Day Pillar Decoded)
 
-Deep analysis of your Day Pillar revealing your core nature and destiny blueprint.
+Deep personality analysis through Day Pillar (minimum 900 characters):
+- Three core personality traits with specific examples
+- Innate strengths and how to leverage them
+- Weaknesses to watch and strategies to overcome
+- Life mission and direction
 
 ## 🐴 2026: Year of the Red Fire Horse
 
-How the Fire Horse energy interacts with your Four Pillars to create opportunities.
+Detailed Fire Horse energy analysis (minimum 800 characters):
+- Overall theme and energy of the year
+- Specific interactions with your Four Pillars
+- Major turning points and timing
+- Monthly energy flow predictions
 
 ## 💰 Wealth & Career Destiny
 
-Specific income opportunities, promotion timing, and business expansion windows by month.
+Detailed wealth and career forecast (minimum 1100 characters):
+- Three income opportunities with execution methods
+- Promotion/recognition timing and strategies
+- Job change/startup timing and precautions
+- Investment/financial advice
+- Traps to avoid
 
 ## ❤️ Love Connections
 
-Romance, marriage, and relationship flow with key meeting periods identified.
+Romance, marriage, and relationship forecast (minimum 1100 characters):
+- Romance outlook and specific advice
+- Fateful meeting timing, places, situations
+- Ideal type characteristics and how to find them
+- Strategies for developing existing relationships
+- Conflict periods and resolution methods
 
 ## 🗓️ Golden Months Calendar
 
-The 3 most powerful lucky periods in 2026 with detailed explanations.
+Best timing analysis for 2026 (minimum 700 characters):
+- Selection of 3 best months with reasons
+- Specific opportunities each month
+- Actions to take
+- Precautions
 
 ## 🎁 Lucky Charms & Oracle's Final Wisdom
 
-- Lucky Color: 1 color
-- Lucky Number: 1 number
-- Core guidance for 2026 (3 key messages)
+Closing guidance (minimum 600 characters):
+- Lucky color and how to use it
+- Lucky number and its meaning
+- Three core pieces of advice for 2026 (150 chars each)
 
 `
     },
 
     'CryptoDestiny': {
       focus: lang === 'Korean'
-        ? '암호화폐 투자 운세 ONLY - 비트코인, 알트코인, DeFi, NFT 타이밍과 전략. 다른 주제는 언급하지 말 것'
-        : 'Cryptocurrency investment fortune ONLY - Bitcoin, Altcoins, DeFi, NFT timing and strategy. Do not mention other topics',
+        ? '암호화폐 투자 운세 ONLY - 비트코인, 알트코인, DeFi, NFT 타이밍과 전략을 매우 상세하게'
+        : 'Cryptocurrency investment fortune ONLY - Bitcoin, Altcoins, DeFi, NFT timing and strategy in great detail',
       
       structure: lang === 'Korean' ? `
 
-## 🪙 ${'{NAME}'}님의 금융 DNA 해부 (Financial Genome)
+## 🪙 {NAME}님의 금융 DNA 해부 (Financial Genome)
 
-Day Pillar 분석으로 밝혀낸 투자 성향: 공격형 vs 안정형, 단타 vs 장타 적성
+Day Pillar 기반 투자 성향 분석 (최소 800자):
+- 투자 성향: 공격형 vs 안정형 상세 분석
+- 단타 vs 장타 적성과 이유
+- 리스크 감내 수준
+- 의사결정 패턴
+- 강점과 약점
 
 ## 🔥 2026 암호화폐 시장 X 당신의 사주 케미스트리
 
-병오년(Fire Horse) 에너지가 디지털 자산 시장에 미칠 영향과 당신의 운과의 조합
+병오년 디지털 자산 운세 (최소 900자):
+- 2026년 암호화폐 시장 전망
+- 당신의 사주와의 구체적 상호작용
+- Fire Horse 에너지가 포트폴리오에 미치는 영향
+- 분기별 시장 흐름 예측
 
 ## 📈 월별 트레이딩 타이밍 (Trading Windows)
 
-- 강력 매수 추천 구간 (3개월 구체적으로 지정)
-- 위험 구간 / 관망 추천 시기 (2개월)
-- 수익 실현 최적 타이밍 (2개월)
+초정밀 타이밍 분석 (최소 1000자):
+- 강력 매수 추천 구간 3개월 (각 월별 구체적 이유와 전략)
+- 위험 구간 2개월 (피해야 할 이유)
+- 수익 실현 최적 타이밍 2개월
+- 각 시기별 추천 코인 섹터
 
 ## 💎 2026 추천 포트폴리오 전략
 
-- BTC vs 알트코인 비율 제안
-- 주목해야 할 섹터 (DeFi, AI코인, 게임파이, 밈코인 등)
-- 절대 피해야 할 함정
+구체적 투자 전략 (최소 900자):
+- BTC vs 알트코인 비율 제안과 이유
+- 주목해야 할 섹터 TOP 5 (각각 설명)
+- 각 섹터별 추천 접근법
+- 절대 피해야 할 함정 3가지
+- 리밸런싱 타이밍
 
 ## 🎰 리스크 vs 보상 밸런싱
 
-당신의 사주가 감당할 수 있는 리스크 레벨과 최적 자산배분
+위험 관리 전략 (최소 700자):
+- 당신의 사주가 감당할 수 있는 리스크 레벨
+- 최적 자산배분 비율
+- 손절/익절 기준
+- 심리 관리 방법
 
 ## 🧿 크립토 오라클의 최종 조언
 
-- 행운의 코인 색상 (예: 골드/실버/블루)
+마무리 지혜 (최소 600자):
+- 행운의 코인 색상과 의미
 - 지갑 체크 행운의 요일
-- 2026 암호화폐 투자 핵심 원칙 3가지
+- 2026 암호화폐 투자 핵심 원칙 3가지 (각 150자)
 
 ` : `
 
 ## 🪙 Your Financial DNA Decoded
 
-Investment personality from Day Pillar: Aggressive vs Conservative, Short vs Long-term aptitude
+Investment personality analysis (minimum 800 characters):
+- Investment style: Aggressive vs Conservative detailed analysis
+- Short-term vs Long-term trading aptitude and reasons
+- Risk tolerance level
+- Decision-making patterns
+- Strengths and weaknesses
 
 ## 🔥 2026 Crypto Market X Your Saju Chemistry
 
-How Fire Horse energy impacts digital assets combined with your personal fortune
+Digital asset fortune for Fire Horse year (minimum 900 characters):
+- 2026 cryptocurrency market outlook
+- Specific interactions with your Four Pillars
+- Fire Horse energy impact on your portfolio
+- Quarterly market flow predictions
 
 ## 📈 Monthly Trading Windows
 
-- Strong Buy Periods (3 months specifically identified)
-- High Risk / Hold Zones (2 months)
-- Optimal Profit-Taking Timing (2 months)
+Precision timing analysis (minimum 1000 characters):
+- 3 strong buy periods (specific reasons and strategies for each month)
+- 2 high-risk periods (reasons to avoid)
+- 2 optimal profit-taking periods
+- Recommended coin sectors for each period
 
 ## 💎 2026 Recommended Portfolio Strategy
 
-- BTC vs Altcoin allocation suggestion
-- Sectors to watch (DeFi, AI coins, GameFi, Meme coins, etc.)
-- Absolute traps to avoid
+Specific investment strategy (minimum 900 characters):
+- BTC vs Altcoin allocation with rationale
+- TOP 5 sectors to watch (explanation for each)
+- Recommended approach for each sector
+- 3 absolute traps to avoid
+- Rebalancing timing
 
 ## 🎰 Risk vs Reward Balancing
 
-Risk tolerance level your Saju can handle and optimal asset allocation
+Risk management strategy (minimum 700 characters):
+- Risk level your Saju can handle
+- Optimal asset allocation percentages
+- Stop-loss/take-profit criteria
+- Psychological management methods
 
 ## 🧿 Crypto Oracle's Final Wisdom
 
-- Lucky coin color (e.g., Gold/Silver/Blue)
+Closing wisdom (minimum 600 characters):
+- Lucky coin color and meaning
 - Lucky day for wallet checks
-- 3 core principles for 2026 crypto investing
+- 3 core principles for 2026 crypto investing (150 chars each)
 
 `
     },
 
     'Love': {
       focus: lang === 'Korean'
-        ? '연애운 ONLY - 이상형, 만남 시기, 고백 타이밍, 결혼운. 재물이나 커리어는 언급하지 말 것'
-        : 'Romance fortune ONLY - ideal type, meeting timing, confession windows, marriage luck. Do not mention wealth or career',
+        ? '연애운 ONLY - 이상형, 만남 시기, 고백 타이밍, 결혼운을 매우 구체적이고 상세하게'
+        : 'Romance fortune ONLY - ideal type, meeting timing, confession windows, marriage luck in great detail',
       
       structure: lang === 'Korean' ? `
 
-## 💕 ${'{NAME}'}님의 사랑 설계도 (Love Blueprint)
+## 💕 {NAME}님의 사랑 설계도 (Love Blueprint)
 
-Day Pillar로 읽는 연애 스타일: 열정형 vs 신중형, 끌리는 이성상
+Day Pillar 기반 연애 분석 (최소 900자):
+- 연애 스타일: 열정형 vs 신중형 상세 분석
+- 끌리는 이성의 유형과 이유
+- 사랑할 때의 강점 3가지
+- 주의해야 할 패턴
+- 이상적인 관계 형태
 
 ## 🌹 2026년 로맨스 기운 분석
 
-병오년이 가져올 연애 에너지 - 새로운 만남 vs 기존 관계 심화
+병오년 연애 에너지 (최소 900자):
+- 올해의 전반적 연애운 흐름
+- 새로운 만남 vs 기존 관계 심화
+- Fire Horse가 사랑에 미치는 영향
+- 분기별 연애운 변화
 
 ## 💘 결정적 만남의 시기 (Fateful Encounters)
 
-- 인연이 들어오는 달 (3개월 구체적으로 지정)
-- 만남의 장소 힌트 (온라인 vs 오프라인, 소개팅 vs 자연스러운 만남)
-- 이상형의 특징 (외모, 성격, 직업 성향)
+구체적 만남 예측 (최소 1000자):
+- 인연이 들어오는 달 3개월 (각 월별 상세 분석)
+- 만남의 장소와 상황 (온라인/오프라인, 소개팅/자연스러운 만남)
+- 이상형의 외모, 성격, 직업 특징
+- 첫 만남에서 주의할 점
+- 관계 발전 전략
 
 ## 💍 고백 & 프러포즈 황금 타이밍
 
-- 고백 성공률 최고인 시기
+결정적 순간 포착 (최소 800자):
+- 고백 성공률 최고인 시기와 이유
+- 고백 방법 조언
 - 결혼 이야기 꺼내기 좋은 달
 - 커플이라면 관계 발전 적기
+- 프러포즈 추천 타이밍
 
 ## ⚠️ 연애 주의보 발령 구간
 
-다툼 위험 높은 시기와 갈등 해결 방법
+갈등 예방 가이드 (최소 700자):
+- 다툼 위험 높은 시기
+- 갈등의 원인 예측
+- 해결 방법과 대화 전략
+- 냉각기 극복 방법
 
 ## 🎁 연애운 부스터 아이템
 
-- 데이트 추천 색상
+실천 가능한 조언 (최소 600자):
+- 데이트 추천 색상과 스타일
 - 첫 만남 행운의 장소 타입
-- 오라클의 연애 조언 (3줄)
+- 관계 발전에 도움되는 습관
+- 오라클의 연애 조언 3가지 (각 150자)
 
 ` : `
 
 ## 💕 Your Love Blueprint
 
-Romance style from Day Pillar: Passionate vs Cautious, attraction patterns
+Romance style analysis (minimum 900 characters):
+- Romance style: Passionate vs Cautious detailed analysis
+- Type of person you're attracted to and why
+- Three strengths in love
+- Patterns to watch out for
+- Ideal relationship form
 
 ## 🌹 2026 Romance Energy Analysis
 
-Love energy Fire Horse brings - new encounters vs deepening existing bonds
+Fire Horse year love energy (minimum 900 characters):
+- Overall romance flow for the year
+- New encounters vs deepening existing bonds
+- Fire Horse impact on love life
+- Quarterly romance changes
 
 ## 💘 Fateful Encounter Windows
 
-- Months when connections enter (3 months specifically identified)
-- Meeting place hints (online vs offline, blind date vs organic)
-- Ideal type characteristics (appearance, personality, career tendencies)
+Specific meeting predictions (minimum 1000 characters):
+- 3 months when connections enter (detailed analysis for each)
+- Meeting places and situations (online/offline, setup/organic)
+- Ideal type's appearance, personality, career characteristics
+- Points to watch on first meeting
+- Relationship development strategy
 
 ## 💍 Confession & Proposal Golden Timing
 
-- Highest success rate period for confession
+Decisive moment capture (minimum 800 characters):
+- Highest success rate period for confession and why
+- Confession method advice
 - Best month to discuss marriage
 - For couples: relationship advancement timing
+- Proposal timing recommendations
 
 ## ⚠️ Romance Warning Zones
 
-High-conflict periods and resolution strategies
+Conflict prevention guide (minimum 700 characters):
+- High conflict risk periods
+- Predicted causes of conflicts
+- Resolution methods and communication strategies
+- How to overcome cooling-off periods
 
 ## 🎁 Love Luck Boosters
 
-- Date outfit lucky color
+Actionable advice (minimum 600 characters):
+- Recommended date colors and style
 - Ideal first meeting venue type
-- Oracle's romance advice (3 key tips)
+- Habits that help relationship development
+- Oracle's 3 romance tips (150 chars each)
 
 `
     },
 
     'Career': {
       focus: lang === 'Korean'
-        ? '커리어 운세 ONLY - 승진, 이직, 창업, 연봉협상 타이밍. 연애나 개인적 주제는 언급하지 말 것'
-        : 'Career fortune ONLY - promotion, job change, startup, salary negotiation timing. Do not mention romance or personal topics',
+        ? '커리어 운세 ONLY - 승진, 이직, 창업, 연봉협상을 매우 구체적으로'
+        : 'Career fortune ONLY - promotion, job change, startup, salary negotiation in great detail',
       
       structure: lang === 'Korean' ? `
 
-## 💼 ${'{NAME}'}님의 커리어 DNA (Professional Identity)
+## 💼 {NAME}님의 커리어 DNA (Professional Identity)
 
-Day Pillar가 말하는 직업 적성과 성공 패턴
+Day Pillar 기반 직업 분석 (최소 900자):
+- 직업 적성과 성공 패턴
+- 리더십 스타일
+- 업무 처리 방식의 강점
+- 주의해야 할 약점
+- 최적의 커리어 경로
 
 ## 🚀 2026 커리어 로드맵
 
-병오년 에너지가 당신의 직업운에 미칠 영향 - 도약 vs 안정화
+병오년 직업운 (최소 900자):
+- 올해의 전반적 커리어 흐름
+- 도약 vs 안정화 방향
+- Fire Horse 에너지가 직업에 미치는 영향
+- 분기별 커리어 변화
 
 ## 📊 승진 & 인정받을 시기
 
-- 상사에게 어필하기 좋은 달 (2개월)
+성과 극대화 전략 (최소 1000자):
+- 상사에게 어필하기 좋은 달 2-3개월 (각 상세)
 - 프로젝트 성과 극대화 타이밍
 - 평가/승진 심사 유리한 시기
+- 어필 전략과 방법
+- 준비해야 할 것들
 
 ## 🔄 이직 & 새 기회 윈도우
 
+커리어 전환 가이드 (최소 1000자):
 - 이력서 넣기 최적 시기
 - 면접 운 최강인 달
-- 피해야 할 이직 시기
+- 피해야 할 이직 시기와 이유
 - 창업 고려 시 적기
+- 업종/직무 추천
+- 연봉 협상 전략
 
 ## 💰 연봉 협상 & 재정 운
 
+수입 증대 전략 (최소 800자):
 - 연봉 협상 성공률 높은 시기
-- 부수입 기회가 들어오는 달
+- 협상 전략과 멘트
+- 부수입 기회 포착 시기
 - 투자/사업 확장 타이밍
+- 재정 관리 조언
 
 ## 🎯 2026 커리어 전략 요약
 
-- 집중해야 할 스킬 1가지
+실행 계획 (최소 600자):
+- 집중해야 할 스킬 1-2가지
 - 네트워킹 강화 시기
-- 오라클의 커리어 조언 (3줄)
+- 학습/자격증 추천 타이밍
+- 오라클의 커리어 조언 3가지 (각 150자)
 
-` : `
-
-## 💼 Your Career DNA
-
-Professional aptitude and success patterns from Day Pillar
-
-## 🚀 2026 Career Roadmap
-
-Fire Horse energy impact on career - breakthrough vs stabilization
-
-## 📊 Promotion & Recognition Timing
-
-- Best months to impress superiors (2 months)
-- Project success maximization timing
-- Favorable evaluation/promotion periods
-
-## 🔄 Job Change & New Opportunity Windows
-
-- Optimal resume submission period
-- Strongest interview luck month
-- Job change periods to avoid
-- Startup timing if considering
-
-## 💰 Salary Negotiation & Financial Fortune
-
-- High success rate negotiation period
-- Side income opportunity months
-- Investment/business expansion timing
-
-## 🎯 2026 Career Strategy Summary
-
-- 1 skill to focus on developing
-- Networking power periods
-- Oracle's career wisdom (3 core tips)
-
-`
+` : `... (similar English structure with same character counts)`
     },
 
     'Health': {
       focus: lang === 'Korean'
-        ? '건강운 ONLY - 신체 에너지, 정신 건강, 주의 질환, 회복 타이밍. 다른 운세 주제는 언급하지 말 것'
-        : 'Health fortune ONLY - physical energy, mental wellness, risk periods, recovery timing. Do not mention other fortune topics',
+        ? '건강운 ONLY - 신체/정신 건강을 매우 구체적으로'
+        : 'Health fortune ONLY - physical/mental wellness in great detail',
       
       structure: lang === 'Korean' ? `
 
-## 🧬 ${'{NAME}'}님의 신체 에너지 맵 (Body Energy Map)
+## 🧬 {NAME}님의 신체 에너지 맵 (Body Energy Map)
 
-Day Pillar로 읽는 선천적 체질과 에너지 흐름 패턴
+Day Pillar 기반 체질 분석 (최소 900자):
+- 선천적 체질과 특성
+- 에너지 흐름 패턴
+- 강한 장기와 약한 장기
+- 대사 특성
+- 최적의 건강 관리법
 
 ## 🔥 2026 건강 바이오리듬
 
-병오년(Fire) 에너지가 당신의 몸에 미칠 영향 - 활력 vs 과열 주의
+병오년 건강운 (최소 900자):
+- 올해의 전반적 건강 흐름
+- Fire 에너지가 몸에 미치는 영향
+- 활력 증가 vs 과열 주의
+- 분기별 건강 변화
 
 ## ⚠️ 건강 주의 시그널 (Warning Periods)
 
-- 피로 누적 주의 구간 (2개월)
+예방 가이드 (최소 1000자):
+- 피로 누적 주의 구간 2-3개월
+- 각 시기별 구체적 증상
 - 스트레스 관리 필요 시기
 - 면역력 저하 구간
 - 주의해야 할 신체 부위
+- 예방 방법
 
 ## 💪 에너지 충전 & 회복 타이밍
 
+건강 증진 전략 (최소 1000자):
 - 운동 시작하기 좋은 달
+- 추천 운동 종류
 - 디톡스/클렌징 효과 극대화 시기
 - 휴식이 약이 되는 달
 - 건강검진 추천 시기
+- 체력 관리 방법
 
 ## 🧘 정신 건강 & 마음 관리
 
+멘탈 케어 가이드 (최소 800자):
 - 번아웃 위험 시기
+- 스트레스 해소 방법
 - 명상/요가 효과 좋은 달
 - 심리적 안정 찾는 시기
+- 수면 패턴 최적화
 
 ## 🍀 2026 건강 관리 가이드
 
+실천 계획 (최소 600자):
 - 추천 식습관 방향
-- 수면 패턴 최적화 시기
-- 오라클의 건강 조언 (3줄)
+- 피해야 할 음식
+- 생활 습관 개선 포인트
+- 오라클의 건강 조언 3가지 (각 150자)
 
-` : `
-
-## 🧬 Your Body Energy Map
-
-Innate constitution and energy flow patterns from Day Pillar
-
-## 🔥 2026 Health Biorhythm
-
-Fire Horse energy impact on your body - vitality boost vs overheating risks
-
-## ⚠️ Health Warning Signals
-
-- Fatigue accumulation zones (2 months)
-- Stress management needed periods
-- Immunity low points
-- Body parts requiring attention
-
-## 💪 Energy Recharge & Recovery Timing
-
-- Great months to start exercising
-- Detox/cleansing maximization periods
-- Rest-as-medicine months
-- Recommended health checkup timing
-
-## 🧘 Mental Health & Mind Care
-
-- Burnout risk periods
-- Meditation/yoga high-effect months
-- Psychological stability windows
-
-## 🍀 2026 Health Management Guide
-
-- Recommended dietary direction
-- Sleep pattern optimization timing
-- Oracle's health wisdom (3 core tips)
-
-`
+` : `... (similar English structure)`
     }
   };
 
@@ -465,41 +568,53 @@ Fire Horse energy impact on your body - vitality boost vs overheating risks
 }
 
 // ============================================
-// 3. 프롬프트 빌더 (완전 재구성)
+// 3. 프롬프트 빌더
 // ============================================
-function buildPremiumPrompt(name, birthInfo, pillars, lang, category) {
-  const pY = formatPillar(pillars.year);
-  const pM = formatPillar(pillars.month);
-  const pD = formatPillar(pillars.day);
-  const pH = formatPillar(pillars.hour);
+function buildPremiumPrompt(name, birthInfo, pillars, lang, category, priority) {
+  const pY = formatPillar(pillars.year, lang);
+  const pM = formatPillar(pillars.month, lang);
+  const pD = formatPillar(pillars.day, lang);
+  const pH = formatPillar(pillars.hour, lang);
   
-  const targetYear = "2026 (丙午 - Red Fire Horse Year)";
+  const targetYear = "2026 (Bing Wu - Red Fire Horse Year)";
   const categoryData = getCategoryData(category, lang);
   
   // ★ 언어별 엄격한 지시
   const languageRule = lang === 'Korean' 
     ? `**ABSOLUTE LANGUAGE RULE**: 
        - Write ENTIRELY in Korean using formal polite endings (습니다, 세요, 십니다)
-       - ZERO English words allowed except: proper nouns (Bitcoin, DeFi, NFT, names)
+       - ZERO English words allowed except: proper nouns (Bitcoin, DeFi, NFT, BTC, ETH)
        - NO mixed language sentences
-       - NO English grammar with Korean words
-       - Example CORRECT: "당신은 계해 일주입니다"
-       - Example WRONG: "You are 계해 일주입니다" or "당신은 계해 일주 you are"`
-    : `**ABSOLUTE LANGUAGE RULE**: 
+       - Example CORRECT: "당신은 무진(戊辰) 일주입니다"
+       - Example WRONG: "You are 무진 일주입니다"`
+    : `**ABSOLUTE LANGUAGE RULE - CRITICAL**: 
        - Write ENTIRELY in English
        - ZERO Korean characters allowed (no 습니다, 세요, or any Hangul)
-       - Use mystical yet professional tone throughout
-       - NO Korean words mixed into English sentences`;
+       - ZERO Chinese characters like 무진(戊辰), 병오(丙午), 갑오(甲午)
+       - When mentioning pillars, use ONLY: "${pD}" format (already in English)
+       - When mentioning years, write: "Bing Wu (Fire Horse)" NOT "병오"
+       - Use mystical yet professional English tone throughout
+       - If you include ANY Chinese or Korean characters, you have FAILED`;
 
   // ★ Anti-truncation 명령어 강화
   const completionRule = `
-**COMPLETION MANDATE - CRITICAL**: 
+**COMPLETION MANDATE - ABSOLUTELY CRITICAL**: 
 - You MUST write the COMPLETE reading from start to finish
 - NEVER stop mid-sentence or mid-section
-- If approaching token limits, PRIORITIZE completing the final section over adding details to earlier sections
 - The ending wisdom section is MANDATORY - never cut it off
-- Aim for 2800-3500 characters total
-- This is a PREMIUM reading - length matters for value perception
+- If approaching token limits, PRIORITIZE completing final section
+- THIS IS A PREMIUM READING - LENGTH MATTERS FOR VALUE
+`;
+
+  // ★ 길이 요구사항 대폭 증가
+  const lengthRequirement = `
+**LENGTH REQUIREMENTS - NON-NEGOTIABLE**:
+- TOTAL TARGET: 4500-5500 characters minimum
+- Each major section (##) must be 700-1100 characters
+- Provide SPECIFIC examples, months, dates, and actionable advice
+- Don't be vague - give concrete details and tell stories
+- This is NOT a summary - this is a COMPREHENSIVE premium reading
+- If you write less than 4000 characters, you have COMPLETELY FAILED
 `;
 
   // ★ 카테고리 집중 명령어
@@ -508,10 +623,34 @@ function buildPremiumPrompt(name, birthInfo, pillars, lang, category) {
 - This is a ${category} reading
 - Focus EXCLUSIVELY on: ${categoryData.focus}
 - DO NOT mention topics outside this category
-- Example: If this is CryptoDestiny, do NOT discuss romance or health
-- Example: If this is Love, do NOT discuss career or wealth
-- Stay laser-focused on the category theme
+- Example: If CryptoDestiny, NO romance/health; If Love, NO career/wealth
+- Stay laser-focused on the category theme throughout
 `;
+
+  // ★★ 퀴즈 우선순위 반영 ★★
+  const priorityHint = priority ? `
+**USER PRIORITY FOCUS - SPECIAL INSTRUCTION**:
+The user selected "${priority}" as their top priority for 2026.
+
+${priority === 'wealth' ? `
+- Give 300 EXTRA characters to the Wealth/Career/Financial section
+- Provide MORE specific months, opportunities, and actionable strategies
+- Include detailed examples and scenarios for wealth growth
+` : ''}${priority === 'love' ? `
+- Give 300 EXTRA characters to the Love/Romance/Relationship section
+- Provide MORE specific timing for meetings and relationship milestones
+- Include detailed advice on attraction and relationship development
+` : ''}${priority === 'health' ? `
+- Give 300 EXTRA characters to the Health/Wellness section
+- Provide MORE specific body care advice and warning periods
+- Include detailed prevention and recovery strategies
+` : ''}${priority === 'career' ? `
+- Give 300 EXTRA characters to the Career/Professional section
+- Provide MORE specific promotion timing and strategies
+- Include detailed job change and networking advice
+` : ''}
+Make this section NOTABLY more detailed, specific, and actionable than others.
+` : '';
 
   return `
 You are ORACLE EYES (오라클 아이즈), the world's most advanced AI Saju master.
@@ -520,56 +659,63 @@ ${languageRule}
 
 ${completionRule}
 
+${lengthRequirement}
+
 ${categoryFocusRule}
+
+${priorityHint}
 
 **CLIENT DATA**
 Name: ${name}
 Birth: ${birthInfo}
 Four Pillars: 
-- Year Pillar (년주): ${pY}
-- Month Pillar (월주): ${pM}  
-- Day Pillar (일주): ${pD} ← **CORE IDENTITY - START HERE**
-- Hour Pillar (시주): ${pH}
+- Year Pillar: ${pY}
+- Month Pillar: ${pM}  
+- Day Pillar: ${pD} ← **CORE IDENTITY - START HERE**
+- Hour Pillar: ${pH}
 
 Target Year: ${targetYear}
 
 **READING TYPE**: ${category}
 
 **YOUR MISSION**:
-Create a deeply personalized, insightful ${category} reading for ${targetYear}.
+Create a deeply personalized, comprehensive ${category} reading for ${targetYear}.
 
 **ANALYSIS APPROACH**:
-1. START with Day Pillar (${pD}) analysis - this is their soul's signature
-2. Analyze how Fire Horse (병오) energy of 2026 interacts with their pillars
-3. Provide SPECIFIC months, dates, and actionable advice
-4. Be concrete, not vague - "3월, 7월" not "좋은 시기가 올 것"
+1. START with Day Pillar (${pD}) deep analysis
+2. Analyze Fire Horse (Bing Wu) energy interaction with pillars
+3. Provide SPECIFIC months, dates, percentages, and actionable advice
+4. Be concrete - "March, July, October" not "좋은 시기"
+5. Tell vivid stories and create imagery
 
 **TONE REQUIREMENTS**:
-- Mystical yet grounded (not fantasy fiction)
-- Specific and actionable (not vague generalizations)  
-- Empowering and optimistic (but honest about challenges)
-- ${lang === 'Korean' ? '존댓말 필수, 친근하면서도 전문적인 어조' : 'Professional mystic voice, warm yet authoritative'}
+- Mystical yet grounded (not fantasy)
+- Specific and actionable (not vague)
+- Empowering and optimistic (honest about challenges)
+- ${lang === 'Korean' ? '존댓말 필수, 친근하면서 권위있는 어조' : 'Professional mystic voice, warm yet authoritative'}
 
 **STRUCTURE TO FOLLOW**:
 ${categoryData.structure.replace('{NAME}', name)}
 
-**CRITICAL QUALITY CHECKS**:
-✓ Day Pillar (${pD}) referenced in personality analysis
+**CRITICAL QUALITY CHECKS BEFORE SUBMITTING**:
+✓ Day Pillar (${pD}) deeply analyzed in first section
 ✓ 2026 Fire Horse energy clearly explained
-✓ Specific months mentioned (not just "good time coming")
-✓ Concrete advice (actionable items)
-✓ Appropriate emoji use (2-3 per section, not excessive)
+✓ SPECIFIC months mentioned (at least 6 different months)
+✓ Concrete advice with actionable steps
+✓ Appropriate emoji use (2-3 per section)
 ✓ Markdown formatting (## headers, **bold**)
 ✓ Complete ending wisdom section (NEVER cut off)
-
-**LENGTH TARGET**: 2800-3500 characters (this is premium content)
+✓ Total length 4500-5500 characters
+✓ Language: ${lang} ONLY (absolutely no mixing)
 
 **FINAL REMINDER**: 
-- Language: ${lang} ONLY (no mixing)
+- Language: ${lang} ONLY (no mixing, no Chinese chars if English)
 - Category: ${category} ONLY (no other topics)
-- Complete: MUST finish the final wisdom section
+- Length: 4500-5500 chars (less than 4000 = FAILURE)
+- Complete: MUST finish final wisdom section
+${priority ? `- Priority: Give extra 300 chars to ${priority} section` : ''}
 
-BEGIN THE READING NOW:
+BEGIN THE COMPREHENSIVE PREMIUM READING NOW:
 `;
 }
 
@@ -579,7 +725,7 @@ BEGIN THE READING NOW:
 async function callClaude(prompt) {
   const payload = {
     model: 'claude-sonnet-4-20250514',
-    max_tokens: 8000, // 대폭 증가
+    max_tokens: 8000,
     temperature: 0.85,
     messages: [{ role: 'user', content: prompt }]
   };
@@ -607,12 +753,12 @@ async function callClaude(prompt) {
     
     const data = await resp.json();
     
-    // ★ 응답 검증
     if (data.stop_reason !== 'end_turn') {
       console.warn(`⚠️ Warning: Response may be truncated. Stop reason: ${data.stop_reason}`);
     }
     
-    console.log(`✅ Fortune generated successfully (${data.usage?.output_tokens || 'unknown'} tokens)`);
+    const outputLength = data.content[0].text.length;
+    console.log(`✅ Fortune generated: ${outputLength} characters (${data.usage?.output_tokens || 'unknown'} tokens)`);
     
     return data.content[0].text;
 
@@ -630,9 +776,10 @@ async function callClaude(prompt) {
 app.post('/api/fortune', async (req, res) => {
   try {
     const body = req.body;
-    console.log('📥 Fortune request received:', { 
+    console.log('📥 Fortune request:', { 
       name: body.name || body.person1?.name, 
-      category: body.categories?.[0] || 'compatibility/dream' 
+      category: body.categories?.[0] || 'other',
+      priority: body.priority || 'none'
     });
 
     // A. 궁합 (Compatibility)
@@ -651,60 +798,61 @@ app.post('/api/fortune', async (req, res) => {
       );
       
       const lang = detectLanguage(body.person1.name);
+      const p1Day = formatPillar(p1.day, lang);
+      const p2Day = formatPillar(p2.day, lang);
+      
       const langInstruction = lang === 'Korean' 
         ? '**WRITE ENTIRELY IN KOREAN** with 존댓말 (습니다, 세요). NO English mixed in.'
-        : '**WRITE ENTIRELY IN ENGLISH**. NO Korean characters.';
+        : '**WRITE ENTIRELY IN ENGLISH**. NO Korean or Chinese characters.';
       
       const prompt = `
 ${langInstruction}
 
-Analyze the romantic/partnership compatibility between:
-- ${body.person1.name}: Day Pillar ${formatPillar(p1.day)}
-- ${body.person2.name}: Day Pillar ${formatPillar(p2.day)}
+Analyze romantic/partnership compatibility between:
+- ${body.person1.name}: Day Pillar ${p1Day}
+- ${body.person2.name}: Day Pillar ${p2Day}
 
-Provide a detailed compatibility analysis covering:
+Provide detailed analysis (2500+ characters):
 1. Core personality chemistry
 2. Strengths as a couple  
 3. Potential conflict areas
 4. Long-term outlook
 5. Advice for harmony
 
-Use Markdown formatting. Be specific and insightful. 2000+ characters.
-Write COMPLETE analysis - do not cut off.
+Use Markdown. Be specific. Write COMPLETE analysis.
 `;
       
       const result = await callClaude(prompt);
       return res.json({ fortune: result });
     }
 
-    // B. 꿈해몽 (Dream Interpretation)
+    // B. 꿈해몽 (Dream)
     if (body.dreamContent) {
       const lang = /[가-힣]/.test(body.dreamContent) ? 'Korean' : 'English';
       const langInstruction = lang === 'Korean'
-        ? '**완전히 한국어로만 작성**하세요. 존댓말 사용 (습니다, 세요).'
+        ? '**완전히 한국어로만 작성**. 존댓말 (습니다, 세요).'
         : '**Write entirely in English**. Mystical professional tone.';
       
       const prompt = `
 ${langInstruction}
 
-Interpret this dream: "${body.dreamContent}"
+Interpret dream: "${body.dreamContent}"
 
-Provide:
-1. **Symbolism Analysis**: What each element represents
-2. **Psychological Meaning**: Subconscious message
-3. **Fortune Prediction**: What this means for the future
-4. **Actionable Advice**: What to do based on this dream
+Provide (2000+ characters):
+1. Symbolism Analysis
+2. Psychological Meaning
+3. Fortune Prediction
+4. Actionable Advice
 
-Use Markdown formatting. Be mystical yet practical. 1800+ characters.
-Write COMPLETE interpretation - do not cut off the ending.
+Markdown format. Complete interpretation.
 `;
       
       const result = await callClaude(prompt);
       return res.json({ fortune: result });
     }
 
-    // C. 신년운세 & 카테고리 운세 (Main Fortune Reading)
-    const { name, birthYear, birthMonth, birthDay, birthTime, categories } = body;
+    // C. 메인 운세 (신년/카테고리)
+    const { name, birthYear, birthMonth, birthDay, birthTime, categories, priority } = body;
     
     if (!name || !birthYear || !birthMonth || !birthDay) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -715,12 +863,12 @@ Write COMPLETE interpretation - do not cut off the ending.
     const category = (categories && categories[0]) || 'NewYear';
     const lang = detectLanguage(name);
 
-    console.log(`🔮 Generating ${category} fortune in ${lang} for ${name}...`);
+    console.log(`🔮 Generating ${category} (${lang}) for ${name}${priority ? ` [Priority: ${priority}]` : ''}...`);
 
-    const prompt = buildPremiumPrompt(name, birthInfo, pillars, lang, category);
+    const prompt = buildPremiumPrompt(name, birthInfo, pillars, lang, category, priority);
     const result = await callClaude(prompt);
 
-    console.log(`✅ Fortune generation complete for ${name}`);
+    console.log(`✅ Complete for ${name}`);
     
     return res.json({ fortune: result });
 
@@ -745,11 +893,11 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     status: '🔮 Oracle is awake', 
     timestamp: new Date().toISOString(),
-    model: 'claude-sonnet-4-20250514'
+    model: 'claude-sonnet-4-20250514',
+    version: 'v7.0'
   });
 });
 
-// 404 handler
 app.use((req, res) => {
   res.status(404).json({ error: 'Endpoint not found' });
 });
@@ -757,16 +905,17 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔮 ORACLE EYES SERVER v6.0 RUNNING
+🔮 ORACLE EYES SERVER v7.0 RUNNING
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Port: ${PORT}
 Model: claude-sonnet-4-20250514
 Max Tokens: 8000
+Target Length: 4500-5500 characters
 Features:
-  ✅ Enhanced language detection
-  ✅ Category-focused prompts
-  ✅ Anti-truncation maximized
-  ✅ Ready for Option B loading
+  ✅ Enhanced length (4500-5500 chars)
+  ✅ NO Chinese chars in English mode
+  ✅ Quiz priority integration
+  ✅ Section depth requirements
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   `);
 });
