@@ -32,9 +32,7 @@
             width: 100%;
         }
 
-        /* ============================================
-           SKELETON UI (즉시 표시)
-           ============================================ */
+        /* Skeleton UI */
         .skeleton {
             background: linear-gradient(90deg, 
                 rgba(255, 255, 255, 0.05) 0%, 
@@ -68,9 +66,7 @@
             max-width: 200px;
         }
 
-        /* ============================================
-           MAIN CONTENT (fade in)
-           ============================================ */
+        /* Main Content */
         .content {
             opacity: 0;
             animation: fadeIn 0.5s ease forwards;
@@ -80,7 +76,6 @@
             to { opacity: 1; }
         }
 
-        /* Crystal Ball */
         .crystal-ball { 
             width: 150px; 
             height: 150px; 
@@ -119,7 +114,6 @@
             95% { opacity: 0; } 
         }
 
-        /* Titles */
         .loading-title {
             font-size: 1.8rem; 
             font-weight: 700; 
@@ -139,9 +133,7 @@
             font-size: 0.95rem;
         }
 
-        /* ============================================
-           SOCIAL PROOF
-           ============================================ */
+        /* Social Proof */
         .social-proof {
             background: rgba(212, 175, 55, 0.1);
             border: 1px solid rgba(212, 175, 55, 0.3);
@@ -163,9 +155,7 @@
             color: #fff;
         }
 
-        /* ============================================
-           PROGRESS SECTION
-           ============================================ */
+        /* Progress Section */
         .progress-section {
             margin: 25px 0;
         }
@@ -194,9 +184,7 @@
             margin-bottom: 10px;
         }
 
-        /* ============================================
-           DYNAMIC MESSAGES
-           ============================================ */
+        /* Dynamic Messages */
         .messages { 
             min-height: 60px; 
             margin-bottom: 20px; 
@@ -219,9 +207,7 @@
             font-size: 1.1rem;
         }
 
-        /* ============================================
-           COUNTER
-           ============================================ */
+        /* Counter */
         .counter-box {
             background: rgba(255, 215, 0, 0.1);
             border: 1px solid rgba(255, 215, 0, 0.3);
@@ -239,9 +225,7 @@
             margin: 5px 0;
         }
 
-        /* ============================================
-           QUIZ (Phase 2.5)
-           ============================================ */
+        /* Quiz */
         .quiz-container {
             background: rgba(148, 0, 211, 0.15);
             border: 2px solid rgba(148, 0, 211, 0.4);
@@ -268,6 +252,25 @@
             font-weight: 700;
             color: #d4af37;
             margin-bottom: 15px;
+        }
+
+        .quiz-instruction {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .quiz-benefit {
+            font-size: 0.85rem;
+            color: #d4af37;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .quiz-question {
+            color: #fff;
+            margin: 10px 0;
+            font-weight: 600;
         }
 
         .quiz-options {
@@ -298,9 +301,7 @@
             border-color: #ffd700;
         }
 
-        /* ============================================
-           BUTTONS
-           ============================================ */
+        /* Buttons */
         .cancel-btn {
             margin-top: 30px; 
             padding: 12px 30px;
@@ -318,9 +319,7 @@
             transform: scale(1.05);
         }
 
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
+        /* Responsive */
         @media (max-width: 600px) {
             .loading-container {
                 padding: 30px 20px;
@@ -340,9 +339,6 @@
             }
         }
 
-        /* ============================================
-           HIDE/SHOW UTILITIES
-           ============================================ */
         .hidden {
             display: none !important;
         }
@@ -354,7 +350,7 @@
 </head>
 <body>
     <div class="loading-container">
-        <!-- Phase 0: Skeleton UI (0-0.5초) -->
+        <!-- Skeleton UI -->
         <div id="skeletonUI">
             <div class="skeleton skeleton-circle"></div>
             <div class="skeleton skeleton-text"></div>
@@ -362,16 +358,14 @@
             <div class="skeleton skeleton-text"></div>
         </div>
 
-        <!-- Main Content (0.5초 후 표시) -->
+        <!-- Main Content -->
         <div id="mainContent" class="content hidden">
-            <!-- Crystal Ball -->
             <div class="crystal-ball">
                 <div class="ball">
                     <div class="oracle-eye">👁️</div>
                 </div>
             </div>
 
-            <!-- Title -->
             <h1 class="loading-title" id="loadingTitle">Oracle is Reading...</h1>
             <p class="loading-subtitle" id="loadingSubtitle">The cosmic forces are aligning for you</p>
 
@@ -382,7 +376,7 @@
                 <div class="stat">⭐ Rating: <span class="stat-number">4.8/5.0</span></div>
             </div>
 
-            <!-- Progress Section -->
+            <!-- Progress -->
             <div class="progress-section">
                 <div class="progress-text" id="progressText">Initializing cosmic connection...</div>
                 <div class="progress-container">
@@ -391,12 +385,12 @@
                 <div style="font-size: 0.85rem; color: #999;" id="progressPercent">0%</div>
             </div>
 
-            <!-- Dynamic Messages -->
+            <!-- Messages -->
             <div class="messages" id="dynamicMessages">
                 <div class="message" id="mainMessage">✨ Connecting to universal energy...</div>
             </div>
 
-            <!-- Counter (10초 후 표시) -->
+            <!-- Counter -->
             <div class="counter-box hidden" id="counterBox">
                 <div>⏱️ Time waited: <span class="counter-time" id="counterTime">0s</span></div>
                 <div style="color: #bbb; font-size: 0.85rem; margin-top: 5px;">
@@ -405,13 +399,16 @@
                 </div>
             </div>
 
-            <!-- Quiz (12초 후 표시) -->
+            <!-- Quiz -->
             <div class="quiz-container" id="quizContainer">
                 <div class="quiz-title">💡 Quick Question</div>
-                <div style="font-size: 0.9rem; color: #ccc; margin-bottom: 10px;">
+                <div class="quiz-instruction" id="quizInstruction">
                     Your answer will enhance the final reading!
                 </div>
-                <div id="quizQuestion" style="color: #fff; margin: 10px 0; font-weight: 600;">
+                <div class="quiz-benefit" id="quizBenefit">
+                    ✨ Selected area will receive deeper analysis
+                </div>
+                <div class="quiz-question" id="quizQuestion">
                     What's your top priority for 2026?
                 </div>
                 <div class="quiz-options">
@@ -422,7 +419,6 @@
                 </div>
             </div>
 
-            <!-- Cancel Button -->
             <button class="cancel-btn" id="cancelBtn">Cancel</button>
         </div>
     </div>
@@ -435,7 +431,27 @@
         let startTime = Date.now();
         let elapsedSeconds = 0;
         let userName = '';
-        let userPillar = '';
+
+        // Set quiz text based on language
+        setTimeout(() => {
+            const instructionEl = document.getElementById('quizInstruction');
+            const benefitEl = document.getElementById('quizBenefit');
+            const questionEl = document.getElementById('quizQuestion');
+            
+            if (instructionEl && benefitEl && questionEl) {
+                instructionEl.textContent = isKorean 
+                    ? '답변이 최종 결과에 반영됩니다!'
+                    : 'Your answer will enhance the final reading!';
+                
+                benefitEl.textContent = isKorean
+                    ? '✨ 선택한 항목은 더 상세하게 분석됩니다'
+                    : '✨ Selected area will receive deeper analysis';
+                
+                questionEl.textContent = isKorean
+                    ? '2026년 가장 중요한 목표는?'
+                    : "What's your top priority for 2026?";
+            }
+        }, 100);
 
         // Messages
         const messagesKo = [
@@ -467,7 +483,6 @@
             document.getElementById('skeletonUI').classList.add('hidden');
             document.getElementById('mainContent').classList.remove('hidden');
             
-            // Set personalized title
             const requestData = JSON.parse(sessionStorage.getItem('fortuneRequestData') || '{}');
             userName = requestData.name || 'User';
             
@@ -482,7 +497,6 @@
             document.getElementById('loadingTitle').textContent = title;
             document.getElementById('loadingSubtitle').textContent = subtitle;
 
-            // Animate social proof numbers
             animateNumber('todayCount', 0, 1247, 1500);
             animateNumber('pillarCount', 0, 324, 1500);
         }, 500);
@@ -495,19 +509,15 @@
                 const msgEl = document.getElementById('mainMessage');
                 msgEl.textContent = msg.text;
                 msgEl.className = msg.highlight ? 'message highlight' : 'message';
-                
-                // Update progress
                 updateProgress(msg.progress);
             }, msg.time);
         });
 
         // ============================================
-        // COUNTER (10초 후)
+        // COUNTER (10초)
         // ============================================
         setTimeout(() => {
             document.getElementById('counterBox').classList.remove('hidden');
-            
-            // Update counter every second
             setInterval(() => {
                 elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
                 document.getElementById('counterTime').textContent = elapsedSeconds + 's';
@@ -515,22 +525,20 @@
         }, 10000);
 
         // ============================================
-        // QUIZ (12초 후)
+        // QUIZ (12초)
         // ============================================
         setTimeout(() => {
             document.getElementById('quizContainer').style.display = 'block';
             
-            // Quiz options click handler
             document.querySelectorAll('.quiz-option').forEach(option => {
                 option.addEventListener('click', function() {
                     document.querySelectorAll('.quiz-option').forEach(o => 
                         o.classList.remove('selected'));
                     this.classList.add('selected');
                     
-                    // Store answer
                     sessionStorage.setItem('quizAnswer', this.dataset.value);
+                    console.log('✨ Quiz answer saved:', this.dataset.value);
                     
-                    // Hide quiz after selection
                     setTimeout(() => {
                         document.getElementById('quizContainer').style.display = 'none';
                     }, 800);
@@ -548,17 +556,24 @@
                 return;
             }
 
+            // ★ 퀴즈 답변 추가
+            const data = JSON.parse(requestData);
+            const quizAnswer = sessionStorage.getItem('quizAnswer');
+            if (quizAnswer) {
+                data.priority = quizAnswer;
+                console.log('✨ User priority:', quizAnswer);
+            }
+
             fetch('/api/fortune', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: requestData
+                body: JSON.stringify(data)
             })
             .then(response => response.json())
             .then(data => {
                 sessionStorage.setItem('fortuneData', JSON.stringify(data.fortune ?? ''));
                 sessionStorage.setItem('fortuneReady', 'true');
                 
-                // Complete animation
                 updateProgress(100);
                 document.getElementById('mainMessage').textContent = 
                     isKorean ? '✨ 완성되었습니다!' : '✨ Complete!';
