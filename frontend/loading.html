@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: https:; media-src *">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:; script-src * 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src * 'self' 'unsafe-inline'; img-src * 'self' data: blob:; media-src *; connect-src *">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OracleEyes.AI - Reading Your Destiny...</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
@@ -49,7 +49,7 @@
         }
         .loading-subtitle { color: #bbb; margin-bottom: 40px; }
         
-        /* ▼▼▼ 2. 게이지 속도 5분(290초)에 맞게 수정 ▼▼▼ */
+        /* 5분 게이지 설정 */
         .progress-container { width: 100%; height: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
         .progress-bar {
             height: 100%;
@@ -64,27 +64,24 @@
             95% { width: 95%; }
             100% { width: 95%; }
         }
-        .cancel-btn {
-            margin-top: 30px; padding: 12px 30px;
-            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff; border-radius: 50px; cursor: pointer;
-        }
+        
+        .messages { height: 30px; margin-bottom: 10px; color: #d4af37; }
+        
+        /* 5분 소요 경고 텍스트 스타일 */
         .time-warning {
             font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.5); /* 은은한 회색 */
+            color: rgba(255, 255, 255, 0.5);
             margin-top: 15px;
             line-height: 1.5;
             animation: pulseText 2s infinite;
         }
-        
-        .time-warning strong {
-            color: #ffd700; /* '정밀 운명 분석'만 금색 강조 */
-            font-weight: 600;
-        }
+        .time-warning strong { color: #ffd700; font-weight: 600; }
+        @keyframes pulseText { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
 
-        @keyframes pulseText {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 0.8; }
+        .cancel-btn {
+            margin-top: 30px; padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff; border-radius: 50px; cursor: pointer;
         }
     </style>
 </head>
@@ -95,62 +92,24 @@
         </div>
         <h1 class="loading-title">Oracle is Reading...</h1>
         <p class="loading-subtitle">The cosmic forces are aligning for you</p>
+        
+        <div class="messages">
+            <div class="message" id="dynamicMessage">✨ Connecting to cosmic energies...</div>
+        </div>
+        
         <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+        
+        <p class="time-warning"></p>
         
         <button class="cancel-btn" id="cancelBtn">Cancel</button>
     </div>
 
     <script>
-        // 페이지 로드 직후 API 호출 실행
-        window.onload = function() {
-            const requestData = sessionStorage.getItem('fortuneRequestData');
-            
-            if (!requestData) {
-                alert('No input data found.');
-                window.location.href = '/';
-                return;
-            }
-
-            // 백엔드 호출
-            fetch('/api/fortune', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: requestData
-            })
-            .then(response => response.json())
-            .then(data => {
-                sessionStorage.setItem('fortuneData', JSON.stringify(data.fortune ?? ''));
-                sessionStorage.setItem('fortuneReady', 'true');
-                
-                // 완료되면 즉시 이동
-                document.getElementById('progressBar').style.width = '100%';
-                setTimeout(() => { window.location.href = '/result.html'; }, 500);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // 에러나도 일단 대기 (타임아웃이 처리함)
-            });
-        };
-
-        // ▼▼▼ 4. 타임아웃 5분(310초)으로 설정 ▼▼▼
-        setTimeout(() => {
-            const isFinished = sessionStorage.getItem('fortuneReady');
-            if (isFinished !== 'true') {
-                alert('The Oracle is taking longer than expected. Please try again.');
-                window.location.href = '/';
-            }
-        }, 310000);
-
-        // ▼▼▼ 5. 버튼 클릭 이벤트 (안전한 방식) ▼▼▼
-        document.getElementById('cancelBtn').addEventListener('click', function() {
-            window.location.href = '/';
-        });
-        <script>
-        // 1. 언어 감지 (한국어면 true, 아니면 false)
+        // 언어 감지
         const isKorean = navigator.language.includes('ko');
 
         window.onload = function() {
-            // 5분 소요 경고 문구도 언어에 맞게 변경
+            // 언어에 맞는 5분 안내 문구 설정
             const warningEl = document.querySelector('.time-warning');
             if (warningEl) {
                 warningEl.innerHTML = isKorean 
@@ -164,6 +123,7 @@
                 return;
             }
 
+            // API 호출
             fetch('/api/fortune', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -198,10 +158,9 @@
             window.location.href = '/';
         });
 
-        // ▼▼▼ 언어별 멘트 자동 변경 로직 ▼▼▼
+        // 멘트 자동 변경 로직
         const msgElement = document.getElementById('dynamicMessage');
         
-        // 한국어 멘트 리스트
         const msgsKo = [
             "✨ 우주의 기운을 연결하고 있습니다...",
             "🌟 별들의 배치를 계산하는 중입니다...",
@@ -211,7 +170,6 @@
             "🧘‍♂️ 신탁을 받아 적고 있습니다 (거의 다 됨)..."
         ];
 
-        // 영어 멘트 리스트
         const msgsEn = [
             "✨ Connecting to cosmic energies...",
             "🌟 Calculating celestial alignments...",
@@ -221,14 +179,11 @@
             "🧘‍♂️ Transcribing the Oracle's vision..."
         ];
 
-        // 현재 언어에 맞는 리스트 선택
         const msgs = isKorean ? msgsKo : msgsEn;
         
         let msgIndex = 0;
         if (msgElement) {
-            // 시작하자마자 첫 멘트 적용
-            msgElement.innerText = msgs[0];
-
+            msgElement.innerText = msgs[0]; // 첫 멘트
             setInterval(() => {
                 msgIndex = (msgIndex + 1) % msgs.length;
                 msgElement.style.opacity = '0'; 
@@ -238,7 +193,6 @@
                 }, 500);
             }, 4000); 
         }
-    </script>
     </script>
 </body>
 </html>
