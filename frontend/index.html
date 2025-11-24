@@ -1618,39 +1618,57 @@
     <script>
         document.body.style.overflow = 'hidden';
         
-        // Loading Animation
+        // 요소 가져오기
         const loadingBar = document.getElementById('loadingBar');
         const loadingPercentage = document.getElementById('loadingPercentage');
         const loadingScreen = document.getElementById('loading-screen');
         const loadingVideo = document.getElementById('loadingVideo');
 
-        let progress = 0;
-        let videoDuration = 5;
+        // ▼▼▼ [수정됨] 영상 스킵 로직 추가 ▼▼▼
+        // 1. 이미 봤는지 확인 ('introPlayed'가 true인지)
+        if (sessionStorage.getItem('introPlayed') === 'true') {
+            // 봤으면 로딩화면 즉시 숨김
+            loadingScreen.style.display = 'none';
+            document.body.style.overflow = 'auto'; 
+            if(loadingVideo) loadingVideo.pause();
+        } 
+        else {
+            // 안 봤으면 영상 재생 로직 실행
+            let progress = 0;
+            let videoDuration = 5;
 
-        loadingVideo.addEventListener('loadedmetadata', () => {
-            videoDuration = loadingVideo.duration;
-            console.log('Video duration:', videoDuration);
-        });
+            if(loadingVideo) {
+                loadingVideo.addEventListener('loadedmetadata', () => {
+                    videoDuration = loadingVideo.duration;
+                });
 
-        loadingVideo.addEventListener('ended', () => {
-            progress = 100;
-            loadingBar.style.width = '100%';
-            loadingPercentage.textContent = '100%';
-            
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-                window.scrollTo(0, 0);
-                document.body.style.overflow = 'auto';
-            }, 500);
-        });
-
-        setInterval(() => {
-            if (loadingVideo.currentTime && loadingVideo.duration) {
-                progress = (loadingVideo.currentTime / loadingVideo.duration) * 100;
-                loadingBar.style.width = progress + '%';
-                loadingPercentage.textContent = Math.floor(progress) + '%';
+                loadingVideo.addEventListener('ended', () => {
+                    progress = 100;
+                    loadingBar.style.width = '100%';
+                    loadingPercentage.textContent = '100%';
+                    
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                        window.scrollTo(0, 0);
+                        document.body.style.overflow = 'auto';
+                        
+                        // ★ 다 보고 나면 "봤음" 도장 찍기
+                        sessionStorage.setItem('introPlayed', 'true');
+                    }, 500);
+                });
             }
-        }, 100);
+
+            const progressInterval = setInterval(() => {
+                if (loadingScreen.style.display !== 'none' && loadingVideo && loadingVideo.currentTime && loadingVideo.duration) {
+                    progress = (loadingVideo.currentTime / loadingVideo.duration) * 100;
+                    loadingBar.style.width = progress + '%';
+                    loadingPercentage.textContent = Math.floor(progress) + '%';
+                } else {
+                    clearInterval(progressInterval);
+                }
+            }, 100);
+        }
+        // ▲▲▲ [영상 로직 끝] ▲▲▲
 
         // Create floating emojis
         const emojis = ['✨', '🌟', '💫', '⭐', '🌙', '☀️', '👁️', '💎', '🦄', '🌈'];
@@ -1682,7 +1700,7 @@
             }, 3000);
         }, 300);
 
-        // Fortune card selection
+        // Fortune card selection logic
         let selectedFortune = null;
         let selectedGender = null;
         let selectedGender1 = null;
@@ -1690,30 +1708,20 @@
 
         window.selectGender = function(btn, gender, person) {
             const container = btn.parentElement;
-            
             container.querySelectorAll('.gender-btn').forEach(b => {
                 b.classList.remove('selected');
             });
-            
             btn.classList.add('selected');
             
-            if (person === 1) {
-                selectedGender1 = gender;
-                console.log('Person 1 gender:', selectedGender1);
-            } else if (person === 2) {
-                selectedGender2 = gender;
-                console.log('Person 2 gender:', selectedGender2);
-            } else {
-                selectedGender = gender;
-                console.log('Selected gender:', selectedGender);
-            }
+            if (person === 1) selectedGender1 = gender;
+            else if (person === 2) selectedGender2 = gender;
+            else selectedGender = gender;
         }
 
         window.selectFortune = function(card, type) {
             document.querySelectorAll('.fortune-card').forEach(c => {
                 c.classList.remove('selected');
             });
-            
             card.classList.add('selected');
             selectedFortune = type;
             
@@ -1735,8 +1743,6 @@
                 if(dreamForm) dreamForm.style.display = 'none';
             }
             
-            console.log('Selected:', selectedFortune);
-            
             const dreamContent = document.getElementById('dream-content');
             if (dreamContent) {
                 dreamContent.addEventListener('input', function() {
@@ -1746,16 +1752,12 @@
             }
         }
 
-        // Submit button animation
-        document.querySelector('.submit-btn').addEventListener('click', async function(e) {
+        // Submit button logic (아까 수정한 로딩 페이지 이동 로직 포함됨)
+        document.querySelector('.submit-btn').addEventListener('click', function(e) {
             e.preventDefault();
             
             const btn = this;
             const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '✨ The Oracle is seeing...';
-            btn.style.opacity = '0.7';
-            btn.style.cursor = 'not-allowed';
             
             try {
                 let requestBody = {};
@@ -1777,43 +1779,13 @@
                     const p2Minute = document.getElementById('person2-minute').value || '';
                     const p2Place = document.getElementById('person2-place').value;
                     
-                    if (!p1Name || !p1Year || !p1Month || !p1Day || !p1Place || !selectedGender1) {
-                        alert('Please fill in all Person 1 information! 👁️');
-                        btn.disabled = false;
-                        btn.innerHTML = originalText;
-                        btn.style.opacity = '1';
-                        btn.style.cursor = 'pointer';
+                    if (!p1Name || !p1Year || !p1Month || !p1Day || !p1Place || !selectedGender1 || !p2Name || !p2Year || !p2Month || !p2Day || !p2Place || !selectedGender2) {
+                        alert('Please fill in all information for both people! 👁️');
                         return;
                     }
-                    
-                    if (!p2Name || !p2Year || !p2Month || !p2Day || !p2Place || !selectedGender2) {
-                        alert('Please fill in all Person 2 information! 👁️');
-                        btn.disabled = false;
-                        btn.innerHTML = originalText;
-                        btn.style.opacity = '1';
-                        btn.style.cursor = 'pointer';
-                        return;
-                    }
-                    
                     requestBody = {
-                        person1: {
-                            name: p1Name,
-                            birthYear: p1Year,
-                            birthMonth: p1Month,
-                            birthDay: p1Day,
-                            birthTime: p1Hour && p1Minute ? `${p1Hour}:${p1Minute}` : '',
-                            birthPlace: p1Place,
-                            gender: selectedGender1
-                        },
-                        person2: {
-                            name: p2Name,
-                            birthYear: p2Year,
-                            birthMonth: p2Month,
-                            birthDay: p2Day,
-                            birthTime: p2Hour && p2Minute ? `${p2Hour}:${p2Minute}` : '',
-                            birthPlace: p2Place,
-                            gender: selectedGender2
-                        }
+                        person1: { name: p1Name, birthYear: p1Year, birthMonth: p1Month, birthDay: p1Day, birthTime: p1Hour && p1Minute ? `${p1Hour}:${p1Minute}` : '', birthPlace: p1Place, gender: selectedGender1 },
+                        person2: { name: p2Name, birthYear: p2Year, birthMonth: p2Month, birthDay: p2Day, birthTime: p2Hour && p2Minute ? `${p2Hour}:${p2Minute}` : '', birthPlace: p2Place, gender: selectedGender2 }
                     };
                 }
                 else if (selectedFortune === 'dream') {
@@ -1825,30 +1797,14 @@
                     
                     if (!dreamName || !dreamYear || !dreamMonth || !dreamDay || !dreamContent) {
                         alert('Please fill in all dream information! 👁️');
-                        btn.disabled = false;
-                        btn.innerHTML = originalText;
-                        btn.style.opacity = '1';
-                        btn.style.cursor = 'pointer';
                         return;
                     }
-                    
-                    if (dreamContent.trim().length < 20) {
+                     if (dreamContent.trim().length < 20) {
                         alert('Please describe your dream in more detail (at least 20 characters)! 🌙');
-                        btn.disabled = false;
-                        btn.innerHTML = originalText;
-                        btn.style.opacity = '1';
-                        btn.style.cursor = 'pointer';
                         return;
                     }
-                
                     requestBody = {
-                        name: dreamName,
-                        birthYear: dreamYear,
-                        birthMonth: dreamMonth,
-                        birthDay: dreamDay,
-                        birthTime: '',
-                        birthPlace: 'Unknown',
-                        dreamContent: dreamContent
+                        name: dreamName, birthYear: dreamYear, birthMonth: dreamMonth, birthDay: dreamDay, birthTime: '', birthPlace: 'Unknown', dreamContent: dreamContent
                     };
                 }
                 else {
@@ -1862,56 +1818,27 @@
                     const birthPlace = document.getElementById('birth-place').value;
                     
                     if (!name || !birthYear || !birthMonth || !birthDay || !birthPlace || !selectedFortune || !selectedGender) {
-                        alert('Please fill in all required fields, select your gender, and choose a fortune category! 👁️');
-                        btn.disabled = false;
-                        btn.innerHTML = originalText;
-                        btn.style.opacity = '1';
-                        btn.style.cursor = 'pointer';
+                        alert('Please fill in all required fields! 👁️');
                         return;
                     }
-                    
-                    const categoryMap = {
-                        'newyear': 'NewYear',  // 신년운세 추가
-                        'love': 'Love',
-                        'money': 'Money',
-                        'career': 'Career',
-                        'crypto': 'Crypto',
-                        'persona': 'Persona',
-                        'karma': 'Karma'
-                    };
-                    
+                    const categoryMap = { 'newyear': 'NewYear', 'love': 'Love', 'money': 'Money', 'career': 'Career', 'crypto': 'Crypto', 'persona': 'Persona', 'karma': 'Karma' };
                     requestBody = {
-                        name,
-                        birthYear,
-                        birthMonth,
-                        birthDay,
-                        birthTime,
-                        birthPlace,
-                        gender: selectedGender,
-                        categories: [categoryMap[selectedFortune]]
+                        name, birthYear, birthMonth, birthDay, birthTime, birthPlace, gender: selectedGender, categories: [categoryMap[selectedFortune]]
                     };
                 }
                 
-                // ▼▼▼▼▼▼ 새로 넣을 코드 시작 ▼▼▼▼▼▼
-
-                // 1. loading.html에서 사용할 데이터 저장
+                // 로딩 페이지로 데이터 저장 및 이동
                 sessionStorage.setItem('fortuneRequestData', JSON.stringify(requestBody));
-
-                // 2. 로딩 페이지로 이동 (API 호출은 loading.html에서 수행)
                 window.location.href = '/loading.html';
                 
             } catch (error) {
-                console.error('Error:', error);
-                alert('Something went wrong. Please try again! 👁️');
-                
-                // 에러 발생 시 버튼 원상복구
+                console.error('Validation Error:', error);
                 btn.disabled = false;
                 btn.innerHTML = originalText;
                 btn.style.opacity = '1';
                 btn.style.cursor = 'pointer';
             }
         });
-            // ▲▲▲▲▲▲ 새로 넣을 코드 끝 ▲▲▲▲▲▲
 
         // Add hover sound effect
         document.querySelectorAll('.fortune-card, .special-card, .feature-box').forEach(card => {
