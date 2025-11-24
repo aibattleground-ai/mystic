@@ -106,10 +106,10 @@ Task: Write a **PREMIUM ${category} REPORT** for ${targetYear}.
 // ============================================
 async function callClaude(prompt) {
   const payload = {
-    // ★★★ 가장 확실한 최신 모델명 하드코딩 (별칭 사용 안함) ★★★
-    model: 'claude-3-5-sonnet-20241022', 
-    max_tokens: 4096, // Sonnet 출력 한계치까지 허용
-    temperature: 0.7,
+    // ★★★ 2024년 6월 출시된 오리지널 Sonnet 3.5 (가장 안전함) ★★★
+    model: 'claude-3-5-sonnet-20240620', 
+    max_tokens: 4096,
+    temperature: 0.9,
     messages: [{ role: 'user', content: prompt }]
   };
 
