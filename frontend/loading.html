@@ -69,6 +69,23 @@
             background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);
             color: #fff; border-radius: 50px; cursor: pointer;
         }
+        .time-warning {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5); /* 은은한 회색 */
+            margin-top: 15px;
+            line-height: 1.5;
+            animation: pulseText 2s infinite;
+        }
+        
+        .time-warning strong {
+            color: #ffd700; /* '정밀 운명 분석'만 금색 강조 */
+            font-weight: 600;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
     </style>
 </head>
 <body>
@@ -128,6 +145,100 @@
         document.getElementById('cancelBtn').addEventListener('click', function() {
             window.location.href = '/';
         });
+        <script>
+        // 1. 언어 감지 (한국어면 true, 아니면 false)
+        const isKorean = navigator.language.includes('ko');
+
+        window.onload = function() {
+            // 5분 소요 경고 문구도 언어에 맞게 변경
+            const warningEl = document.querySelector('.time-warning');
+            if (warningEl) {
+                warningEl.innerHTML = isKorean 
+                    ? "⏳ <strong>정밀 운명 분석</strong>을 위해<br>최대 5분까지 소요될 수 있습니다."
+                    : "⏳ <strong>Deep Cosmic Analysis</strong><br>May take up to 5 minutes.";
+            }
+
+            const requestData = sessionStorage.getItem('fortuneRequestData');
+            if (!requestData) {
+                window.location.href = '/';
+                return;
+            }
+
+            fetch('/api/fortune', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: requestData
+            })
+            .then(response => response.json())
+            .then(data => {
+                sessionStorage.setItem('fortuneData', JSON.stringify(data.fortune ?? ''));
+                sessionStorage.setItem('fortuneReady', 'true');
+                
+                document.getElementById('progressBar').style.width = '100%';
+                setTimeout(() => { window.location.href = '/result.html'; }, 500);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        };
+
+        // 타임아웃 5분 10초
+        setTimeout(() => {
+            const isFinished = sessionStorage.getItem('fortuneReady');
+            if (isFinished !== 'true') {
+                alert(isKorean 
+                    ? '분석 시간이 예상보다 오래 걸립니다. 다시 시도해주세요.' 
+                    : 'The Oracle is taking longer than expected. Please try again.');
+                window.location.href = '/';
+            }
+        }, 310000);
+
+        // 취소 버튼
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            window.location.href = '/';
+        });
+
+        // ▼▼▼ 언어별 멘트 자동 변경 로직 ▼▼▼
+        const msgElement = document.getElementById('dynamicMessage');
+        
+        // 한국어 멘트 리스트
+        const msgsKo = [
+            "✨ 우주의 기운을 연결하고 있습니다...",
+            "🌟 별들의 배치를 계산하는 중입니다...",
+            "🌙 당신의 과거 데이터를 스캔합니다...",
+            "🔮 2026년의 흐름을 읽고 있습니다...",
+            "⚡ 중요한 운명적 변수를 발견했습니다!",
+            "🧘‍♂️ 신탁을 받아 적고 있습니다 (거의 다 됨)..."
+        ];
+
+        // 영어 멘트 리스트
+        const msgsEn = [
+            "✨ Connecting to cosmic energies...",
+            "🌟 Calculating celestial alignments...",
+            "🌙 Scanning your past resonance...",
+            "🔮 Reading the flow of 2026...",
+            "⚡ Analyzing critical destiny variables...",
+            "🧘‍♂️ Transcribing the Oracle's vision..."
+        ];
+
+        // 현재 언어에 맞는 리스트 선택
+        const msgs = isKorean ? msgsKo : msgsEn;
+        
+        let msgIndex = 0;
+        if (msgElement) {
+            // 시작하자마자 첫 멘트 적용
+            msgElement.innerText = msgs[0];
+
+            setInterval(() => {
+                msgIndex = (msgIndex + 1) % msgs.length;
+                msgElement.style.opacity = '0'; 
+                setTimeout(() => {
+                    msgElement.innerText = msgs[msgIndex];
+                    msgElement.style.opacity = '1';
+                }, 500);
+            }, 4000); 
+        }
+    </script>
     </script>
 </body>
 </html>
