@@ -1892,38 +1892,25 @@
                     };
                 }
                 
-                console.log('Sending request:', requestBody);
-                
-                const response = await fetch('/api/fortune', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody),
-                });
+                // ▼▼▼▼▼▼ 새로 넣을 코드 시작 ▼▼▼▼▼▼
 
-                if (!response.ok) {
-                    const errText = await response.text();
-                    console.error('API Error:', errText);
-                    alert('The Oracle is temporarily unavailable. Please try again.');
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
-                    btn.style.opacity = '1';
-                    btn.style.cursor = 'pointer';
-                    return;
-                }
+                // 1. loading.html에서 사용할 데이터 저장
+                sessionStorage.setItem('fortuneRequestData', JSON.stringify(requestBody));
 
-                const data = await response.json();
-                sessionStorage.setItem('fortuneData', JSON.stringify(data.fortune ?? ''));
-                window.location.href = '/result.html';
+                // 2. 로딩 페이지로 이동 (API 호출은 loading.html에서 수행)
+                window.location.href = '/loading.html';
                 
             } catch (error) {
                 console.error('Error:', error);
-                alert('Failed to connect with the Oracle. Please try again! 👁️');
+                alert('Something went wrong. Please try again! 👁️');
+                
+                // 에러 발생 시 버튼 원상복구
                 btn.disabled = false;
                 btn.innerHTML = originalText;
                 btn.style.opacity = '1';
                 btn.style.cursor = 'pointer';
             }
-        });
+            // ▲▲▲▲▲▲ 새로 넣을 코드 끝 ▲▲▲▲▲▲
 
         // Add hover sound effect
         document.querySelectorAll('.fortune-card, .special-card, .feature-box').forEach(card => {
