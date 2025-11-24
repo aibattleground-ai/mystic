@@ -1,6 +1,6 @@
 // ============================================
-// MYSTIC AI SERVER - FINAL STABLE
-// (Model: Claude 3.5 Sonnet Latest | Timeout: 300s)
+// MYSTIC AI SERVER - FINAL FIX
+// (Model: 'claude-3-5-sonnet-latest')
 // ============================================
 
 const express = require('express');
@@ -48,7 +48,7 @@ function calculateFourPillars(y, m, d, t) {
 function formatPillar(p) { return p ? `${p.stemKo}${p.branchKo}(${p.stemHan}${p.branchHan})` : ''; }
 function detectLanguage(name) { return /[가-힣]/.test(name) ? 'Korean' : 'English'; }
 
-// 2. 프롬프트 (최적화)
+// 2. 프롬프트 (Sonnet 최적화)
 function buildPremiumPrompt(name, birthInfo, pillars, lang, category) {
   const pY = formatPillar(pillars.year);
   const pM = formatPillar(pillars.month);
@@ -81,18 +81,19 @@ Task: Write a **PREMIUM ${category} REPORT** for ${targetYear}.
 `;
 }
 
-// 3. API 호출 (최신 모델 적용)
+// 3. API 호출 (여기가 수정됨!)
 async function callClaude(prompt) {
   const payload = {
-    // ★★★ 2025년 11월 기준 가장 최신/안정적인 모델 ★★★
-    model: 'claude-3-5-sonnet-20241022', 
-    max_tokens: 4096,
+    // ★★★ 가장 안전한 '최신 버전 자동 선택' 옵션 ★★★
+    model: 'claude-3-5-sonnet-latest', 
+    max_tokens: 4096, 
     temperature: 0.7,
     messages: [{ role: 'user', content: prompt }]
   };
 
+  // 타임아웃 290초 (Vercel Pro 대응)
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 290000); // 290초
+  const timeout = setTimeout(() => controller.abort(), 290000); 
 
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
