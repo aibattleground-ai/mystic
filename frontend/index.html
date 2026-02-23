@@ -2365,7 +2365,7 @@
                 style="max-width: 1000px; margin: 2rem auto; position: relative; height: 500px; background-image: radial-gradient(circle at center, rgba(94, 234, 212, 0.05) 0%, transparent 70%); border-radius: 50%;">
 
                 <img src="world-map.svg" alt="Global Node Map"
-                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.15; object-fit: contain; pointer-events: none;" />
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.5; filter: drop-shadow(0 0 10px rgba(94, 234, 212, 0.2)); object-fit: contain; pointer-events: none;" />
                 <!-- Nodes -->
                 <div class="network-node map-node" style="top: 35%; left: 22%;">
                     <div class="node-glow"></div>
@@ -2401,38 +2401,76 @@
 
 
                 <!-- Pulsing CSS Nodes randomly positioned on land -->
-                <!-- Nodes -->
+                <!-- Nodes - expanded for heavy global traffic -->
                 <div class="network-node active" style="top: 35%; left: 22%;">
                     <div class="node-glow"></div>
-                </div> <!-- NA -->
-                <div class="network-node" style="top: 48%; left: 28%;">
+                </div> <!-- NA 1 -->
+                <div class="network-node" style="top: 32%; left: 18%;">
+                    <div class="node-glow"></div>
+                </div> <!-- NA 2 -->
+                <div class="network-node" style="top: 38%; left: 28%;">
+                    <div class="node-glow"></div>
+                </div> <!-- NA 3 -->
+                <div class="network-node active" style="top: 48%; left: 28%;">
                     <div class="node-glow"></div>
                 </div> <!-- NA/SA -->
+                <div class="network-node" style="top: 55%; left: 24%;">
+                    <div class="node-glow"></div>
+                </div> <!-- SA 1 -->
                 <div class="network-node active" style="top: 65%; left: 32%;">
                     <div class="node-glow"></div>
-                </div> <!-- SA -->
-                <div class="network-node" style="top: 25%; left: 48%;">
+                </div> <!-- SA 2 -->
+                <div class="network-node" style="top: 72%; left: 30%;">
                     <div class="node-glow"></div>
-                </div> <!-- EU -->
-                <div class="network-node active" style="top: 32%; left: 52%;">
+                </div> <!-- SA 3 -->
+                <div class="network-node" style="top: 25%; left: 45%;">
                     <div class="node-glow"></div>
-                </div> <!-- EU -->
-                <div class="network-node" style="top: 45%; left: 58%;">
+                </div> <!-- EU 1 -->
+                <div class="network-node active" style="top: 32%; left: 48%;">
                     <div class="node-glow"></div>
-                </div> <!-- ME -->
+                </div> <!-- EU 2 -->
+                <div class="network-node" style="top: 28%; left: 52%;">
+                    <div class="node-glow"></div>
+                </div> <!-- EU 3 -->
+                <div class="network-node active" style="top: 35%; left: 50%;">
+                    <div class="node-glow"></div>
+                </div> <!-- EU 4 -->
+                <div class="network-node" style="top: 42%; left: 55%;">
+                    <div class="node-glow"></div>
+                </div> <!-- ME 1 -->
+                <div class="network-node active" style="top: 38%; left: 62%;">
+                    <div class="node-glow"></div>
+                </div> <!-- ME 2 -->
+                <div class="network-node" style="top: 60%; left: 52%;">
+                    <div class="node-glow"></div>
+                </div> <!-- Africa 1 -->
                 <div class="network-node active" style="top: 70%; left: 55%;">
                     <div class="node-glow"></div>
-                </div> <!-- Africa -->
-                <div class="network-node" style="top: 30%; left: 75%;">
+                </div> <!-- Africa 2 -->
+                <div class="network-node" style="top: 80%; left: 58%;">
                     <div class="node-glow"></div>
-                </div> <!-- Asia -->
+                </div> <!-- Africa 3 -->
+                <div class="network-node active" style="top: 30%; left: 75%;">
+                    <div class="node-glow"></div>
+                </div> <!-- Asia 1 -->
+                <div class="network-node" style="top: 32%; left: 85%;">
+                    <div class="node-glow"></div>
+                </div> <!-- Asia 2 -->
                 <div class="network-node active" style="top: 45%; left: 82%;">
                     <div class="node-glow"></div>
-                </div> <!-- Asia/JP -->
+                </div> <!-- Asia/JP 1 -->
+                <div class="network-node" style="top: 42%; left: 88%;">
+                    <div class="node-glow"></div>
+                </div> <!-- Asia/JP 2 -->
+                <div class="network-node active" style="top: 55%; left: 78%;">
+                    <div class="node-glow"></div>
+                </div> <!-- SE Asia -->
                 <div class="network-node" style="top: 75%; left: 85%;">
                     <div class="node-glow"></div>
-                </div> <!-- AUS -->
-                }">
+                </div> <!-- AUS 1 -->
+                <div class="network-node active" style="top: 82%; left: 88%;">
+                    <div class="node-glow"></div>
+                </div> <!-- AUS 2 -->
             </div>
         </div>
 
@@ -2888,16 +2926,16 @@
         const mapNodes = document.querySelectorAll('.map-node');
         if (mapNodes.length > 0) {
             setInterval(() => {
-                // Pick 1-2 random nodes to pulse
-                const numToPulse = Math.random() > 0.5 ? 2 : 1;
+                // Pick 3-6 random nodes to pulse for heavy traffic
+                const numToPulse = Math.floor(Math.random() * 4) + 3;
                 for (let i = 0; i < numToPulse; i++) {
                     const randomNode = mapNodes[Math.floor(Math.random() * mapNodes.length)];
                     randomNode.classList.add('active');
                     setTimeout(() => {
                         randomNode.classList.remove('active');
-                    }, 2500);
+                    }, 2000);
                 }
-            }, 1000);
+            }, 600);
         }
 
         // AI Modules Animation
