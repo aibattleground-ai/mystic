@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:; script-src * 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src * 'self' 'unsafe-inline'; img-src * 'self' data: blob:; media-src *; connect-src *">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OracleEyes.AI - Reading Your Destiny...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(ellipse at center, #1a0033 0%, #0a0011 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+        
+        .loading-container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 25px 75px rgba(212, 175, 55, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        /* Skeleton UI */
+        .skeleton {
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0.05) 0%, 
+                rgba(255, 255, 255, 0.15) 50%, 
+                rgba(255, 255, 255, 0.05) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 10px;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .skeleton-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        .skeleton-text {
+            height: 24px;
+            margin: 10px auto;
+            max-width: 300px;
+        }
+
+        .skeleton-text.small {
+            height: 16px;
+            max-width: 200px;
+        }
+
+        /* Main Content */
+        .content {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .crystal-ball { 
+            width: 150px; 
+            height: 150px; 
+            margin: 0 auto 20px; 
+            position: relative; 
+        }
+        
+        .ball {
+            width: 100%; 
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.9), 
+                rgba(212, 175, 55, 0.3), 
+                rgba(148, 0, 211, 0.6));
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.5);
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes float { 
+            0%, 100% { transform: translateY(0) scale(1); } 
+            50% { transform: translateY(-20px) scale(1.05); } 
+        }
+        
+        .oracle-eye {
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%);
+            font-size: 50px; 
+            animation: blink 4s infinite;
+        }
+        
+        @keyframes blink { 
+            0%, 90%, 100% { opacity: 1; } 
+            95% { opacity: 0; } 
+        }
+
+        .loading-title {
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            margin-bottom: 10px;
+            color: #d4af37;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .loading-subtitle { 
+            color: #bbb; 
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        /* Social Proof */
+        .social-proof {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .social-proof .stat {
+            display: inline-block;
+            margin: 5px 10px;
+            color: #ffd700;
+        }
+
+        .social-proof .stat-number {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            margin: 25px 0;
+        }
+
+        .progress-container { 
+            width: 100%; 
+            height: 12px; 
+            background: rgba(255, 255, 255, 0.1); 
+            border-radius: 10px; 
+            overflow: hidden; 
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37, #ffd700, #fff);
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        /* Dynamic Messages */
+        .messages { 
+            min-height: 60px; 
+            margin-bottom: 20px; 
+            color: #d4af37;
+            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .message {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .message.highlight {
+            color: #ffd700;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Counter */
+        .counter-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .counter-time {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin: 5px 0;
+        }
+
+        /* Quiz */
+        .quiz-container {
+            background: rgba(148, 0, 211, 0.15);
+            border: 2px solid rgba(148, 0, 211, 0.4);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .quiz-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 15px;
+        }
+
+        .quiz-instruction {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .quiz-benefit {
+            font-size: 0.85rem;
+            color: #d4af37;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .quiz-question {
+            color: #fff;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .quiz-option:hover {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+            transform: scale(1.05);
+        }
+
+        .quiz-option.selected {
+            background: rgba(212, 175, 55, 0.3);
+            border-color: #ffd700;
+        }
+
+        /* Buttons */
+        .cancel-btn {
+            margin-top: 30px; 
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff; 
+            border-radius: 50px; 
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .loading-container {
+                padding: 30px 20px;
+            }
+
+            .loading-title {
+                font-size: 1.5rem;
+            }
+
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+
+            .social-proof .stat {
+                display: block;
+                margin: 8px 0;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .visible {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <!-- Skeleton UI -->
+        <div id="skeletonUI">
+            <div class="skeleton skeleton-circle"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text small"></div>
+            <div class="skeleton skeleton-text"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" class="content hidden">
+            <div class="crystal-ball">
+                <div class="ball">
+                    <div class="oracle-eye">👁️</div>
+                </div>
+            </div>
+
+            <h1 class="loading-title" id="loadingTitle">Oracle is Reading...</h1>
+            <p class="loading-subtitle" id="loadingSubtitle">The cosmic forces are aligning for you</p>
+
+            <!-- Social Proof -->
+            <div class="social-proof">
+                <div class="stat">✨ Today: <span class="stat-number" id="todayCount">0</span> readings</div>
+                <div class="stat">🔥 Your pillar: <span class="stat-number" id="pillarCount">0</span> users</div>
+                <div class="stat">⭐ Rating: <span class="stat-number">4.8/5.0</span></div>
+            </div>
+
+            <!-- Progress -->
+            <div class="progress-section">
+                <div class="progress-text" id="progressText">Initializing cosmic connection...</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div style="font-size: 0.85rem; color: #999;" id="progressPercent">0%</div>
+            </div>
+
+            <!-- Messages -->
+            <div class="messages" id="dynamicMessages">
+                <div class="message" id="mainMessage">✨ Connecting to universal energy...</div>
+            </div>
+
+            <!-- Counter -->
+            <div class="counter-box hidden" id="counterBox">
+                <div>⏱️ Time waited: <span class="counter-time" id="counterTime">0s</span></div>
+                <div style="color: #bbb; font-size: 0.85rem; margin-top: 5px;">
+                    Average users wait <strong style="color: #ffd700;">42 seconds</strong><br>
+                    to unlock their 2026 destiny 😉
+                </div>
+            </div>
+
+            <!-- Quiz -->
+            <div class="quiz-container" id="quizContainer">
+                <div class="quiz-title">💡 Quick Question</div>
+                <div class="quiz-instruction" id="quizInstruction">
+                    Your answer will enhance the final reading!
+                </div>
+                <div class="quiz-benefit" id="quizBenefit">
+                    ✨ Selected area will receive deeper analysis
+                </div>
+                <div class="quiz-question" id="quizQuestion">
+                    What's your top priority for 2026?
+                </div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-value="wealth">💰 Wealth Growth</div>
+                    <div class="quiz-option" data-value="love">❤️ Finding Love</div>
+                    <div class="quiz-option" data-value="health">💪 Health & Wellness</div>
+                    <div class="quiz-option" data-value="career">🚀 Career Breakthrough</div>
+                </div>
+            </div>
+
+            <button class="cancel-btn" id="cancelBtn">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        const isKorean = navigator.language.includes('ko');
+        let startTime = Date.now();
+        let elapsedSeconds = 0;
+        let userName = '';
+
+        // Set quiz text based on language
+        setTimeout(() => {
+            const instructionEl = document.getElementById('quizInstruction');
+            const benefitEl = document.getElementById('quizBenefit');
+            const questionEl = document.getElementById('quizQuestion');
+            
+            if (instructionEl && benefitEl && questionEl) {
+                instructionEl.textContent = isKorean 
+                    ? '답변이 최종 결과에 반영됩니다!'
+                    : 'Your answer will enhance the final reading!';
+                
+                benefitEl.textContent = isKorean
+                    ? '✨ 선택한 항목은 더 상세하게 분석됩니다'
+                    : '✨ Selected area will receive deeper analysis';
+                
+                questionEl.textContent = isKorean
+                    ? '2026년 가장 중요한 목표는?'
+                    : "What's your top priority for 2026?";
+            }
+        }, 100);
+
+        // Messages
+        const messagesKo = [
+            { time: 0, text: "✨ 우주의 기운을 연결하고 있습니다...", progress: 5 },
+            { time: 3000, text: "🌟 사주팔자 계산 완료!", highlight: true, progress: 30 },
+            { time: 6000, text: "🔮 당신의 일주를 분석하는 중...", progress: 45 },
+            { time: 10000, text: "💎 2026년 병오년 에너지 매칭 중...", progress: 60 },
+            { time: 15000, text: "📊 월별 타이밍 계산 중...", progress: 75 },
+            { time: 25000, text: "⚡ 행운의 시기를 찾았습니다!", highlight: true, progress: 85 },
+            { time: 35000, text: "🧘‍♂️ 오라클의 최종 메시지 작성 중...", progress: 95 }
+        ];
+
+        const messagesEn = [
+            { time: 0, text: "✨ Connecting to cosmic energies...", progress: 5 },
+            { time: 3000, text: "🌟 Four Pillars calculated!", highlight: true, progress: 30 },
+            { time: 6000, text: "🔮 Analyzing your Day Pillar...", progress: 45 },
+            { time: 10000, text: "💎 Matching 2026 Fire Horse energy...", progress: 60 },
+            { time: 15000, text: "📊 Calculating monthly timing...", progress: 75 },
+            { time: 25000, text: "⚡ Lucky periods discovered!", highlight: true, progress: 85 },
+            { time: 35000, text: "🧘‍♂️ Crafting Oracle's final wisdom...", progress: 95 }
+        ];
+
+        const messages = isKorean ? messagesKo : messagesEn;
+
+        // ============================================
+        // PHASE 0: Skeleton UI (0.5초)
+        // ============================================
+        setTimeout(() => {
+            document.getElementById('skeletonUI').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            
+            const requestData = JSON.parse(sessionStorage.getItem('fortuneRequestData') || '{}');
+            userName = requestData.name || 'User';
+            
+            const title = isKorean 
+                ? `${userName}님만을 위한 운명 분석 중...`
+                : `Analyzing ${userName}'s destiny...`;
+            
+            const subtitle = isKorean
+                ? `284,000개 조합에서 최적 패턴을 찾고 있습니다`
+                : `Finding optimal patterns from 284,000 combinations`;
+            
+            document.getElementById('loadingTitle').textContent = title;
+            document.getElementById('loadingSubtitle').textContent = subtitle;
+
+            animateNumber('todayCount', 0, 1247, 1500);
+            animateNumber('pillarCount', 0, 324, 1500);
+        }, 500);
+
+        // ============================================
+        // MESSAGE & PROGRESS TIMELINE
+        // ============================================
+        messages.forEach(msg => {
+            setTimeout(() => {
+                const msgEl = document.getElementById('mainMessage');
+                msgEl.textContent = msg.text;
+                msgEl.className = msg.highlight ? 'message highlight' : 'message';
+                updateProgress(msg.progress);
+            }, msg.time);
+        });
+
+        // ============================================
+        // COUNTER (10초)
+        // ============================================
+        setTimeout(() => {
+            document.getElementById('counterBox').classList.remove('hidden');
+            setInterval(() => {
+                elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('counterTime').textContent = elapsedSeconds + 's';
+            }, 1000);
+        }, 10000);
+
+        // ============================================
+        // QUIZ (12초)
+        // ============================================
+        setTimeout(() => {
+            document.getElementById('quizContainer').style.display = 'block';
+            
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.quiz-option').forEach(o => 
+                        o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    sessionStorage.setItem('quizAnswer', this.dataset.value);
+                    console.log('✨ Quiz answer saved:', this.dataset.value);
+                    
+                    setTimeout(() => {
+                        document.getElementById('quizContainer').style.display = 'none';
+                    }, 800);
+                });
+            });
+        }, 12000);
+
+        // ============================================
+        // API CALL
+        // ============================================
+        window.onload = function() {
+            const requestData = sessionStorage.getItem('fortuneRequestData');
+            if (!requestData) {
+                window.location.href = '/';
+                return;
+            }
+
+            // ★ 퀴즈 답변 추가
+            const data = JSON.parse(requestData);
+            const quizAnswer = sessionStorage.getItem('quizAnswer');
+            if (quizAnswer) {
+                data.priority = quizAnswer;
+                console.log('✨ User priority:', quizAnswer);
+            }
+
+            fetch('/api/fortune', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                sessionStorage.setItem('fortuneData', JSON.stringify(data.fortune ?? ''));
+                sessionStorage.setItem('fortuneReady', 'true');
+                
+                updateProgress(100);
+                document.getElementById('mainMessage').textContent = 
+                    isKorean ? '✨ 완성되었습니다!' : '✨ Complete!';
+                document.getElementById('mainMessage').className = 'message highlight';
+                
+                setTimeout(() => { 
+                    window.location.href = '/result.html'; 
+                }, 800);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(isKorean 
+                    ? '오류가 발생했습니다. 다시 시도해주세요.'
+                    : 'An error occurred. Please try again.');
+                window.location.href = '/';
+            });
+        };
+
+        // ============================================
+        // TIMEOUT (5분 10초)
+        // ============================================
+        setTimeout(() => {
+            const isFinished = sessionStorage.getItem('fortuneReady');
+            if (isFinished !== 'true') {
+                alert(isKorean 
+                    ? '분석 시간이 예상보다 오래 걸립니다. 다시 시도해주세요.' 
+                    : 'The Oracle is taking longer than expected. Please try again.');
+                window.location.href = '/';
+            }
+        }, 310000);
+
+        // ============================================
+        // CANCEL BUTTON
+        // ============================================
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            if (confirm(isKorean 
+                ? '정말 취소하시겠습니까?' 
+                : 'Are you sure you want to cancel?')) {
+                window.location.href = '/';
+            }
+        });
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function updateProgress(percent) {
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = percent + '%';
+            
+            const progressTexts = isKorean 
+                ? ['초기화 중...', '계산 중...', '분석 중...', '거의 완료...', '완료!']
+                : ['Initializing...', 'Calculating...', 'Analyzing...', 'Almost done...', 'Complete!'];
+            
+            let textIndex = Math.floor(percent / 25);
+            if (textIndex >= progressTexts.length) textIndex = progressTexts.length - 1;
+            
+            document.getElementById('progressText').textContent = progressTexts[textIndex];
+        }
+
+        function animateNumber(elementId, start, end, duration) {
+            const element = document.getElementById(elementId);
+            const range = end - start;
+            const increment = range / (duration / 50);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= end) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current);
+            }, 50);
+        }
+    </script>
+</body>
+</html>
