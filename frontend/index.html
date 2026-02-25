@@ -883,6 +883,102 @@
             box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.3);
         }
 
+        /* Custom Select Styling */
+        .custom-select-wrapper {
+            position: relative;
+            user-select: none;
+            width: 100%;
+        }
+
+        .custom-select {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 1rem 1.25rem;
+            /* Inherit padding from form-input */
+            background: rgba(10, 10, 15, 0.4);
+            /* Inherit background from form-input */
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            /* Inherit border from form-input */
+            border-radius: 8px;
+            /* Inherit border-radius from form-input */
+            font-size: 1rem;
+            /* Inherit font-size from form-input */
+            color: var(--text-primary);
+            /* Inherit color from form-input */
+            font-family: 'Space Mono', monospace;
+            /* Inherit font-family from form-input */
+            transition: all 0.3s ease;
+            /* Inherit transition from form-input */
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+            /* Inherit box-shadow from form-input */
+        }
+
+        .custom-select-arrow {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid var(--text-secondary);
+            transition: transform 0.3s;
+        }
+
+        .custom-select-wrapper.open .custom-select-arrow {
+            transform: rotate(180deg);
+            border-top-color: var(--gold);
+        }
+
+        .custom-select-wrapper.open .custom-select {
+            border-color: var(--gold);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            background: rgba(212, 175, 55, 0.05);
+            /* Match form-input:focus background */
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.3);
+            /* Match form-input:focus box-shadow */
+        }
+
+        .custom-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--gold);
+            border-top: none;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            z-index: 99;
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .custom-select-wrapper.open .custom-options {
+            display: block;
+        }
+
+        .custom-option {
+            padding: 0.75rem 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .custom-option:hover {
+            background: rgba(240, 185, 11, 0.15);
+            color: var(--gold);
+        }
+
+        /* Hide original selects */
+        select.hidden-native {
+            display: none !important;
+        }
+
         .form-input::placeholder {
             color: var(--text-muted);
         }
@@ -2187,8 +2283,18 @@
         </div>
 
         <!-- Step 2: Form Section -->
-        <div id="step-2" style="border-top: 1px solid var(--border-subtle); margin-top: 2rem;">
-            <div class="form-section" id="fortune-form">
+        <div id="step-2" style="border-top: 1px solid var(--border-subtle); margin-top: 2rem; position: relative;">
+
+            <!-- Video Background -->
+            <video autoplay loop muted playsinline
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.15; z-index: 0; pointer-events: none; border-radius: 20px;">
+                <source src="Mystical_Crystal_Ball_Video_Generation.mov">
+            </video>
+            <div
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 20%, transparent 80%, var(--bg-primary) 100%); z-index: 0; pointer-events: none;">
+            </div>
+
+            <div class="form-section" id="fortune-form" style="position: relative; z-index: 1;">
                 <div class="form-header">
                     <h3>Enter Your Birth Data</h3>
                     <p>Precise birth information enhances reading accuracy</p>
@@ -3025,6 +3131,68 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script>
+        // Custom Select Logic
+        function initCustomSelects() {
+            const selects = document.querySelectorAll('select.form-input');
+            selects.forEach(select => {
+                select.classList.add('hidden-native');
+                const wrapper = document.createElement('div');
+                wrapper.className = 'custom-select-wrapper';
+
+                const customSelect = document.createElement('div');
+                customSelect.className = 'form-input custom-select';
+
+                const textSpan = document.createElement('span');
+                textSpan.textContent = select.options[select.selectedIndex].text;
+
+                const arrow = document.createElement('div');
+                arrow.className = 'custom-select-arrow';
+
+                customSelect.appendChild(textSpan);
+                customSelect.appendChild(arrow);
+                wrapper.appendChild(customSelect);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'custom-options';
+
+                Array.from(select.options).forEach((option, index) => {
+                    if (index === 0 && option.value === "") return; // Skip placeholder option from list
+                    const optDiv = document.createElement('div');
+                    optDiv.className = 'custom-option';
+                    optDiv.textContent = option.text;
+                    optDiv.dataset.value = option.value;
+
+                    optDiv.addEventListener('click', function () {
+                        select.value = this.dataset.value;
+                        textSpan.textContent = this.textContent;
+                        textSpan.style.color = 'var(--text-primary)';
+                        select.dispatchEvent(new Event('change'));
+                        wrapper.classList.remove('open');
+                    });
+                    optionsDiv.appendChild(optDiv);
+                });
+
+                wrapper.appendChild(optionsDiv);
+                select.parentNode.insertBefore(wrapper, select.nextSibling);
+                wrapper.appendChild(select); // move select inside wrapper for easier referencing
+
+                customSelect.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const isOpen = wrapper.classList.contains('open');
+                    document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
+                    if (!isOpen) wrapper.classList.add('open');
+                });
+            });
+
+            document.addEventListener('click', function () {
+                document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initCustomSelects();
+        });
+
         // Loading Screen
         document.body.style.overflow = 'hidden';
         const loadingBar = document.getElementById('loadingBar');
