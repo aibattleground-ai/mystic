@@ -10,6 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
         rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -276,6 +277,23 @@
             background: var(--gold);
             border-radius: 50%;
             animation: pulse 2s infinite;
+        }
+
+        .pulse-animation {
+            animation: connectPulse 0.5s infinite alternate;
+            border: 2px solid var(--gold) !important;
+        }
+
+        @keyframes connectPulse {
+            from {
+                box-shadow: 0 0 10px rgba(240, 185, 11, 0.5);
+                transform: scale(1);
+            }
+
+            to {
+                box-shadow: 0 0 25px rgba(240, 185, 11, 1);
+                transform: scale(1.05);
+            }
         }
 
         @keyframes pulse {
@@ -1767,6 +1785,8 @@
                 <li><a href="https://x.com/orceyes" target="_blank">X (Twitter)</a></li>
                 <li><a href="https://t.me/orceyes" target="_blank">TG Community</a></li>
                 <li><a href="#" class="nav-cta">Launch App</a></li>
+                <li><a href="#" class="nav-cta connect-wallet-btn" id="connectWalletBtn"
+                        onclick="connectWallet()">Connect Wallet</a></li>
             </ul>
         </div>
     </nav>
@@ -2145,6 +2165,22 @@
                                 </svg></div>
                             <div class="card-title">Dream Decode</div>
                             <div class="card-description">Subconscious messages</div>
+                        </div>
+
+                        <div class="fortune-card premium-card" onclick="selectFortune(this, 'premium')"
+                            style="border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(240, 185, 11, 0.2);">
+                            <span class="card-badge" style="background: var(--gold); color: black;">500 $ORC</span>
+                            <div class="selected-indicator"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></div>
+                            <div class="card-icon" style="color: var(--gold);"><svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <polygon
+                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                    </polygon>
+                                </svg></div>
+                            <div class="card-title" style="color: var(--gold);">Premium Life Report</div>
+                            <div class="card-description">All-in-One Neural Analysis</div>
                         </div>
                     </div>
             </section>
@@ -3230,8 +3266,33 @@
         const dreamContent = document.getElementById('dream-content');
         if (dreamContent) dreamContent.addEventListener('input', function () { document.getElementById('dream-char-count').textContent = this.value.length; });
 
+        // Web3 Connection
+        let userWalletAddress = null;
+        async function connectWallet() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    await provider.send("eth_requestAccounts", []);
+                    const signer = provider.getSigner();
+                    userWalletAddress = await signer.getAddress();
+                    const btn = document.getElementById('connectWalletBtn');
+                    btn.textContent = userWalletAddress.substring(0, 6) + '...' + userWalletAddress.substring(38);
+                    btn.style.background = 'transparent';
+                    btn.style.border = '1px solid var(--gold)';
+                    btn.style.color = 'var(--gold)';
+                    showToast('Wallet connected successfully', 'success');
+                } catch (err) {
+                    console.error(err);
+                    showToast('Failed to connect wallet', 'error');
+                }
+            } else {
+                window.open('https://metamask.io/download/', '_blank');
+                showToast('Please install MetaMask', 'error');
+            }
+        }
+
         // Submit
-        document.getElementById('submit-btn').addEventListener('click', function (e) {
+        document.getElementById('submit-btn').addEventListener('click', async function (e) {
             e.preventDefault();
             let body = {};
 
@@ -3248,6 +3309,45 @@
                 const g = id => document.getElementById(id).value;
                 if (!g('dream-content')) { alert('Please describe your dream.'); return; }
                 body = { name: g('dream-name') || 'Dreamer', birthYear: g('dream-year') || '1990', birthMonth: g('dream-month') || '1', birthDay: g('dream-day') || '1', birthTime: '', birthPlace: 'Unknown', dreamContent: g('dream-content') };
+            } else if (selectedFortune === 'premium') {
+                const g = id => document.getElementById(id).value;
+                if (!userWalletAddress) {
+                    alert('Please connect your Web3 wallet first to access Premium Analysis.');
+                    // Scroll to top or trigger connect
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    document.getElementById('connectWalletBtn').classList.add('pulse-animation');
+                    setTimeout(() => document.getElementById('connectWalletBtn').classList.remove('pulse-animation'), 2000);
+                    return;
+                }
+
+                try {
+                    // Mock ORC Token Contract Interaction
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    const signer = provider.getSigner();
+                    const orcAddress = "0xD9CDcE2Fb87552Ba1bF31EaBe0a8cE1f97951aE9";
+                    const abi = ["function transfer(address to, uint amount) returns (bool)"];
+                    const orcContract = new ethers.Contract(orcAddress, abi, signer);
+
+                    document.getElementById('submit-btn').innerHTML = '<svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg> Approving ORC...';
+
+                    // Request signature for transaction
+                    showToast('Please approve the 500 $ORC transaction in your wallet', 'success');
+                    const amount = ethers.utils.parseUnits("500", 18);
+
+                    // Sending transaction (In reality we would transfer to a treasury wallet, here we just trigger the wallet prompt)
+                    const tx = await orcContract.transfer("0x0000000000000000000000000000000000000000", amount);
+                    document.getElementById('submit-btn').innerHTML = '<svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg> Confirming Transaction...';
+
+                    await tx.wait(); // Wait for confirmation
+                    showToast('Premium Access Granted!', 'success');
+                } catch (error) {
+                    console.error("Transaction failed or rejected:", error);
+                    document.getElementById('submit-btn').innerHTML = 'Reveal Destiny <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>';
+                    showToast('Transaction cancelled or failed.', 'error');
+                    return; // Stop execution if payment failed
+                }
+
+                body = { name: g('name') || 'Seeker', categories: ['Premium'] };
             } else {
                 const g = id => document.getElementById(id).value;
                 if (!selectedFortune) { alert('Please select a category in Step 1.'); return; }
