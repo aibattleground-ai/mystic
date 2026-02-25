@@ -1871,18 +1871,24 @@
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
-            <a href="#" class="logo">
-                <div class="logo-icon"></div>
-                <span class="logo-text">Oracle<span>Eyes</span>.AI</span>
+            <a href="#" class="logo" style="display: flex; align-items: center; gap: 12px;">
+                <img src="logo.png" style="width: 48px; height: 48px; border-radius: 12px; object-fit: contain;"
+                    alt="OracleEyes Logo">
+                <span class="logo-text" style="font-size: 1.8rem; letter-spacing: -0.5px;">Oracle<span
+                        style="color: var(--gold);">Eyes</span>.AI</span>
             </a>
             <ul class="nav-menu">
                 <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">Whitepaper</a></li>
                 <li><a href="tokenomics.html">Tokenomics</a></li>
                 <li><a href="https://x.com/orceyes" target="_blank">X (Twitter)</a></li>
                 <li><a href="https://t.me/orceyes" target="_blank">TG Community</a></li>
-                <li><a href="#" class="nav-cta">Launch App</a></li>
-                <li><a href="#" class="nav-cta connect-wallet-btn" id="connectWalletBtn"
-                        onclick="connectWallet()">Connect Wallet</a></li>
+                <li style="margin-left: 1rem;"><a href="#" class="nav-cta"
+                        style="background: var(--gold); color: #000; font-weight: 700; border: none; padding: 0.75rem 1.5rem; border-radius: 8px;">Launch
+                        App</a></li>
+                <li style="margin-left: 0.5rem;"><a href="#" class="nav-cta connect-wallet-btn" id="connectWalletBtn"
+                        onclick="connectWallet()"
+                        style="background: var(--gold); color: #000; font-weight: 700; border: none; padding: 0.75rem 1.5rem; border-radius: 8px;">Connect
+                        Wallet</a></li>
             </ul>
         </div>
     </nav>
@@ -2286,10 +2292,9 @@
         <div id="step-2" style="border-top: 1px solid var(--border-subtle); margin-top: 2rem; position: relative;">
 
             <!-- Video Background -->
-            <video autoplay loop muted playsinline webkit-playsinline id="formVideoBg"
+            <video autoplay loop muted playsinline webkit-playsinline class="bg-video-element"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; z-index: 0; pointer-events: none; border-radius: 20px;">
-                <source src="Mystical_Crystal_Ball_Video_Generation.mov" type="video/quicktime">
-                <source src="Mystical_Crystal_Ball_Video_Generation.mov" type="video/mp4">
+                <source src="landing.mp4" type="video/mp4">
             </video>
             <div
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 20%, transparent 80%, var(--bg-primary) 100%); z-index: 0; pointer-events: none;">
@@ -2847,8 +2852,17 @@
     </section>
 
     <!-- Features Section -->
-    <section class="features-section" id="features">
-        <div class="section-container">
+    <section class="features-section" id="features" style="position: relative; overflow: hidden;">
+        <!-- Mid-page Video Background -->
+        <video autoplay loop muted playsinline webkit-playsinline class="bg-video-element"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.15; z-index: 0; pointer-events: none;">
+            <source src="landing.mp4" type="video/mp4">
+        </video>
+        <div
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 15%, transparent 85%, var(--bg-primary) 100%); z-index: 0; pointer-events: none;">
+        </div>
+
+        <div class="section-container" style="position: relative; z-index: 1;">
             <div class="section-header reveal">
                 <div class="section-label">Technology</div>
                 <h2 class="section-title">Advanced Oracle Engine</h2>
@@ -3194,12 +3208,12 @@
             initCustomSelects();
 
             // Force video background to play
-            const formVideo = document.getElementById('formVideoBg');
-            if (formVideo) {
+            const formVideos = document.querySelectorAll('.bg-video-element');
+            formVideos.forEach(video => {
                 // Ensure muted property is explicitly set for autoplay policies
-                formVideo.muted = true;
-                formVideo.play().catch(e => console.log("Video autoplay blocked:", e));
-            }
+                video.muted = true;
+                video.play().catch(e => console.log("Video autoplay blocked:", e));
+            });
         });
 
         // Loading Screen
