@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OracleEyes Tokenomics & Vesting Schedule</title>
+    <meta property="og:title" content="OracleEyes (ORC) Tokenomics Overview">
+    <meta property="og:description" content="Explore ORC's transparent token distribution and vesting schedule.">
+    <meta property="og:image" content="https://oracleeyes.io/assets/og-tokenomics.png">
+    <meta property="og:url" content="https://tokenomics.oracleeyes.io/">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Binance/Elite Exchange Palette */
+            --gold: #F0B90B;
+            --gold-light: #FCD535;
+            --gold-dark: #C99400;
+            --cyan: #02C076;
+            --bg-primary: #0B0E14;
+            --bg-secondary: #181A20;
+            --bg-tertiary: #1E2329;
+            --text-primary: #EAECEF;
+            --text-secondary: #848E9C;
+            --text-muted: #474D57;
+            --border-subtle: #2B3139;
+            --border-gold: rgba(240, 185, 11, 0.4);
+            --gradient-gold: linear-gradient(135deg, #F0B90B 0%, #FCD535 50%, #F0B90B 100%);
+            --glass-bg: rgba(24, 26, 32, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Navigation (Copied from index.html) */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+            background: rgba(11, 14, 20, 0.85);
+            /* Slightly darker bg-primary for nav */
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-gold);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-cta {
+            padding: 0.75rem 1.75rem;
+            background: var(--gradient-gold);
+            border: none;
+            border-radius: 8px;
+            color: var(--bg-primary) !important;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(240, 185, 11, 0.3);
+        }
+
+        /* Animated Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 20px 60px;
+            /* Offset for fixed nav */
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(240, 185, 11, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        .tabs {
+            display: inline-flex;
+            gap: 6px;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .tab-btn {
+            padding: 16px 40px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--bg-primary);
+            background: var(--gradient-gold);
+            box-shadow: 0 4px 15px rgba(240, 185, 11, 0.2);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Content */
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Card */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 30px;
+            padding: 4rem;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Distribution Grid */
+        .distribution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 500px;
+        }
+
+        /* Allocations */
+        .allocations {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .allocation {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .allocation:hover {
+            transform: translateX(10px);
+            border-color: var(--accent);
+            background: rgba(43, 49, 57, 0.8);
+        }
+
+        .allocation-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 1.5rem;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .allocation-info {
+            flex: 1;
+        }
+
+        .allocation-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .allocation-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .allocation-value {
+            text-align: right;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .allocation-percent {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .allocation-tokens {
+            font-size: 0.85rem;
+            color: var(--gold);
+            margin-top: 4px;
+        }
+
+        /* Stats Grid */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .stat {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+
+        .stat-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Vesting Timeline */
+        .vesting-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1rem;
+        }
+
+        .vesting-table th {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .vesting-table td {
+            padding: 1.5rem 1rem;
+            font-size: 1rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-subtle);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .vesting-table td:first-child .category {
+            font-family: 'Sora', sans-serif;
+        }
+
+        .vesting-table tr:hover td {
+            background: var(--bg-tertiary);
+        }
+
+        /* Category */
+        .category {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .category-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 12px;
+            background: var(--accent);
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            font-family: 'Sora', sans-serif;
+        }
+
+        .badge.unlock {
+            background: rgba(2, 192, 118, 0.15);
+            /* Cyan */
+            color: var(--cyan);
+            border: 1px solid rgba(2, 192, 118, 0.3);
+        }
+
+        .badge.partial {
+            background: rgba(240, 185, 11, 0.15);
+            /* Gold */
+            color: var(--gold);
+            border: 1px solid rgba(240, 185, 11, 0.3);
+        }
+
+        .badge.lock {
+            background: rgba(234, 236, 239, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid rgba(234, 236, 239, 0.2);
+        }
+
+        /* Timeline Box */
+        .timeline-box {
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid var(--border-subtle);
+            margin-top: 4rem;
+        }
+
+        .timeline-header {
+            margin-bottom: 2rem;
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chart-container-line {
+            height: 400px;
+            position: relative;
+        }
+
+        /* Footer (Copied from index.html) */
+        footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 4rem 2rem 2rem;
+            background: var(--bg-secondary);
+            margin-top: 6rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            max-width: 300px;
+            line-height: 1.6;
+        }
+
+        .footer-column h4 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 4rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--gold);
+            color: var(--bg-primary);
+        }
+
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .distribution-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .chart-wrapper {
+                height: 400px;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3rem;
+            }
+
+            .card {
+                padding: 2rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            /* Assuming you have a mobile menu toggle handled elsewhere */
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .vesting-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"></div>
+                <span class="logo-text">Oracle<span>Eyes</span>.AI</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">Whitepaper</a></li>
+                <li><a href="tokenomics.html">Tokenomics</a></li>
+                <li><a href="https://x.com/orceyes" target="_blank">X (Twitter)</a></li>
+                <li><a href="https://t.me/orceyes" target="_blank">TG Community</a></li>
+                <li><a href="index.html#pricing" class="nav-cta">Get Started</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <canvas class="particles" id="particles"></canvas>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">ORC Tokenomics</h1>
+            <p class="subtitle">Transparent distribution designed for the OracleEyes AI ecosystem. Engineered for
+                long-term sustainability and community growth.</p>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab(event, 'distribution')">
+                    Token Distribution
+                </button>
+                <button class="tab-btn" onclick="switchTab(event, 'vesting')">
+                    Vesting Schedule
+                </button>
+            </div>
+        </div>
+
+        <div id="distribution" class="content active">
+            <div class="card">
+                <div class="distribution-grid">
+                    <div class="chart-wrapper">
+                        <canvas id="tokenChart"></canvas>
+                    </div>
+
+                    <div class="allocations">
+                        <div class="allocation" style="--accent: #02C076;">
+                            <span class="allocation-dot"></span>
+                            <div class="allocation-info">
+                                <div class="allocation-name">Ecosystem & Rewards</div>
+                                <div class="allocation-desc">48 months linear vesting</div>
+                            </div>
+                            <div class="allocation-value">
+                                <div class="allocation-percent">30%</div>
+                                <div class="allocation-tokens">300,000,000</div>
+                            </div>
+                        </div>
+
+                        <div class="allocation" style="--accent: #EAECEF;">
+                            <span class="allocation-dot"></span>
+                            <div class="allocation-info">
+                                <div class="allocation-name">Liquidity & Market Making</div>
+                                <div class="allocation-desc">20% reserve</div>
+                            </div>
+                            <div class="allocation-value">
+                                <div class="allocation-percent">15%</div>
+                                <div class="allocation-tokens">150,000,000</div>
+                            </div>
+                        </div>
+
+                        <div class="allocation" style="--accent: #FCD535;">
+                            <span class="allocation-dot"></span>
+                            <div class="allocation-info">
+                                <div class="allocation-name">Team & Advisors</div>
+                                <div class="allocation-desc">60 months linear vesting</div>
+                            </div>
+                            <div class="allocation-value">
+                                <div class="allocation-percent">15%</div>
+                                <div class="allocation-tokens">150,000,000</div>
+                            </div>
+                        </div>
+
+                        <div class="allocation" style="--accent: #F0B90B;">
+                            <span class="allocation-dot"></span>
+                            <div class="allocation-info">
+                                <div class="allocation-name">Treasury & Governance</div>
+                                <div class="allocation-desc">60 months DAO-controlled</div>
+                            </div>
+                            <div class="allocation-value">
+                                <div class="allocation-percent">10%</div>
+                                <div class="allocation-tokens">100,000,000</div>
+                            </div>
+                        </div>
+
+                        <div class="allocation" style="--accent: #C99400;">
+                            <span class="allocation-dot"></span>
+                            <div class="allocation-info">
+                                <div class="allocation-name">Airdrops & User Acquisition</div>
+                                <div class="allocation-desc">24 months linear vesting</div>
+                            </div>
+                            <div class="allocation-value">
+                                <div class="allocation-percent">10%</div>
+                                <div class="allocation-tokens">100,000,000</div>
+                            </div>
+                        </div>
+
+                        <div class="allocation" style="--accent: #474D57;">
+                            <span class="allocation-dot"></span>
+                            <div class="allocation-info">
+                                <div class="allocation-name">Development Fund</div>
+                                <div class="allocation-desc">60 months linear vesting</div>
+                            </div>
+                            <div class="allocation-value">
+                                <div class="allocation-percent">10%</div>
+                                <div class="allocation-tokens">100,000,000</div>
+                            </div>
+                        </div>
+
+                        <div class="allocation" style="--accent: #848E9C;">
+                            <span class="allocation-dot"></span>
+                            <div class="allocation-info">
+                                <div class="allocation-name">Private Sale</div>
+                                <div class="allocation-desc">12 months linear vesting</div>
+                            </div>
+                            <div class="allocation-value">
+                                <div class="allocation-percent">5%</div>
+                                <div class="allocation-tokens">50,000,000</div>
+                            </div>
+                        </div>
+
+                        <div class="allocation" style="--accent: #8A2BE2;">
+                            <span class="allocation-dot"
+                                style="background: #8A2BE2; box-shadow: 0 0 10px #8A2BE2;"></span>
+                            <div class="allocation-info">
+                                <div class="allocation-name">Foundation Reserve</div>
+                                <div class="allocation-desc">36 months quarterly</div>
+                            </div>
+                            <div class="allocation-value">
+                                <div class="allocation-percent">5%</div>
+                                <div class="allocation-tokens">50,000,000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">~15%</div>
+                        <div class="stat-label">Initial Circulating</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">60M</div>
+                        <div class="stat-label">Max Vesting Duration</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">6M</div>
+                        <div class="stat-label">Team Cliff</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1B</div>
+                        <div class="stat-label">Max Token Supply</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="vesting" class="content">
+            <div class="card">
+                <table class="vesting-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Allocation</th>
+                            <th>TGE Unlock</th>
+                            <th>Cliff</th>
+                            <th>Vesting</th>
+                            <th>Schedule</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="category">
+                                    <span class="category-dot" style="background: #02C076;"></span>
+                                    Ecosystem & Rewards
+                                </div>
+                            </td>
+                            <td>300,000,000</td>
+                            <td><span class="badge partial">5%</span></td>
+                            <td>None</td>
+                            <td>48 months</td>
+                            <td>Linear</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="category">
+                                    <span class="category-dot" style="background: #EAECEF;"></span>
+                                    Liquidity & Market Making
+                                </div>
+                            </td>
+                            <td>150,000,000</td>
+                            <td><span class="badge unlock">80%</span></td>
+                            <td>None</td>
+                            <td>-</td>
+                            <td>20% reserve</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="category">
+                                    <span class="category-dot" style="background: #FCD535;"></span>
+                                    Team & Advisors
+                                </div>
+                            </td>
+                            <td>150,000,000</td>
+                            <td><span class="badge lock">0%</span></td>
+                            <td>6 months</td>
+                            <td>60 months</td>
+                            <td>Linear</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="category">
+                                    <span class="category-dot" style="background: #F0B90B;"></span>
+                                    Treasury & Governance
+                                </div>
+                            </td>
+                            <td>100,000,000</td>
+                            <td><span class="badge lock">0%</span></td>
+                            <td>1 month</td>
+                            <td>60 months</td>
+                            <td>DAO-controlled</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="category">
+                                    <span class="category-dot" style="background: #C99400;"></span>
+                                    Airdrops & User Acquisition
+                                </div>
+                            </td>
+                            <td>100,000,000</td>
+                            <td><span class="badge partial">10%</span></td>
+                            <td>None</td>
+                            <td>24 months</td>
+                            <td>Linear</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="category">
+                                    <span class="category-dot" style="background: #474D57;"></span>
+                                    Development Fund
+                                </div>
+                            </td>
+                            <td>100,000,000</td>
+                            <td><span class="badge partial">5%</span></td>
+                            <td>None</td>
+                            <td>60 months</td>
+                            <td>Linear</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="category">
+                                    <span class="category-dot" style="background: #848E9C;"></span>
+                                    Private Sale
+                                </div>
+                            </td>
+                            <td>50,000,000</td>
+                            <td><span class="badge lock">0%</span></td>
+                            <td>3 months</td>
+                            <td>12 months</td>
+                            <td>Linear</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="category">
+                                    <span class="category-dot" style="background: #8A2BE2;"></span>
+                                    Foundation Reserve
+                                </div>
+                            </td>
+                            <td>50,000,000</td>
+                            <td><span class="badge lock">0%</span></td>
+                            <td>12 months</td>
+                            <td>36 months</td>
+                            <td>Quarterly</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="timeline-box">
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Cumulative ORC Token Release</h3>
+                    </div>
+                    <div class="chart-container-line">
+                        <canvas id="vestingChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="stats" style="margin-top: 3rem;">
+                    <div class="stat">
+                        <div class="stat-value">~15%</div>
+                        <div class="stat-label">TGE Unlock</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">~85%</div>
+                        <div class="stat-label">Initially Locked</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Deflationary</div>
+                        <div class="stat-label">Model Type</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Fair</div>
+                        <div class="stat-label">Launch Type</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-top" style="display: contents;">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon"></div><span class="logo-text">Oracle<span>Eyes</span>.AI</span>
+                    </a>
+                    <p>Advanced AI-powered destiny intelligence combining ancient wisdom with neural networks.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">Whitepaper</a></li>
+                        <li><a href="index.html#features">Features</a></li>
+                        <li><a href="index.html#pricing">Pricing</a></li>
+                        <li><a href="tokenomics.html">Tokenomics</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Community & Company</h4>
+                    <ul>
+                        <li><a href="https://x.com/orceyes" target="_blank">X (Twitter)</a></li>
+                        <li><a href="https://t.me/orceyes" target="_blank">Telegram</a></li>
+                        <li><a href="careers.html">Careers <span
+                                    style="font-size: 0.6rem; background: var(--gold); color: black; padding: 2px 4px; border-radius: 4px; margin-left: 4px; font-weight: bold;">HIRING</span></a>
+                        </li>
+                        <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Disclaimer</a></li>
+                        <li><a href="mailto:contact@oracleeyes.io">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 OracleEyes.AI. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://x.com/orceyes" target="_blank" class="social-link"><svg viewBox="0 0 24 24">
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg></a>
+                <a href="https://t.me/orceyes" target="_blank" class="social-link"><svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.9 1.21-5.36 3.55-.5.35-.96.52-1.37.51-.45-.01-1.32-.26-1.96-.46-.79-.26-1.42-.39-1.37-.83.02-.23.33-.47.92-.71 3.6-1.56 6.01-2.61 7.22-3.11 3.43-1.42 4.15-1.67 4.62-1.68.1 0 .33.02.48.13.12.1.17.24.18.36 0 .09.01.2.01.29z" />
+                    </svg></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching
+        function switchTab(evt, tabName) {
+            const tabs = document.getElementsByClassName('tab-btn');
+            for (let tab of tabs) {
+                tab.classList.remove('active');
+            }
+
+            const contents = document.getElementsByClassName('content');
+            for (let content of contents) {
+                content.classList.remove('active');
+            }
+
+            evt.currentTarget.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Token Distribution Chart setup
+        Chart.defaults.font.family = "'Space Mono', monospace";
+        Chart.defaults.color = '#848E9C';
+
+        const ctx = document.getElementById('tokenChart').getContext('2d');
+        const tokenChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'Ecosystem & Rewards',
+                    'Liquidity & Market Making',
+                    'Team & Advisors',
+                    'Treasury & Governance',
+                    'Airdrops & User Acquisition',
+                    'Development Fund',
+                    'Private Sale',
+                    'Foundation Reserve'
+                ],
+                datasets: [{
+                    data: [30, 15, 15, 10, 10, 10, 5, 5],
+                    backgroundColor: [
+                        '#02C076',  // Cyan 
+                        '#EAECEF',  // Text Primary
+                        '#FCD535',  // Light Gold
+                        '#F0B90B',  // Gold
+                        '#C99400',  // Dark Gold
+                        '#474D57',  // Text Muted
+                        '#848E9C',  // Text Secondary
+                        '#8A2BE2'   // Purple
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#181A20', // pb-secondary match to blend
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(11, 14, 20, 0.95)',
+                        titleColor: '#EAECEF',
+                        bodyColor: '#848E9C',
+                        bodyFont: { family: "'Sora', sans-serif" },
+                        titleFont: { family: "'Sora', sans-serif", weight: 'bold' },
+                        borderColor: 'rgba(43, 49, 57, 1)',
+                        borderWidth: 1,
+                        padding: 16,
+                        cornerRadius: 12,
+                        callbacks: {
+                            label: function (context) {
+                                return ' ' + context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                },
+                cutout: '72%',
+                animation: {
+                    animateRotate: true,
+                    duration: 1500,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+
+        // Center text plugin for Chart.js
+        Chart.register({
+            id: 'centerText',
+            beforeDraw: function (chart) {
+                if (chart.config.type !== 'doughnut') return;
+                var width = chart.width,
+                    height = chart.height,
+                    ctx = chart.ctx;
+
+                ctx.restore();
+
+                // ORC Value Line
+                var fontSize = (height / 120).toFixed(2);
+                ctx.font = "bold " + fontSize + "em 'Space Mono'";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "#F0B90B"; // Gold
+
+                var text = "1B",
+                    textX = Math.round((width - ctx.measureText(text).width) / 2),
+                    textY = height / 2 - 10;
+
+                ctx.fillText(text, textX, textY);
+
+                // Subtitle Line
+                ctx.font = "normal " + (fontSize / 2.5) + "em 'Sora'";
+                ctx.fillStyle = "#848E9C";
+                var text2 = "$ORC TOKENS";
+                var text2X = Math.round((width - ctx.measureText(text2).width) / 2);
+
+                ctx.fillText(text2, text2X, height / 2 + 25);
+
+                ctx.save();
+            }
+        });
+
+        // Vesting Chart
+        const vestingCtx = document.getElementById('vestingChart');
+        if (vestingCtx) {
+            new Chart(vestingCtx, {
+                type: 'line',
+                data: {
+                    labels: ['TGE', 'Month 6', 'Month 12', 'Month 24', 'Month 36', 'Month 48', 'Month 60'],
+                    datasets: [{
+                        label: 'Total Circulating %',
+                        data: [15, 23, 31, 48, 65, 82, 100],
+                        borderColor: '#F0B90B', // Gold line
+                        backgroundColor: 'rgba(240, 185, 11, 0.1)', // Light gold fill
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: '#0B0E14',
+                        pointBorderColor: '#F0B90B',
+                        pointBorderWidth: 2,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(11, 14, 20, 0.95)',
+                            titleColor: '#EAECEF',
+                            bodyColor: '#F0B90B',
+                            titleFont: { family: "'Sora', sans-serif" },
+                            bodyFont: { family: "'Space Mono', monospace", size: 14 },
+                            borderColor: 'rgba(43, 49, 57, 1)',
+                            borderWidth: 1,
+                            padding: 16,
+                            cornerRadius: 12,
+                            callbacks: {
+                                label: function (context) {
+                                    return ' Circulating: ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(43, 49, 57, 0.5)',
+                                drawBorder: false
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(43, 49, 57, 0.5)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function (value) {
+                                    return value + '%';
+                                }
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Background particles script (Reused from index.html logic)
+        const canvas = document.getElementById('particles');
+        const ctxP = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                // Mix of gold and cyan
+                this.color = Math.random() > 0.5 ? `rgba(240, 185, 11, ${this.opacity})` : `rgba(2, 192, 118, ${this.opacity})`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > width) this.x = 0;
+                if (this.x < 0) this.x = width;
+                if (this.y > height) this.y = 0;
+                if (this.y < 0) this.y = height;
+            }
+
+            draw() {
+                ctxP.fillStyle = this.color;
+                ctxP.beginPath();
+                ctxP.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctxP.fill();
+            }
+        }
+
+        function init() {
+            resize();
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctxP.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        animate();
+    </script>
+</body>
+
+</html>
