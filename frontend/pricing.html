@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing | OracleEyes.AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #F0B90B;
+            --gold-light: #FCD535;
+            --gold-dark: #C99400;
+            --cyan: #02C076;
+            --bg-primary: #0B0E14;
+            --bg-secondary: #181A20;
+            --bg-tertiary: #1E2329;
+            --text-primary: #EAECEF;
+            --text-secondary: #848E9C;
+            --text-muted: #474D57;
+            --border-subtle: #2B3139;
+            --border-gold: rgba(240, 185, 11, 0.4);
+            --gradient-gold: linear-gradient(135deg, #F0B90B 0%, #FCD535 50%, #F0B90B 100%);
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Ambient Glow */
+        .ambient-glow {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(240, 185, 11, 0.08) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-gold);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--gold);
+        }
+
+        .nav-cta {
+            background: var(--gradient-gold);
+            color: var(--bg-primary) !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(240, 185, 11, 0.3);
+        }
+
+        /* Pricing Header */
+        .pricing-header {
+            max-width: 800px;
+            margin: 180px auto 4rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .pricing-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #FFF 0%, #A9B7C6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pricing-header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .billing-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-tertiary);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .toggle-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .toggle-label.active {
+            color: var(--text-primary);
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 28px;
+            background: #181A20;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .toggle-knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: var(--gold);
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .billing-toggle.annual .toggle-knob {
+            transform: translateX(22px);
+        }
+
+        .discount-badge {
+            background: rgba(2, 192, 118, 0.15);
+            color: var(--cyan);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+
+        /* Pricing Grid */
+        .pricing-grid {
+            max-width: 1400px;
+            margin: 0 auto 6rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .pricing-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .pricing-card.popular {
+            border-color: var(--border-gold);
+            background: linear-gradient(180deg, rgba(30, 35, 41, 1) 0%, rgba(24, 26, 32, 1) 100%);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient-gold);
+            color: var(--bg-primary);
+            padding: 0.5rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            box-shadow: 0 5px 15px rgba(240, 185, 11, 0.3);
+        }
+
+        .tier-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .tier-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            min-height: 45px;
+        }
+
+        .tier-price {
+            font-size: 3.5rem;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .tier-price span {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-family: 'Sora', sans-serif;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .token-price {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(240, 185, 11, 0.1);
+            border-radius: 8px;
+            color: var(--gold);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .tier-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 3rem;
+            text-decoration: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--text-muted);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .btn-primary {
+            background: var(--gradient-gold);
+            border: none;
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 5px 20px rgba(240, 185, 11, 0.4);
+        }
+
+        .features-list {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .features-list li svg {
+            flex-shrink: 0;
+            margin-top: 2px;
+            color: var(--cyan);
+        }
+
+        .features-list li.disabled {
+            color: var(--text-muted);
+        }
+
+        .features-list li.disabled svg {
+            color: var(--border-subtle);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            max-width: 800px;
+            margin: 0 auto 8rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 1.5rem 0;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .faq-question svg {
+            transition: transform 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, margin-top 0.3s ease;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .faq-answer.open {
+            max-height: 200px;
+            margin-top: 1rem;
+        }
+
+        /* Footer (Copied exactly from index.html) */
+        footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 4rem 2rem 2rem;
+            background: var(--bg-secondary);
+            margin-top: 6rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            max-width: 300px;
+            line-height: 1.6;
+        }
+
+        .footer-column h4 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 4rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--gold);
+            color: var(--bg-primary);
+        }
+
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 1024px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .footer-container {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ambient-glow"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"></div>
+                <span class="logo-text">Oracle<span>Eyes</span>.AI</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">Whitepaper</a></li>
+                <li><a href="tokenomics.html">Tokenomics</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="index.html#pricing" class="nav-cta">Launch App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Pricing Header -->
+    <div class="pricing-header">
+        <h1>Unlock Your Karmic Data</h1>
+        <p>Choose the tier that matches your predictive needs. Pay in fiat or achieve significant discounts by staking
+            and paying with $ORC tokens.</p>
+
+        <div class="billing-toggle" id="billingToggle">
+            <span class="toggle-label active" onclick="setBilling('monthly')">Monthly</span>
+            <div class="toggle-switch" onclick="toggleBilling()">
+                <div class="toggle-knob"></div>
+            </div>
+            <span class="toggle-label" onclick="setBilling('annual')">Annual <span class="discount-badge">Save
+                    20%</span></span>
+        </div>
+    </div>
+
+    <!-- Pricing Grid -->
+    <div class="pricing-grid">
+        <!-- Basic Tier -->
+        <div class="pricing-card">
+            <div class="tier-name">Initiate</div>
+            <div class="tier-desc">For casual seekers wanting a glimpse into the near future.</div>
+            <div class="tier-price">
+                $<span id="price-basic">19</span><span>/mo</span>
+            </div>
+            <div class="token-price">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v12M8 12h8" stroke="var(--bg-primary)" stroke-width="2" />
+                </svg>
+                <span id="token-basic">1,900</span> $ORC
+            </div>
+            <a href="#" class="tier-btn btn-outline">Start Free Trial</a>
+
+            <ul class="features-list">
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span><strong>10</strong> Standard Readings/mo</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Basic Love Compatibility</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>24-Hour Timeline Horizon</span>
+                </li>
+                <li class="disabled">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    <span>No Webhook API Access</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Pro Tier -->
+        <div class="pricing-card popular">
+            <div class="popular-badge">MOST POPULAR</div>
+            <div class="tier-name" style="color: var(--gold);">Oracle</div>
+            <div class="tier-desc">Advanced predictive analytics for crypto traders and planners.</div>
+            <div class="tier-price">
+                $<span id="price-pro">49</span><span>/mo</span>
+            </div>
+            <div class="token-price">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v12M8 12h8" stroke="var(--bg-primary)" stroke-width="2" />
+                </svg>
+                <span id="token-pro">4,200</span> $ORC <span
+                    style="font-size: 0.75rem; color: var(--cyan); margin-left: 4px;">-15%</span>
+            </div>
+            <a href="#" class="tier-btn btn-primary">Upgrade to Oracle</a>
+
+            <ul class="features-list">
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span><strong>100</strong> Deep Readings/mo</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Advanced Wealth Transits</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>18-Month Timeline Horizon</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Private API Access (1k req/mo)</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Priority Node Execution</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Enterprise Tier -->
+        <div class="pricing-card">
+            <div class="tier-name">Deity</div>
+            <div class="tier-desc">Unlimited karmic analysis and enterprise API solutions.</div>
+            <div class="tier-price">
+                $<span id="price-ent">199</span><span>/mo</span>
+            </div>
+            <div class="token-price">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v12M8 12h8" stroke="var(--bg-primary)" stroke-width="2" />
+                </svg>
+                <span id="token-ent">15,000</span> $ORC <span
+                    style="font-size: 0.75rem; color: var(--cyan); margin-left: 4px;">-25%</span>
+            </div>
+            <a href="#" class="tier-btn btn-outline">Contact Sales</a>
+
+            <ul class="features-list">
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span><strong>Custom</strong> Reading Limits</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Automated Trading Bot Integration</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Real-time On-chain Sync API</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>White-glove Support</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>How does paying in $ORC tokens work?</span>
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                When you connect your Web3 wallet and pay with $ORC tokens, the smart contract automatically applies the
+                discount corresponding to your tier. The tokens are then either burned or redistributed to node
+                operators as part of our tokenomics structure.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>What happens when I hit my API limit?</span>
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                If you exceed your monthly request limit, future requests will respond with a 429 Too Many Requests
+                status. You can upgrade your tier or purchase supplemental request bursts on your dashboard.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <span>Can I cancel my subscription?</span>
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                Yes, you can cancel your fiat subscription at any time. For $ORC token payments, which operate via smart
+                contract allowances, you can revoke the allowance at any point via your connected wallet.
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-top" style="display: contents;">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon"></div><span class="logo-text">Oracle<span>Eyes</span>.AI</span>
+                    </a>
+                    <p>Advanced AI-powered destiny intelligence combining ancient wisdom with neural networks.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">Whitepaper</a></li>
+                        <li><a href="index.html#features">Features</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="tokenomics.html">Tokenomics</a></li>
+                        <li><a href="api.html">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Community & Company</h4>
+                    <ul>
+                        <li><a href="https://x.com/orceyes" target="_blank">X (Twitter)</a></li>
+                        <li><a href="https://t.me/orceyes" target="_blank">Telegram</a></li>
+                        <li><a href="careers.html">Careers <span
+                                    style="font-size: 0.6rem; background: var(--gold); color: black; padding: 2px 4px; border-radius: 4px; margin-left: 4px; font-weight: bold;">HIRING</span></a>
+                        </li>
+                        <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy</a></li>
+                        <li><a href="terms.html">Terms</a></li>
+                        <li><a href="disclaimer.html">Disclaimer</a></li>
+                        <li><a href="mailto:contact@oracleeyes.io">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 OracleEyes.AI. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://x.com/orceyes" target="_blank" class="social-link"><svg viewBox="0 0 24 24">
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg></a>
+                <a href="https://t.me/orceyes" target="_blank" class="social-link"><svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.9 1.21-5.36 3.55-.5.35-.96.52-1.37.51-.45-.01-1.32-.26-1.96-.46-.79-.26-1.42-.39-1.37-.83.02-.23.33-.47.92-.71 3.6-1.56 6.01-2.61 7.22-3.11 3.43-1.42 4.15-1.67 4.62-1.68.1 0 .33.02.48.13.12.1.17.24.18.36 0 .09.01.2.01.29z" />
+                    </svg></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let isAnnual = false;
+
+        function toggleBilling() {
+            const toggle = document.getElementById('billingToggle');
+            if (isAnnual) {
+                setBilling('monthly');
+            } else {
+                setBilling('annual');
+            }
+        }
+
+        function setBilling(mode) {
+            const toggle = document.getElementById('billingToggle');
+            const labels = toggle.querySelectorAll('.toggle-label');
+
+            if (mode === 'annual') {
+                isAnnual = true;
+                toggle.classList.add('annual');
+                labels[0].classList.remove('active');
+                labels[1].classList.add('active');
+
+                document.getElementById('price-basic').innerText = '15';
+                document.getElementById('price-pro').innerText = '39';
+                document.getElementById('price-ent').innerText = '159';
+            } else {
+                isAnnual = false;
+                toggle.classList.remove('annual');
+                labels[0].classList.add('active');
+                labels[1].classList.remove('active');
+
+                document.getElementById('price-basic').innerText = '19';
+                document.getElementById('price-pro').innerText = '49';
+                document.getElementById('price-ent').innerText = '199';
+            }
+        }
+
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('svg');
+            if (answer.classList.contains('open')) {
+                answer.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+                icon.style.color = 'var(--text-secondary)';
+            } else {
+                answer.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+                icon.style.color = 'var(--gold)';
+            }
+        }
+    </script>
+</body>
+
+</html>

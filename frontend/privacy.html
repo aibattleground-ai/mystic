@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | OracleEyes.AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #F0B90B;
+            --gold-light: #FCD535;
+            --cyan: #02C076;
+            --bg-primary: #0B0E14;
+            --bg-secondary: #181A20;
+            --bg-tertiary: #1E2329;
+            --text-primary: #EAECEF;
+            --text-secondary: #848E9C;
+            --text-muted: #474D57;
+            --border-subtle: #2B3139;
+            --gradient-gold: linear-gradient(135deg, #F0B90B 0%, #FCD535 50%, #F0B90B 100%);
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-gold);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--gold);
+        }
+
+        .nav-cta {
+            background: var(--gradient-gold);
+            color: var(--bg-primary) !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600 !important;
+        }
+
+        .legal-container {
+            max-width: 800px;
+            margin: 150px auto 100px;
+            padding: 0 2rem;
+        }
+
+        .legal-header {
+            margin-bottom: 4rem;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 2rem;
+        }
+
+        .legal-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .legal-header p {
+            color: var(--text-secondary);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .legal-content h2 {
+            font-size: 1.8rem;
+            margin: 3rem 0 1.5rem;
+            color: var(--gold);
+        }
+
+        .legal-content p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .legal-content ul {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .legal-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .legal-content a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 4rem 2rem 2rem;
+            background: var(--bg-secondary);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 4rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1024px) {
+            .footer-container {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"></div><span class="logo-text">Oracle<span>Eyes</span>.AI</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="tokenomics.html">Tokenomics</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="index.html#pricing" class="nav-cta">Launch App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="legal-container">
+        <div class="legal-header">
+            <h1>Privacy Policy</h1>
+            <p>Last Updated: October 24, 2025</p>
+        </div>
+
+        <div class="legal-content">
+            <p>At OracleEyes.AI, we are committed to protecting the privacy and security of your personal, astrological,
+                and blockchain data. This Privacy Policy explains how we collect, use, disclose, and safeguard your
+                information when you visit our website or use our AI destiny intelligence services.</p>
+
+            <h2>1. Information We Collect</h2>
+            <p>We collect information that identifies, relates to, describes, or could reasonably be linked, directly or
+                indirectly, with you or your device. This includes:</p>
+            <ul>
+                <li><strong>Astrological Data:</strong> Names, dates of birth, times of birth, and places of birth
+                    provided for destiny readings.</li>
+                <li><strong>Blockchain Data:</strong> Public Web3 wallet addresses, transaction hashes, and on-chain
+                    interactions related to $ORC token usage.</li>
+                <li><strong>Technical Data:</strong> IP address, browser type, operating system, and interaction metrics
+                    on our platform.</li>
+            </ul>
+
+            <h2>2. How We Use Your Information</h2>
+            <p>The neural networks require historical and user-input data to generate accurate karmic probability
+                scores. We use the collected data exclusively to:</p>
+            <ul>
+                <li>Generate and deliver personalized Oracle Readings and Destiny Reports.</li>
+                <li>Process payments via blockchain smart contracts.</li>
+                <li>Train and fine-tune our proprietary AI models (all identifiable PII is stripped prior to training).
+                </li>
+                <li>Comply with necessary legal and regulatory requirements.</li>
+            </ul>
+
+            <h2>3. Data Security and Decentralization</h2>
+            <p>We employ enterprise-grade security measures. Sensitive astrological inputs are encrypted at rest using
+                AES-256. Web3 wallet authorizations rely entirely on decentralized smart contracts; we do not store your
+                private keys or seed phrases.</p>
+
+            <h2>4. Third-Party Sharing</h2>
+            <p>We do not sell your personal data. We may share anonymized, aggregated demographic data with research
+                partners. Standard transactional data is public by nature of the blockchain.</p>
+
+            <h2>5. Contact Us</h2>
+            <p>If you have questions or comments about this Privacy Policy, please contact us at: <a
+                    href="mailto:privacy@oracleeyes.io">privacy@oracleeyes.io</a>.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-top" style="display: contents;">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon"></div><span class="logo-text">Oracle<span>Eyes</span>.AI</span>
+                    </a>
+                    <p>Advanced AI-powered destiny intelligence combining ancient wisdom with neural networks.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">Whitepaper</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="tokenomics.html">Tokenomics</a></li>
+                        <li><a href="api.html">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Community & Company</h4>
+                    <ul>
+                        <li><a href="https://x.com/orceyes" target="_blank">X (Twitter)</a></li>
+                        <li><a href="https://t.me/orceyes" target="_blank">Telegram</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy</a></li>
+                        <li><a href="terms.html">Terms</a></li>
+                        <li><a href="disclaimer.html">Disclaimer</a></li>
+                        <li><a href="mailto:contact@oracleeyes.io">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 OracleEyes.AI. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

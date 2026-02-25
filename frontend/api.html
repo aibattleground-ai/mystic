@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation | OracleEyes.AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #F0B90B;
+            --gold-light: #FCD535;
+            --gold-dark: #C99400;
+            --cyan: #02C076;
+            --bg-primary: #0B0E14;
+            --bg-secondary: #181A20;
+            --bg-tertiary: #1E2329;
+            --text-primary: #EAECEF;
+            --text-secondary: #848E9C;
+            --text-muted: #474D57;
+            --border-subtle: #2B3139;
+            --border-gold: rgba(240, 185, 11, 0.4);
+            --gradient-gold: linear-gradient(135deg, #F0B90B 0%, #FCD535 50%, #F0B90B 100%);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Particles Base */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 10%, rgba(240, 185, 11, 0.05), transparent 60%);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-gold);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--gold);
+        }
+
+        .nav-cta {
+            background: var(--gradient-gold);
+            color: var(--bg-primary) !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(240, 185, 11, 0.3);
+        }
+
+        /* General Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 150px 2rem 4rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Page Headers */
+        .page-header {
+            text-align: left;
+            margin-bottom: 4rem;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .page-header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            max-width: 700px;
+        }
+
+        /* API Content */
+        .api-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 4rem;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: calc(100vh - 150px);
+            overflow-y: auto;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: block;
+            padding: 0.5rem 0;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: var(--gold);
+        }
+
+        .api-section {
+            margin-bottom: 5rem;
+        }
+
+        .api-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .api-section p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .endpoint-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .endpoint-header {
+            background: var(--bg-tertiary);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .method {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .method.post {
+            background: rgba(2, 192, 118, 0.1);
+            color: var(--cyan);
+        }
+
+        .method.get {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196F3;
+        }
+
+        .path {
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .endpoint-body {
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .param-table th,
+        .param-table td {
+            text-align: left;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.9rem;
+        }
+
+        .param-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .param-table td {
+            color: var(--text-primary);
+        }
+
+        .code-block {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: #A9B7C6;
+            overflow-x: auto;
+        }
+
+        .code-block .string {
+            color: #6A8759;
+        }
+
+        .code-block .keyword {
+            color: #CC7832;
+            font-weight: bold;
+        }
+
+        .code-block .number {
+            color: #6897BB;
+        }
+
+        .api-key-gen {
+            background: var(--gradient-gold);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .api-key-gen h3 {
+            color: var(--bg-primary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .api-key-gen p {
+            color: var(--bg-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .api-input-group {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .api-input-group input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--bg-primary);
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .api-input-group input::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .api-input-group button {
+            padding: 0 2rem;
+            border: none;
+            background: var(--bg-primary);
+            color: var(--gold);
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .api-input-group button:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Footer (Copied exactly from index.html) */
+        footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 4rem 2rem 2rem;
+            background: var(--bg-secondary);
+            margin-top: 6rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            max-width: 300px;
+            line-height: 1.6;
+        }
+
+        .footer-column h4 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 4rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--gold);
+            color: var(--bg-primary);
+        }
+
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 1024px) {
+            .api-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                height: auto;
+                top: 0;
+                margin-bottom: 2rem;
+            }
+
+            .endpoint-body {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"></div>
+                <span class="logo-text">Oracle<span>Eyes</span>.AI</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">Whitepaper</a></li>
+                <li><a href="tokenomics.html">Tokenomics</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="index.html#pricing" class="nav-cta">Launch App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>API Reference</h1>
+            <p>Integrate the world's most advanced astrological and predictive AI engines into your own applications,
+                utilizing deep karmic neural networks.</p>
+        </div>
+
+        <div class="api-grid">
+            <div class="sidebar">
+                <ul>
+                    <li><a href="#intro" class="active">Introduction</a></li>
+                    <li><a href="#auth">Authentication</a></li>
+                    <li><a href="#predict-destiny">POST /v1/destiny</a></li>
+                    <li><a href="#predict-love">POST /v1/love-compatibility</a></li>
+                    <li><a href="#predict-wealth">GET /v1/wealth-transits</a></li>
+                    <li><a href="#webhooks">Webhooks</a></li>
+                    <li><a href="#errors">Errors</a></li>
+                </ul>
+            </div>
+
+            <div class="api-content">
+                <div id="intro" class="api-section">
+                    <h2>Introduction</h2>
+                    <p>The OracleEyes API is organized around REST. Our API has predictable resource-oriented URLs,
+                        accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP
+                        response codes, authentication, and verbs.</p>
+                </div>
+
+                <div id="auth" class="api-section">
+                    <h2>Authentication</h2>
+                    <p>Authenticate your account when using the API by including your secret API key in the request.
+                        Manage your API keys in your automated Oracle Dashboard. Your API keys carry many privileges, so
+                        be sure to keep them secure.</p>
+                    <div class="code-block">
+                        Authorization: Bearer <span class="string">sk_test_oracleeyes_api_key_EXAMPLE</span>
+                    </div>
+                </div>
+
+                <div id="predict-destiny" class="api-section">
+                    <h2>Predict Destiny</h2>
+                    <p>Calculates the absolute probability of karmic events over an 18-month horizon based on standard
+                        Bazi inputs and planetary transits.</p>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="path">https://api.oracleeyes.io/v1/destiny</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div>
+                                <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Parameters</h4>
+                                <table class="param-table">
+                                    <tr>
+                                        <th>name</th>
+                                        <td><span style="color: var(--gold); font-family: 'Space Mono';">string</span>
+                                            Required.<br><span
+                                                style="color: var(--text-secondary); font-size: 0.8rem;">Target subject
+                                                name</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>date_of_birth</th>
+                                        <td><span style="color: var(--gold); font-family: 'Space Mono';">string</span>
+                                            Required.<br><span
+                                                style="color: var(--text-secondary); font-size: 0.8rem;">Format:
+                                                YYYY-MM-DD</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>time_of_birth</th>
+                                        <td><span style="color: var(--gold); font-family: 'Space Mono';">string</span>
+                                            Optional.<br><span
+                                                style="color: var(--text-secondary); font-size: 0.8rem;">Format:
+                                                HH:MM</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>location</th>
+                                        <td><span style="color: var(--gold); font-family: 'Space Mono';">string</span>
+                                            Required.<br><span
+                                                style="color: var(--text-secondary); font-size: 0.8rem;">City, Country
+                                                format</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Example Request</h4>
+                                <div class="code-block" style="margin-bottom: 1rem;">
+                                    <span class="keyword">curl</span> -X POST https://api.oracleeyes.io/v1/destiny \
+                                    -H <span class="string">"Authorization: Bearer sk_test_123"</span> \
+                                    -H <span class="string">"Content-Type: application/json"</span> \
+                                    -d '{
+                                    <span class="string">"name"</span>: <span class="string">"Satoshi N."</span>,
+                                    <span class="string">"date_of_birth"</span>: <span
+                                        class="string">"1975-04-05"</span>,
+                                    <span class="string">"location"</span>: <span class="string">"Tokyo, Japan"</span>
+                                    }'
+                                </div>
+                                <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Example Response</h4>
+                                <div class="code-block">
+                                    {
+                                    <span class="string">"id"</span>: <span class="string">"dst_8ak10z"</span>,
+                                    <span class="string">"object"</span>: <span
+                                        class="string">"destiny_prediction"</span>,
+                                    <span class="string">"karmic_score"</span>: <span class="number">94.2</span>,
+                                    <span class="string">"major_transit"</span>: <span class="string">"Wealth Expansion
+                                        Phase"</span>,
+                                    <span class="string">"accuracy_confidence"</span>: <span class="number">0.981</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="predict-love" class="api-section">
+                    <h2>Love Compatibility</h2>
+                    <p>Cross-references two individuals' charts to determine synaptic alignment and long-term friction
+                        metrics.</p>
+
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="path">https://api.oracleeyes.io/v1/love-compatibility</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <div>
+                                <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Parameters</h4>
+                                <table class="param-table">
+                                    <tr>
+                                        <th>person_1_id</th>
+                                        <td><span style="color: var(--gold); font-family: 'Space Mono';">string</span>
+                                            Required.<br><span
+                                                style="color: var(--text-secondary); font-size: 0.8rem;">Profile ID of
+                                                subject A</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>person_2_id</th>
+                                        <td><span style="color: var(--gold); font-family: 'Space Mono';">string</span>
+                                            Required.<br><span
+                                                style="color: var(--text-secondary); font-size: 0.8rem;">Profile ID of
+                                                subject B</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Example Response</h4>
+                                <div class="code-block">
+                                    {
+                                    <span class="string">"id"</span>: <span class="string">"cmp_49x81a"</span>,
+                                    <span class="string">"compatibility_score"</span>: <span class="number">88.5</span>,
+                                    <span class="string">"friction_points"</span>: [
+                                    <span class="string">"Communication styles differ"</span>,
+                                    <span class="string">"Financial risk tolerance"</span>
+                                    ]
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="api-key-gen">
+                    <h3>Ready to predict the future?</h3>
+                    <p>Generate a test API key to try the Neural Oracle in your environment immediately.</p>
+                    <div class="api-input-group">
+                        <input type="email" placeholder="Enter your developer email...">
+                        <button onclick="alert('API Sandbox details sent to your email!')">Generate Key</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-top" style="display: contents;">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon"></div><span class="logo-text">Oracle<span>Eyes</span>.AI</span>
+                    </a>
+                    <p>Advanced AI-powered destiny intelligence combining ancient wisdom with neural networks.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">Whitepaper</a></li>
+                        <li><a href="index.html#features">Features</a></li>
+                        <li><a href="pricing.html">Pricing</a></li>
+                        <li><a href="tokenomics.html">Tokenomics</a></li>
+                        <li><a href="api.html">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Community & Company</h4>
+                    <ul>
+                        <li><a href="https://x.com/orceyes" target="_blank">X (Twitter)</a></li>
+                        <li><a href="https://t.me/orceyes" target="_blank">Telegram</a></li>
+                        <li><a href="careers.html">Careers <span
+                                    style="font-size: 0.6rem; background: var(--gold); color: black; padding: 2px 4px; border-radius: 4px; margin-left: 4px; font-weight: bold;">HIRING</span></a>
+                        </li>
+                        <li><a href="https://oracleeyes.gitbook.io/oracleeyes-docs/" target="_blank">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy</a></li>
+                        <li><a href="terms.html">Terms</a></li>
+                        <li><a href="disclaimer.html">Disclaimer</a></li>
+                        <li><a href="mailto:contact@oracleeyes.io">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 OracleEyes.AI. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://x.com/orceyes" target="_blank" class="social-link"><svg viewBox="0 0 24 24">
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg></a>
+                <a href="https://t.me/orceyes" target="_blank" class="social-link"><svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.9 1.21-5.36 3.55-.5.35-.96.52-1.37.51-.45-.01-1.32-.26-1.96-.46-.79-.26-1.42-.39-1.37-.83.02-.23.33-.47.92-.71 3.6-1.56 6.01-2.61 7.22-3.11 3.43-1.42 4.15-1.67 4.62-1.68.1 0 .33.02.48.13.12.1.17.24.18.36 0 .09.01.2.01.29z" />
+                    </svg></a>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
