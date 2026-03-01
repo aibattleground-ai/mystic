@@ -3432,25 +3432,65 @@
             }
             if (step === 3) {
                 // Populate summary data before moving
-                const name = document.getElementById('name').value || 'N/A';
-                const dob = `${document.getElementById('birth-year').value || 'YYYY'}-${document.getElementById('birth-month').value || 'MM'}-${document.getElementById('birth-day').value || 'DD'}`;
-                const gender = selectedGender ? selectedGender.toUpperCase() : 'N/A';
+                let summaryHTML = '';
+                if (selectedFortune === 'compatibility') {
+                    const name1 = document.getElementById('person1-name').value || 'N/A';
+                    const name2 = document.getElementById('person2-name').value || 'N/A';
+                    const dob1 = `${document.getElementById('person1-year').value || 'YYYY'}-${document.getElementById('person1-month').value || 'MM'}-${document.getElementById('person1-day').value || 'DD'}`;
+                    const dob2 = `${document.getElementById('person2-year').value || 'YYYY'}-${document.getElementById('person2-month').value || 'MM'}-${document.getElementById('person2-day').value || 'DD'}`;
+                    const gender1 = selectedGender1 ? selectedGender1.toUpperCase() : 'N/A';
+                    const gender2 = selectedGender2 ? selectedGender2.toUpperCase() : 'N/A';
 
-                let bHour = document.getElementById('birth-hour');
-                let bMin = document.getElementById('birth-minute');
-                const birthTime = (bHour && bHour.value) || (bMin && bMin.value) ? `${(bHour && bHour.value) || '00'}:${(bMin && bMin.value) || '00'}` : 'N/A';
+                    let time1 = (document.getElementById('person1-hour').value || document.getElementById('person1-minute').value) ? `${document.getElementById('person1-hour').value || '00'}:${document.getElementById('person1-minute').value || '00'}` : 'N/A';
+                    let time2 = (document.getElementById('person2-hour').value || document.getElementById('person2-minute').value) ? `${document.getElementById('person2-hour').value || '00'}:${document.getElementById('person2-minute').value || '00'}` : 'N/A';
 
-                let bPlace = document.getElementById('birth-place');
-                const birthPlace = (bPlace && bPlace.value) ? bPlace.value : 'N/A';
+                    let place1 = document.getElementById('person1-place').value || 'N/A';
+                    let place2 = document.getElementById('person2-place').value || 'N/A';
 
-                let summaryHTML = `
-                    <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">CATEGORY:</span> ${selectedFortune ? selectedFortune.toUpperCase() : 'N/A'}</p>
-                    <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">NAME:</span> ${name}</p>
-                    <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">GENDER:</span> ${gender}</p>
-                    <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">DOB:</span> ${dob}</p>
-                    <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">TIME:</span> ${birthTime}</p>
-                    <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">PLACE:</span> ${birthPlace}</p>
-                `;
+                    summaryHTML = `
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">CATEGORY:</span> COMPATIBILITY</p>
+                        <hr style="border-color: rgba(255,255,255,0.1); margin: 1rem 0;">
+                        <p style="color: var(--gold); margin-bottom:0.5rem; font-weight:bold;">[Person 1]</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">NAME:</span> ${name1}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">GENDER:</span> ${gender1}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">DOB:</span> ${dob1}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">TIME:</span> ${time1}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">PLACE:</span> ${place1}</p>
+                        <hr style="border-color: rgba(255,255,255,0.1); margin: 1rem 0;">
+                        <p style="color: var(--gold); margin-bottom:0.5rem; font-weight:bold;">[Person 2]</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">NAME:</span> ${name2}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">GENDER:</span> ${gender2}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">DOB:</span> ${dob2}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">TIME:</span> ${time2}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">PLACE:</span> ${place2}</p>
+                    `;
+                } else if (selectedFortune === 'dream') {
+                    const desc = document.getElementById('dream-content').value || 'N/A';
+                    summaryHTML = `
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">CATEGORY:</span> DREAM DECODE</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">DREAM INFO:</span> ${desc.substring(0, 100)}${desc.length > 100 ? '...' : ''}</p>
+                    `;
+                } else {
+                    const name = document.getElementById('name').value || 'N/A';
+                    const dob = `${document.getElementById('birth-year').value || 'YYYY'}-${document.getElementById('birth-month').value || 'MM'}-${document.getElementById('birth-day').value || 'DD'}`;
+                    const gender = selectedGender ? selectedGender.toUpperCase() : 'N/A';
+
+                    let bHour = document.getElementById('birth-hour');
+                    let bMin = document.getElementById('birth-minute');
+                    const birthTime = (bHour && bHour.value) || (bMin && bMin.value) ? `${(bHour && bHour.value) || '00'}:${(bMin && bMin.value) || '00'}` : 'N/A';
+
+                    let bPlace = document.getElementById('birth-place');
+                    const birthPlace = (bPlace && bPlace.value) ? bPlace.value : 'N/A';
+
+                    summaryHTML = `
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">CATEGORY:</span> ${selectedFortune ? selectedFortune.toUpperCase() : 'N/A'}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">NAME:</span> ${name}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">GENDER:</span> ${gender}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">DOB:</span> ${dob}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">TIME:</span> ${birthTime}</p>
+                        <p style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">PLACE:</span> ${birthPlace}</p>
+                    `;
+                }
                 document.getElementById('confirmation-summary').innerHTML = summaryHTML;
             }
 
